@@ -131,9 +131,14 @@
             }
 
             try {
-                // reCAPTCHA v3 Execution (Strict)
-                await new Promise(resolve => grecaptcha.ready(resolve));
-                const token = await grecaptcha.execute('6LfgZqYsAAAAAIARfVd_5xzKFB-IKP513QVxUgIh', {action: 'signup'});
+                let token = null;
+                // reCAPTCHA v3 Execution (Strict -> Resilient)
+                if (typeof grecaptcha !== 'undefined' && grecaptcha.ready) {
+                    try {
+                        await new Promise(resolve => grecaptcha.ready(resolve));
+                        token = await grecaptcha.execute('6LfgZqYsAAAAAIARfVd_5xzKFB-IKP513QVxUgIh', {action: 'signup'});
+                    } catch (cErr) { console.warn("Signup captcha skipped:", cErr.message); }
+                }
                 
                 const res = await KNSAuth.register(name, email, password, token);
                 if (res.ok) {

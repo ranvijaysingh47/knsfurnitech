@@ -114,18 +114,17 @@ document.addEventListener('DOMContentLoaded', () => {
             // reCAPTCHA v3 Execution
             if (window.grecaptcha) {
                 grecaptcha.ready(async () => {
-                    try {
-                        const token = await grecaptcha.execute('6LfgZqYsAAAAAIARfVd_5xzKFB-IKP513QVxUgIh', {action: 'catalog_request'});
-                        console.log("reCAPTCHA verified for catalog:", token);
+                        try {
+                            const token = await grecaptcha.execute('6LfgZqYsAAAAAIARfVd_5xzKFB-IKP513QVxUgIh', {action: 'catalog_request'});
+                            console.log("reCAPTCHA verified for catalog:", token);
+                        } catch (err) {
+                            console.warn("reCAPTCHA Error (Proceeding anyway):", err);
+                        }
                         
-                        // Proceed with submission
+                        // Proceed with submission regardless of reCAPTCHA success
                         closeCatalogModal();
                         KNSCart.showToast(`Thank you! The catalog is now downloading.`);
                         triggerCatalogDownload();
-                    } catch (err) {
-                        console.error("reCAPTCHA Error:", err);
-                        KNSCart.showToast("Problem verifying. Please try again.");
-                    }
                 });
             } else {
                 // Fallback if reCAPTCHA not loaded

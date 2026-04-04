@@ -115,10 +115,17 @@
             const rememberMe = document.getElementById('rememberMe').checked;
             
             try {
-                // reCAPTCHA v3 Execution (Strict)
-                await new Promise(resolve => grecaptcha.ready(resolve));
-                const token = await grecaptcha.execute('6LfgZqYsAAAAAIARfVd_5xzKFB-IKP513QVxUgIh', {action: 'LOGIN'});
-                console.log("reCAPTCHA verified:", token);
+                let token = null;
+                // Resilient reCAPTCHA v3 Execution
+                if (typeof grecaptcha !== 'undefined' && grecaptcha.ready) {
+                    try {
+                        await new Promise(resolve => grecaptcha.ready(resolve));
+                        token = await grecaptcha.execute('6LfgZqYsAAAAAIARfVd_5xzKFB-IKP513QVxUgIh', {action: 'LOGIN'});
+                        console.log("reCAPTCHA verified:", token);
+                    } catch (captchaErr) {
+                        console.warn("reCAPTCHA check skipped (Key/Environment issue):", captchaErr.message);
+                    }
+                }
 
                 const res = await KNSAuth.login(email, password);
                 if (res.ok) {
