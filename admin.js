@@ -33,6 +33,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     renderBlogsTable();
     renderCouponsTable();
 
+    // Reset Bulk Actions UI on load
+    updateBulkActionBar('products');
+    updateBulkActionBar('coupons');
+
     // 4. Intensive Auth Readiness Poll
     console.log("🔐 [Auth] Checking Session Authorization...");
     let waitAttempts = 0;
@@ -442,6 +446,7 @@ function renderProductsTable() {
 
     tbody.innerHTML = products.map(p => `
         <tr>
+            <td><input type="checkbox" class="select-row-products" value="${p.id}" onchange="updateBulkActionBar('products')"></td>
             <td data-label="Preview"><img src="${p.image}" class="table-img" alt="${p.name}"></td>
             <td data-label="Product Name" style="font-weight:600;">${p.name}</td>
             <td data-label="Category">${p.category}</td>
@@ -453,7 +458,7 @@ function renderProductsTable() {
                 </div>
             </td>
         </tr>
-    `).join('') || '<tr><td colspan="5" style="text-align:center; padding: 2rem; color: #888;">No products found.</td></tr>';
+    `).join('') || '<tr><td colspan="6" style="text-align:center; padding: 2rem; color: #888;">No products found.</td></tr>';
 
     if (window.lucide) lucide.createIcons();
 }
@@ -900,6 +905,7 @@ function renderCouponsTable() {
 
         return `
             <tr>
+                <td><input type="checkbox" class="select-row-coupons" value="${c.id}" onchange="updateBulkActionBar('coupons')"></td>
                 <td data-label="Code" style="font-weight:700; color:var(--admin-green);">${c.code}</td>
                 <td data-label="Discount">${c.type === 'percentage' ? c.value + '%' : '₹' + c.value}</td>
                 <td data-label="Min Order">₹ ${(c.minOrder || 0).toLocaleString()}</td>
@@ -919,7 +925,7 @@ function renderCouponsTable() {
                 </td>
             </tr>
         `;
-    }).join('') || '<tr><td colspan="7" style="text-align:center; padding: 2rem; color: #888;">No coupons found.</td></tr>';
+    }).join('') || '<tr><td colspan="8" style="text-align:center; padding: 2rem; color: #888;">No coupons found.</td></tr>';
 
     if (window.lucide) lucide.createIcons();
 }
@@ -1023,6 +1029,211 @@ window.openBlogModal = openBlogModal;
 window.handleBlogSubmit = handleBlogSubmit;
 window.deleteBlog = deleteBlog;
 window.renderBlogsTable = renderBlogsTable;
+window.openCouponModal = openCouponModal;
+window.deleteCoupon = deleteCoupon;
+window.renderCouponsTable = renderCouponsTable;
+/** Bulk Actions & CSV Import System **/
+let importType = null;
+let importedData = [];
+
+function toggleSelectAll(type) {
+    const isChecked = document.getElementById(`select-all-${type}`).checked;
+    document.querySelectorAll(`.select-row-${type}`).forEach(cb => cb.checked = isChecked);
+    updateBulkActionBar(type);
+}
+
+function updateBulkActionBar(type) {
+    const selected = document.querySelectorAll(`.select-row-${type}:checked`);
+    const btn = document.getElementById(`btn-bulk-delete-${type}`);
+    const countSpan = document.getElementById(`count-${type}`);
+    
+    if (btn) {
+        if (selected.length > 0) {
+            btn.style.display = 'flex';
+            countSpan.textContent = selected.length;
+        } else {
+            btn.style.display = 'none';
+        }
+    }
+}
+
+async function handleBulkDelete(type) {
+    const selected = Array.from(document.querySelectorAll(`.select-row-${type}:checked`)).map(cb => cb.value);
+    if (!selected.length) return;
+
+    if (confirm(`Are you sure you want to delete ${selected.length} ${type}? This action cannot be reversed.`)) {
+        try {
+            const btn = document.getElementById(`btn-bulk-delete-${type}`);
+            btn.innerHTML = '<i data-lucide="loader-2" class="spin"></i> Deleting...';
+            btn.disabled = true;
+
+            for (const id of selected) {
+                if (type === 'products') await KNSData.deleteProduct(id);
+                else if (type === 'coupons') await KNSData.deleteCoupon(id);
+            }
+
+            if (window.KNSCart) KNSCart.showToast(`Batch delete successful: ${selected.length} items removed.`);
+            
+            // Re-render table and reset head checkbox
+            const masterCb = document.getElementById(`select-all-${type}`);
+            if (masterCb) masterCb.checked = false;
+            
+            if (type === 'products') renderProductsTable();
+            else renderCouponsTable();
+
+        } catch (e) {
+            console.error("Bulk Delete Error:", e);
+            alert("Error during bulk delete: " + e.message);
+        }
+    }
+}
+
+function openImportModal(type) {
+    importType = type;
+    const modal = document.getElementById('import-modal');
+    const title = document.getElementById('importModalTitle');
+    const instructions = document.getElementById('importInstructions');
+    const preview = document.getElementById('import-preview');
+    const templateLink = document.getElementById('template-link');
+    
+    title.textContent = `Import ${type.charAt(0).toUpperCase() + type.slice(1)}`;
+    instructions.innerHTML = type === 'products' 
+        ? "Upload a CSV file to add multiple items at once.<br><a id='template-link' href='products_template.csv' download style='color:var(--admin-green); font-weight:600; text-decoration:none; margin-top:8px; display:inline-block;'><i data-lucide='download' size='14'></i> Download Product Template</a>"
+        : "Upload a CSV file to add multiple items at once.<br><a id='template-link' href='coupons_template.csv' download style='color:var(--admin-green); font-weight:600; text-decoration:none; margin-top:8px; display:inline-block;'><i data-lucide='download' size='14'></i> Download Coupon Template</a>";
+    
+    preview.style.display = 'none';
+    importedData = [];
+    modal.classList.add('active');
+    if (window.lucide) lucide.createIcons();
+}
+
+function handleFileSelect(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const text = e.target.result;
+        importedData = parseCSV(text);
+        showImportPreview();
+    };
+    reader.readAsText(file);
+}
+
+function parseCSV(text) {
+    const lines = text.trim().split('\n');
+    const headers = lines[0].toLowerCase().split(',').map(h => h.trim().replace(/"/g, ''));
+    const rows = [];
+
+    for (let i = 1; i < lines.length; i++) {
+        if (!lines[i].trim()) continue;
+        const currentline = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/); // Better regex for commas inside quotes
+        const obj = {};
+        headers.forEach((h, index) => {
+            let val = (currentline[index] || '').trim().replace(/"/g, '');
+            obj[h] = val;
+        });
+        rows.push(obj);
+    }
+    return rows;
+}
+
+function showImportPreview() {
+    const preview = document.getElementById('import-preview');
+    const countSpan = document.getElementById('preview-count');
+    const table = document.getElementById('preview-table');
+    
+    countSpan.textContent = importedData.length;
+    
+    if (importedData.length > 0) {
+        const headers = Object.keys(importedData[0]);
+        table.innerHTML = `
+            <thead>
+                <tr>${headers.map(h => `<th style="text-align:left; border-bottom:1px solid #ddd; padding:5px;">${h}</th>`).join('')}</tr>
+            </thead>
+            <tbody>
+                ${importedData.slice(0, 5).map(row => `
+                    <tr>${headers.map(h => `<td style="padding:5px; border-bottom:1px solid #eee;">${row[h]}</td>`).join('')}</tr>
+                `).join('')}
+                ${importedData.length > 5 ? `<tr><td colspan="${headers.length}" style="text-align:center; padding-top:10px; color:#999;">...and ${importedData.length - 5} more rows</td></tr>` : ''}
+            </tbody>
+        `;
+        preview.style.display = 'block';
+    }
+}
+
+async function processImport() {
+    if (!importedData.length) return;
+    
+    const btn = document.querySelector('#import-preview .btn-add');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i data-lucide="loader-2" class="spin"></i> Importing...';
+    btn.disabled = true;
+
+    let successCount = 0;
+    try {
+        for (const row of importedData) {
+            if (importType === 'products') {
+                if (!row.name || !row.category) continue;
+                
+                // Helper to parse JSON fields safely
+                const parseJSON = (str, fallback) => {
+                    try { return str ? JSON.parse(str.replace(/""/g, '"')) : fallback; } 
+                    catch(e) { console.warn("JSON Parse Error for field:", str); return fallback; }
+                };
+
+                await KNSData.addProduct({
+                    name: row.name,
+                    category: row.category,
+                    price: parseInt(row.price) || 0,
+                    mrp: parseInt(row.mrp) || 0,
+                    description: row.description || '',
+                    longDescription: row.longDescription || row.long_description || '',
+                    image: row.image_url || row.image || 'https://via.placeholder.com/300',
+                    images: row.gallery_images ? row.gallery_images.split(',').map(s => s.trim()) : [],
+                    material: row.material || 'Standard',
+                    badge: row.badge || '',
+                    specs: parseJSON(row.specs, {}),
+                    dimensions: parseJSON(row.dimensions, {}),
+                    colors: parseJSON(row.colors, []),
+                    rating: 5,
+                    isNew: row.is_new === 'true' || row.is_new === true
+                });
+            } else if (importType === 'coupons') {
+                if (!row.code || !row.value) continue;
+                await KNSData.addCoupon({
+                    code: row.code.toUpperCase(),
+                    type: row.type || 'percentage',
+                    value: parseInt(row.value) || 0,
+                    minOrder: parseInt(row.min_order) || parseInt(row.minOrder) || 0,
+                    expiry: row.expiry || new Date().toISOString().split('T')[0],
+                    usageLimit: parseInt(row.usage_limit) || parseInt(row.usageLimit) || 100
+                });
+            }
+            successCount++;
+        }
+
+        if (window.KNSCart) KNSCart.showToast(`Import completed: ${successCount} items added successfully.`);
+        closeModal('import-modal');
+        
+        if (importType === 'products') renderProductsTable();
+        else renderCouponsTable();
+
+    } catch (e) {
+        console.error("Import Error:", e);
+        alert("An error occurred during import: " + e.message);
+    } finally {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+    }
+}
+
+window.toggleSelectAll = toggleSelectAll;
+window.updateBulkActionBar = updateBulkActionBar;
+window.handleBulkDelete = handleBulkDelete;
+window.openImportModal = openImportModal;
+window.handleFileSelect = handleFileSelect;
+window.processImport = processImport;
 window.viewOrder = (id) => {
     // Optional: Pre-cache for instant load
     const orders = window.KNSData && KNSData.getAllOrders ? KNSData.getAllOrders() : [];

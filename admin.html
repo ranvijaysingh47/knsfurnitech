@@ -242,6 +242,12 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        .admin-table-container {
+            width: 100%;
+            overflow-x: auto;
+            scrollbar-width: thin;
+        }
+
         .admin-card {
             background: white;
             border-radius: 20px;
@@ -286,6 +292,13 @@
             border-bottom: 1px solid var(--admin-border);
             color: #444;
             font-size: 1rem;
+        }
+
+        /* Ensure Actions column is always wide enough */
+        .admin-table th:last-child, 
+        .admin-table td:last-child {
+            min-width: 120px;
+            text-align: right;
         }
 
         .admin-table tr:last-child td {
@@ -338,6 +351,8 @@
         .action-btns {
             display: flex;
             gap: 10px;
+            flex-wrap: nowrap;
+            min-width: 80px;
         }
 
         .action-btn {
@@ -762,7 +777,15 @@
                 <div class="admin-card" style="border:none; box-shadow:none;">
                 <div class="card-header">
                     <h3>Inventory Management</h3>
-                    <button class="btn-add" onclick="openProductModal()"><i data-lucide="plus"></i> Add Product</button>
+                    <div style="display:flex; gap:10px;">
+                        <button class="btn-sync" onclick="openImportModal('products')" style="background:#4DB6AC; color:white; border:none; padding: 10px 20px; border-radius: 10px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:8px;">
+                            <i data-lucide="upload"></i> Import CSV
+                        </button>
+                        <button class="btn-sync" id="btn-bulk-delete-products" onclick="handleBulkDelete('products')" style="background:#ff4d4d; color:white; border:none; padding: 10px 20px; border-radius: 10px; font-weight:600; cursor:pointer; display:none; align-items:center; gap:8px;">
+                            <i data-lucide="trash-2"></i> Delete Selected (<span id="count-products">0</span>)
+                        </button>
+                        <button class="btn-add" onclick="openProductModal()"><i data-lucide="plus"></i> Add Product</button>
+                    </div>
                 </div>
                 <div style="padding: 1.5rem 2rem; background: #fafafa; display: flex; gap: 1rem;">
                     <input type="text" placeholder="Search by name or category..." id="prod-search" style="flex:1; padding: 10px; border: 1px solid #ddd; border-radius: 8px;" oninput="renderProductsTable()">
@@ -770,6 +793,7 @@
                 <table class="admin-table">
                     <thead>
                         <tr>
+                            <th style="width:40px;"><input type="checkbox" id="select-all-products" onclick="toggleSelectAll('products')"></th>
                             <th>Preview</th>
                             <th>Product Name</th>
                             <th>Category</th>
@@ -952,15 +976,23 @@
                 <div class="card-header">
                     <h3>Active Coupons</h3>
                     <div style="display:flex; gap:10px;">
+                        <button class="btn-sync" onclick="openImportModal('coupons')" style="background:#4DB6AC; color:white; border:none; padding: 10px 20px; border-radius: 10px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:8px;">
+                            <i data-lucide="upload"></i> Import CSV
+                        </button>
+                        <button class="btn-sync" id="btn-bulk-delete-coupons" onclick="handleBulkDelete('coupons')" style="background:#ff4d4d; color:white; border:none; padding: 10px 20px; border-radius: 10px; font-weight:600; cursor:pointer; display:none; align-items:center; gap:8px;">
+                            <i data-lucide="trash-2"></i> Delete Selected (<span id="count-coupons">0</span>)
+                        </button>
                         <input type="text" id="coupon-search" placeholder="Search code..." onkeyup="renderCouponsTable()" style="padding: 8px 15px; border-radius: 8px; border: 1px solid var(--admin-border); font-family:inherit;">
                         <button class="btn-sync" onclick="openCouponModal()" style="background:var(--admin-green); color:white; border:none; padding: 10px 20px; border-radius: 10px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:8px;">
                             <i data-lucide="plus"></i> Create Coupon
                         </button>
                     </div>
                 </div>
-                <table class="admin-table">
+                <div class="admin-table-container">
+                    <table class="admin-table">
                     <thead>
                         <tr>
+                            <th style="width:40px;"><input type="checkbox" id="select-all-coupons" onclick="toggleSelectAll('coupons')"></th>
                             <th>Code</th>
                             <th>Discount</th>
                             <th>Min. Order</th>
@@ -974,9 +1006,38 @@
                         <!-- Dynamic -->
                     </tbody>
                 </table>
+                </div>
             </div>
         </section>
     </main>
+
+    <!-- Import Modal -->
+    <div id="import-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="importModalTitle">Import CSV</h2>
+                <button class="close-modal" onclick="closeModal('import-modal')">&times;</button>
+            </div>
+            <div class="admin-form">
+                <p id="importInstructions" style="margin-bottom:1.5rem; color:#666; font-size:0.9rem;">
+                    Upload a CSV file to add multiple items at once.
+                </p>
+                <div style="border: 2px dashed #ddd; border-radius: 15px; padding: 3rem; text-align:center; background:#fafafa;">
+                    <i data-lucide="upload-cloud" size="48" style="color:#aaa; margin-bottom:1rem;"></i>
+                    <div style="margin-bottom:1rem; font-weight:600;">Drop your CSV file here or</div>
+                    <input type="file" id="csv-file-input" accept=".csv" style="display:none;" onchange="handleFileSelect(event)">
+                    <button type="button" class="btn-add" onclick="document.getElementById('csv-file-input').click()" style="margin: 0 auto;">Choose File</button>
+                </div>
+                <div id="import-preview" style="margin-top:2rem; display:none;">
+                    <h4 style="margin-bottom:10px;">Data Preview (<span id="preview-count">0</span> rows found)</h4>
+                    <div style="max-height: 200px; overflow-y: auto; border: 1px solid #eee; border-radius: 10px; font-size: 0.8rem; background:#fff; padding:10px;">
+                        <table style="width:100%; border-collapse:collapse;" id="preview-table"></table>
+                    </div>
+                    <button class="btn-add" onclick="processImport()" style="width:100%; margin-top:1.5rem;">Process Import</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Coupon Modal -->
     <div id="coupon-modal" class="modal-overlay">

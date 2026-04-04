@@ -388,7 +388,7 @@ const KNSDb = (() => {
     }
 
     return {
-        saveDocument, getDocuments, getDocument, saveInquiry, saveOrder, getProducts,
+        saveDocument, getDocuments, getDocument, deleteDocument, saveInquiry, saveOrder, getProducts,
         saveProduct, deleteProduct, getOrdersByUser, saveUserData, getUserData,
         saveReview, deleteReview, getReviewsByProduct, saveCatalog, deleteCatalog, updateOrder,
         getBlogs, saveBlog, deleteBlog,

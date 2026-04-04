@@ -1,0 +1,4 @@
+code,type,value,min_order,expiry,usage_limit
+"SAVE20","percentage",20,1000,"2026-12-31",500
+"DIWALI500","fixed",500,5000,"2026-11-15",200
+"WELCOME10","percentage",10,0,"2027-01-01",1000
