@@ -57,25 +57,29 @@
 
         .admin-logo {
             display: flex;
-            align-items: center;
-            gap: 0; /* Integrated single-unit brand gap */
+            align-items: baseline;
+            gap: 12px;
             font-weight: 800;
-            font-size: 1.15rem;
+            font-size: 1.4rem;
             letter-spacing: -0.5px;
-            margin-bottom: 2.2rem;
+            margin-bottom: 2.5rem;
             color: #fff;
             text-decoration: none;
+            padding-left: 5px;
         }
 
         .logo-img-admin {
-            height: 38px;
+            height: 42px;
             width: auto;
-            background: white;
-            padding: 2px;
-            border-radius: 8px;
             object-fit: contain;
-            transform: scale(2.2) translateX(-2px);
-            margin-right: -18px; /* Reduced from -24px to fix overlap */
+            filter: brightness(0) invert(1); /* Keep it white on dark background */
+            transform: scale(2.2) translateY(4px) translateX(-2px);
+            margin-right: -4px; /* Integrated brand gap */
+            transition: transform 0.3s;
+        }
+        
+        .admin-logo:hover .logo-img-admin {
+            transform: scale(2.3) translateY(4px) translateX(-2px);
         }
 
         .admin-nav {
@@ -535,8 +539,8 @@
     </style>
 </head>
     <div class="mobile-admin-bar">
-        <div class="admin-logo" style="margin:0; font-size:1rem; gap: 0; align-items: baseline;">
-            <img src="images/logo.png" alt="KNS Furnitech" class="logo-img" style="height: 32px; transform: scale(2.2) translateY(3px) translateX(-4px); margin-right: -10px;">
+        <div class="admin-logo" style="margin:0; font-size:1.2rem; gap: 10px; align-items: center;">
+            <img src="images/logo.png" alt="KNS Furnitech" class="logo-img" style="height: 32px; filter: brightness(0) invert(1); transform: none; margin: 0;">
             <span>KNS ADMIN</span>
         </div>
         <button onclick="toggleSidebar()" style="background:none; border:none; color:white; cursor:pointer;">
