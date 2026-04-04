@@ -84,23 +84,19 @@ const KNSData = (() => {
     try {
         const storedProducts = localStorage.getItem(P_KEY);
         if (!storedProducts) {
-            localStorage.setItem(P_KEY, JSON.stringify(DEFAULT_PRODUCTS));
-            _products = DEFAULT_PRODUCTS; // Update memory-backed store
+            // First run: Use defaults but don't commit to localStorage yet to allow sync to overwrite
+            _products = DEFAULT_PRODUCTS;
         } else {
             const existing = JSON.parse(storedProducts);
             if (Array.isArray(existing)) {
-                if (updated) localStorage.setItem(P_KEY, JSON.stringify(existing));
-                _products = existing; // Update memory-backed store
+                _products = existing;
             } else {
-                // If corrupted, reset to default
-                localStorage.setItem(P_KEY, JSON.stringify(DEFAULT_PRODUCTS));
-                _products = DEFAULT_PRODUCTS; // Update memory-backed store
+                _products = DEFAULT_PRODUCTS;
             }
         }
     } catch (e) {
         console.error("KNSData Init Error:", e);
-        localStorage.setItem(P_KEY, JSON.stringify(DEFAULT_PRODUCTS));
-        _products = DEFAULT_PRODUCTS; // Update memory-backed store
+        _products = DEFAULT_PRODUCTS;
     }
 
     // Initialize Reviews
@@ -311,12 +307,14 @@ const KNSData = (() => {
             // 0. Check Metadata First (Smart Sync)
             const remoteMeta = await KNSDb.getSyncMetadata();
             
-            if (remoteMeta && localMeta.version === remoteMeta.version) {
+            // FORCE SYNC if first time this session or if version mismatch
+            if (remoteMeta && localMeta.version === remoteMeta.version && window._kns_synced) {
                 console.log("⚡ KNSData: Local data is up-to-date. Skipping full sync.");
                 return true;
             }
 
-            console.log("🔄 KNSData: Change detected or first sync. Fetching full collections...");
+            console.log("🔄 KNSData: Change detected or first session sync. Fetching full collections...");
+            window._kns_synced = true;
 
             // 1. Sync Products
             const cloudProducts = await KNSDb.getDocuments('products');
