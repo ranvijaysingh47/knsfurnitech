@@ -3786,10 +3786,14 @@ button.quote-btn:hover {
         margin-bottom: 2rem;
     }
 
+    .ecommerce-footer {
+        padding-top: 1rem;
+    }
+
     .footer-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 2.5rem;
-        padding-top: 3rem;
+        padding-top: 0;
     }
 
     .footer-brand {
