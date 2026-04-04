@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (window.grecaptcha) {
                 grecaptcha.ready(async () => {
                     try {
-                        const token = await grecaptcha.execute('6LfgZqYsAAAAAIARfVd_5xzKFB-IKP513QVxUglh', {action: 'catalog_request'});
+                        const token = await grecaptcha.execute('6LfgZqYsAAAAAIARfVd_5xzKFB-IKP513QVxUgIh', {action: 'catalog_request'});
                         console.log("reCAPTCHA verified for catalog:", token);
                         
                         // Proceed with submission

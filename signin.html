@@ -63,7 +63,7 @@
 
                     <div class="auth-options">
                         <label class="auth-checkbox">
-                            <input type="checkbox"> Remember me
+                            <input type="checkbox" id="rememberMe"> Remember me
                         </label>
                         <a href="forgot-password.html" class="auth-forgot">Forgot Password?</a>
                     </div>
@@ -112,14 +112,30 @@
             e.preventDefault();
             const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value;
+            const rememberMe = document.getElementById('rememberMe').checked;
             
             try {
-                // reCAPTCHA v3 Execution
-                const token = await grecaptcha.execute('6LfgZqYsAAAAAIARfVd_5xzKFB-IKP513QVxUglh', {action: 'LOGIN'});
-                console.log("reCAPTCHA verified:", token);
+                let token = null;
+                // Resilient reCAPTCHA v3 execution
+                if (typeof grecaptcha !== 'undefined' && grecaptcha.ready) {
+                    try {
+                        await new Promise(resolve => grecaptcha.ready(resolve));
+                        token = await grecaptcha.execute('6LfgZqYsAAAAAIARfVd_5xzKFB-IKP513QVxUgIh', {action: 'LOGIN'});
+                        console.log("reCAPTCHA verified:", token);
+                    } catch (captchaErr) {
+                        console.warn("reCAPTCHA check skipped (Key/Environment issue):", captchaErr.message);
+                    }
+                }
 
                 const res = await KNSAuth.login(email, password);
                 if (res.ok) {
+                    // Remember Me Logic
+                    if (rememberMe) {
+                        localStorage.setItem('kns_remember_email', email);
+                    } else {
+                        localStorage.removeItem('kns_remember_email');
+                    }
+
                     // Show Loading Overlay
                     document.getElementById('loadingOverlay').classList.add('active');
                     
@@ -136,8 +152,9 @@
                     errorEl.style.display = 'block';
                 }
             } catch (err) {
+                console.error("Login Flow Error:", err);
                 const errorEl = document.getElementById('loginError');
-                errorEl.textContent = 'An unexpected error occurred. Please try again.';
+                errorEl.textContent = 'Connection error. (' + (err.message || 'Unknown') + ')';
                 errorEl.style.display = 'block';
             }
         }
@@ -157,6 +174,13 @@
             } catch (err) {
                 console.error("Google Login Error:", err);
             }
+        }
+
+        // Remember Me Initialization
+        const savedEmail = localStorage.getItem('kns_remember_email');
+        if (savedEmail) {
+            document.getElementById('loginEmail').value = savedEmail;
+            document.getElementById('rememberMe').checked = true;
         }
 
         window.handlePageLogin = handlePageLogin;

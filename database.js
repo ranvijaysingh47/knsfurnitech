@@ -165,7 +165,7 @@ const KNSDb = (() => {
             if (!db || !uid) return null;
             const docRef = db.doc(db.instance, "users", uid, "private", key);
             const docSnap = await db.getDoc(docRef);
-            return docSnap.exists() ? docSnap.data().data : null;
+            return docSnap.exists ? docSnap.data().data : null;
         } catch (e) {
             console.error(`Error getting user ${key}:`, e);
             return null;
@@ -230,7 +230,7 @@ const KNSDb = (() => {
 
             const docRef = db.doc(db.instance, collName, id);
             const docSnap = await db.getDoc(docRef);
-            if (docSnap.exists()) {
+            if (docSnap.exists) {
                 return { id: docSnap.id, ...docSnap.data() };
             }
             return null;

@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- reCAPTCHA v3 -->
-    <script src="https://www.google.com/recaptcha/api.js?render=6LfgZqYsAAAAAIARfVd_5xzKFB-IKP513QVxUglh"></script>
+    <script src="https://www.google.com/recaptcha/api.js?render=6LfgZqYsAAAAAIARfVd_5xzKFB-IKP513QVxUgIh"></script>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="auth.css">
 </head>
@@ -131,8 +131,14 @@
             }
 
             try {
-                // reCAPTCHA v3 Execution
-                const token = await grecaptcha.execute('6LfgZqYsAAAAAIARfVd_5xzKFB-IKP513QVxUglh', {action: 'signup'});
+                let token = null;
+                // reCAPTCHA v3 Execution (Resilient)
+                if (typeof grecaptcha !== 'undefined' && grecaptcha.ready) {
+                    try {
+                        await new Promise(resolve => grecaptcha.ready(resolve));
+                        token = await grecaptcha.execute('6LfgZqYsAAAAAIARfVd_5xzKFB-IKP513QVxUgIh', {action: 'signup'});
+                    } catch (cErr) { console.warn("Signup captcha skipped:", cErr.message); }
+                }
                 
                 const res = await KNSAuth.register(name, email, password, token);
                 if (res.ok) {

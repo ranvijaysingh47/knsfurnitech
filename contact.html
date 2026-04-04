@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="ecommerce.css">
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- reCAPTCHA v3 -->
-    <script src="https://www.google.com/recaptcha/api.js?render=6LfgZqYsAAAAAIARfVd_5xzKFB-IKP513QVxUglh"></script>
+    <script src="https://www.google.com/recaptcha/api.js?render=6LfgZqYsAAAAAIARfVd_5xzKFB-IKP513QVxUgIh"></script>
     <style>
         .contact-wrapper {
             max-width: 1200px;
@@ -348,9 +348,14 @@
                                 const form = e.target;
 
                                 try {
-                                    // reCAPTCHA v3 Execution
-                                    const token = await grecaptcha.execute('6LfgZqYsAAAAAIARfVd_5xzKFB-IKP513QVxUglh', {action: 'contact_form'});
-                                    console.log("reCAPTCHA verified for contact:", token);
+                                    let token = null;
+                                    // reCAPTCHA v3 Execution (Resilient)
+                                    if (typeof grecaptcha !== 'undefined' && grecaptcha.ready) {
+                                        try {
+                                            await new Promise(resolve => grecaptcha.ready(resolve));
+                                            token = await grecaptcha.execute('6LfgZqYsAAAAAIARfVd_5xzKFB-IKP513QVxUgIh', {action: 'contact_form'});
+                                        } catch (cErr) { console.warn("Contact captcha skipped:", cErr.message); }
+                                    }
 
                                     const formData = new FormData(form);
                                     const data = {
@@ -374,8 +379,14 @@
                                 const form = e.target;
 
                                 try {
-                                    // reCAPTCHA v3 Execution
-                                    const token = await grecaptcha.execute('6LfgZqYsAAAAAIARfVd_5xzKFB-IKP513QVxUglh', {action: 'quote_request'});
+                                    let token = null;
+                                    // reCAPTCHA v3 Execution (Resilient)
+                                    if (typeof grecaptcha !== 'undefined' && grecaptcha.ready) {
+                                        try {
+                                            await new Promise(resolve => grecaptcha.ready(resolve));
+                                            token = await grecaptcha.execute('6LfgZqYsAAAAAIARfVd_5xzKFB-IKP513QVxUgIh', {action: 'quote_request'});
+                                        } catch (cErr) { console.warn("Quote captcha skipped:", cErr.message); }
+                                    }
                                     
                                     const data = {
                                         name: form.querySelector('input[placeholder="Your Name"]').value,
