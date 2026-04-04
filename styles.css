@@ -219,7 +219,7 @@ body.page-exit {
 
 .logo {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     /* Align icon bottom with text baseline */
     gap: 0;
     /* Integrated single-unit brand gap */
@@ -239,7 +239,7 @@ body.page-exit {
     object-fit: contain;
     mix-blend-mode: multiply;
     transition: transform 0.3s ease;
-    transform: scale(2.2) translateY(4px) translateX(-2px);
+    transform: scale(2.2) translateY(-2px) translateX(-2px);
     /* Pushed down to lock onto baseline */
     margin-right: -9px;
     /* Further reduced from -20px to prevent overlap */
@@ -434,8 +434,8 @@ body.page-exit {
 
     .logo {
         display: flex;
-        align-items: baseline;
-        gap: 0px;
+        align-items: center;
+        gap: 0;
     }
 
     .logo span {
@@ -448,7 +448,7 @@ body.page-exit {
         height: 42px;
         width: auto;
         object-fit: contain;
-        transform: scale(2.2) translateY(4px) translateX(-2px);
+        transform: scale(2.2) translateY(-2px) translateX(-2px);
         margin-right: -10px;
     }
 
