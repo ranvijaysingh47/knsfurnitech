@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Clients - KNS Furnitech</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="ecommerce.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* High-Priority Slider Arrow Visibility Fix */
+        .client-slider-wrapper .slider-arrow {
+            background-color: #8CC63F !important; /* Vibrant Brand Green */
+            color: #FFFFFF !important;
+            border: 2px solid #FFFFFF !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25) !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            display: flex !important;
+            width: 60px !important;
+            height: 60px !important;
+            z-index: 100 !important;
+        }
+        .client-slider-wrapper .slider-arrow svg,
+        .client-slider-wrapper .slider-arrow i {
+            color: #FFFFFF !important;
+            stroke: #FFFFFF !important;
+            width: 32px !important;
+            height: 32px !important;
+        }
+        .client-slider-wrapper .slider-arrow:hover {
+            background-color: #1A1A1A !important;
+            border-color: #1A1A1A !important;
+            transform: translateY(-50%) scale(1.15) !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top utility bar -->
+    <div class="top-bar">
+        Welcome to KNS Furnitech. Enjoy Hassle-free Exchange and Delivery!
+    </div>
+
+    <!-- Main Navigation -->
+    <header class="ecommerce-nav">
+        <div class="main-header">
+            <a href="index.html" class="logo">
+                <img src="images/logo.png" alt="KNS Furnitech" class="logo-img">
+                <span>KNS FURNITECH</span>
+            </a>
+
+            <!-- Animated Desktop Search (Centered - Hidden on Mobile) -->
+            <div class="desktop-search-container">
+                <form class="search-box-animated" action="search-results.html" method="GET">
+                    <input type="text" name="q" placeholder="Search website..." required>
+                    <button type="submit" aria-label="Search"><i data-lucide="search" size="20"></i></button>
+                </form>
+            </div>
+            
+            <div class="user-actions kns-nav-icons">
+                <span class="kns-auth-slot"></span>
+                <a href="orders.html" class="kns-icon-btn" title="My Orders">
+                    <i data-lucide="package" size="22"></i>
+                </a>
+                <a href="track-order.html" class="kns-icon-btn" title="Track Order">
+                    <i data-lucide="truck" size="22"></i>
+                </a>
+                <a href="wishlist.html" class="kns-icon-btn" title="Wishlist">
+                    <i data-lucide="heart" size="22"></i>
+                    <span class="kns-wish-badge">0</span>
+                </a>
+                <button class="kns-icon-btn" data-open-cart title="Cart">
+                    <i data-lucide="shopping-cart" size="22"></i>
+                    <span class="kns-cart-badge">0</span>
+                </button>
+                <!-- Premium Hamburger Toggle -->
+                <button class="hamburger-btn" title="Menu">
+                    <i data-lucide="menu" size="24"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Categories Mega Nav -->
+        <nav class="categories-nav">
+            <a href="shop.html">All</a>
+            <a href="shop.html?cat=Executive%20Chair">Executive Chair</a>
+            <a href="shop.html?cat=Workstation%20Chair">Workstation Chair</a>
+            <a href="shop.html?cat=Plastic%20Metal%20-%20Cafe%20Chair">Cafe Chair</a>
+            <a href="shop.html?cat=Bar%20Stool%20Chair">Bar Stool</a>
+            <a href="shop.html?cat=Puffy%20Table%20Chair">Puffy Table</a>
+            <a href="shop.html?cat=Sofa%20Lounge%20Seating">Sofa Lounge</a>
+            <a href="shop.html?cat=Educational%20Furniture">Educational</a>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Page Hero -->
+        <section class="page-hero" style="background: linear-gradient(rgba(0,0,0,0.65),rgba(0,0,0,0.65)), url('https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1920&q=80') center/cover; color: white; padding: 10rem 5% 6rem; text-align: center; position: relative; overflow: hidden;">
+            <!-- Breadcrumb -->
+            <nav aria-label="breadcrumb">
+                <ol class="kns-breadcrumb centered on-dark animate-scale-up">
+                    <li><a href="index.html"><i data-lucide="home" size="14" style="margin-right:6px;"></i> Home</a></li>
+                    <li class="sep"><i data-lucide="chevron-right" size="14"></i></li>
+                    <li class="cur">Our Clients</li>
+                </ol>
+            </nav>
+            <div style="position: relative; z-index: 2;" class="animate-on-scroll">
+                <h1 style="font-size: 3.5rem; font-weight: 700; margin-bottom: 1rem;">Our Esteemed Clients</h1>
+                <p style="font-size: 1.2rem; max-width: 600px; margin: 0 auto; color: #ccc;">Trusted by India's leading enterprises, luxury hotels, and modern households.</p>
+            </div>
+        </section>
+
+        <!-- Clients Grid Marquee -->
+        <section class="section-wrapper bg-white" style="padding: 6rem 0; text-align: center; overflow: hidden;">
+            <div class="client-slider-wrapper">
+                <button class="slider-arrow prev" id="clients-prev" aria-label="Previous">
+                    <i data-lucide="chevron-left" size="24"></i>
+                </button>
+                
+                <div class="client-slider-viewport" id="clients-slider">
+                    <div class="client-logo-card-animated" title="Nilkamal Ltd">
+                        <img src="https://www.companieslogo.com/img/orig/NILKAMAL.NS_BIG-fccaa894.png" alt="Nilkamal Ltd Logo">
+                    </div>
+                    <div class="client-logo-card-animated" title="Tech Mahindra Ltd">
+                        <img src="https://www.companieslogo.com/img/orig/TECHM.NS_BIG-281ab5b9.png" alt="Tech Mahindra Ltd Logo">
+                    </div>
+                    <div class="client-logo-card-animated" title="State Bank of India">
+                        <img src="https://www.companieslogo.com/img/orig/SBIN.NS_BIG-b060a2ff.png" alt="State Bank of India Logo">
+                    </div>
+                    <div class="client-logo-card-animated" title="Aditya Birla Capital">
+                        <img src="images/clients/aditya_birla_logo.png" alt="Aditya Birla Logo">
+                    </div>
+                    <div class="client-logo-card-animated" title="Meril Healthcare">
+                        <img src="https://www.merillife.com/_next/static/media/new-logo.b0d3f168.png" alt="Meril Healthcare Logo">
+                    </div>
+                    <div class="client-logo-card-animated" title="Eurotech Design Systems">
+                        <img src="https://eurotechworld.com/wp-content/uploads/2022/09/EUROTECH-LOGO-CDR.png" alt="Eurotech Design Systems Logo">
+                    </div>
+                    <div class="client-logo-card-animated" title="Systems Plus Solutions">
+                        <img src="https://systems-plus.com/wp-content/themes/systemsplus/images/splus_logo_blue.svg" alt="Systems Plus Logo">
+                    </div>
+                    <div class="client-logo-card-animated" title="Furlenco">
+                        <img src="images/clients/furlenco_logo.png" alt="Furlenco Logo">
+                    </div>
+                    <div class="client-logo-card-animated" title="Eurocaustic Products">
+                        <img src="https://www.eplgroup.co.in/assets/images/footer/Green.png" alt="Eurocaustic Products Logo">
+                    </div>
+                </div>
+
+                <button class="slider-arrow next" id="clients-next" aria-label="Next">
+                    <i data-lucide="chevron-right" size="24"></i>
+                </button>
+            </div>
+            
+            <div style="margin-top: 5rem;" class="animate-on-scroll">
+                <h3 style="font-size: 2rem; color: var(--brand-dark); margin-bottom: 1rem;">Looking for B2B Purchasing?</h3>
+                <a href="contact.html" class="btn-primary" style="text-decoration: none; display: inline-block;">Contact Corporate Sales</a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Catalog Email Capture Modal -->
+    <div id="catalog-modal" class="catalog-modal">
+        <div class="catalog-modal-content">
+            <button class="catalog-modal-close" onclick="closeCatalogModal()">&times;</button>
+            <div class="catalog-modal-icon">
+                <i data-lucide="mail" size="48"></i>
+            </div>
+            <h3>Almost There!</h3>
+            <p>Please enter your email address to receive your free 2026 KNS Furnitech catalog.</p>
+            <form id="catalog-email-form" onsubmit="handleCatalogEmailSubmit(event)">
+                <input type="email" id="catalog-email" class="catalog-input" placeholder="Your Work Email" required>
+                <button type="submit" class="btn-primary" style="width:100%; justify-content:center;">Get My Catalog &rarr;</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Comprehensive Godrej-Style Footer -->
+    <footer class="ecommerce-footer">
+        <div class="footer-grid">
+            <div class="footer-brand animate-on-scroll">
+                <a href="index.html" class="logo">
+                    <img src="images/logo.png" alt="KNS Furnitech" class="logo-img">
+                    <span>KNS FURNITECH</span>
+                </a>
+                <p>Elevating living spaces across India with premium, modular, and sustainable furniture. Discover the perfect blend of modern aesthetics and unparalleled comfort.</p>
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+                    </a>
+                    <a href="#" aria-label="Instagram">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg>
+                    </a>
+                    <a href="#" aria-label="Twitter">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path></svg>
+                    </a>
+                    <a href="https://linkedin.com/company/kns-furnitech" target="_blank" aria-label="LinkedIn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="footer-col animate-on-scroll">
+                <h4>Shop Categories</h4>
+                <ul class="footer-links">
+                    <li><a href="shop.html?cat=Executive+Chair">Executive Chair</a></li>
+                    <li><a href="shop.html?cat=Workstation+Chair">Workstation Chair</a></li>
+                    <li><a href="shop.html?cat=Plastic+Metal+-+Cafe+Chair">Plastic Metal - Cafe Chair</a></li>
+                    <li><a href="shop.html?cat=Bar+Stool+Chair">Bar Stool Chair</a></li>
+                    <li><a href="shop.html?cat=Puffy+Table+Chair">Puffy Table Chair</a></li>
+                    <li><a href="shop.html?cat=Sofa+Lounge+Seating">Sofa Lounge Seating</a></li>
+                    <li><a href="shop.html?cat=Educational+Furniture">Educational Furniture</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col animate-on-scroll">
+                <h4>Customer Service</h4>
+                <ul class="footer-links">
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="blog.html">Our Blog</a></li>
+                    <li><a href="clients.html">Our Clients</a></li>
+                    <li><a href="catalogs.html">Catalogs</a></li>
+                    <li><a href="track-order.html">Track Order</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col animate-on-scroll">
+                <h4>Newsletter</h4>
+                <p style="color: #aaa; margin-bottom: 1rem; font-size: 0.95rem;">Subscribe to get special offers, free giveaways, and design inspiration.</p>
+                <form class="newsletter-form" onsubmit="event.preventDefault();">
+                    <input type="email" placeholder="Enter your email">
+                    <button type="submit">Subscribe</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2026 KNS Furnitech. All Rights Reserved.</p>
+            <div class="footer-bottom-links">
+                <a href="privacy-policy.html">Privacy Policy</a>
+                <a href="terms-of-service.html">Terms of Service</a>
+                <a href="#">Sitemap</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Auth overlay + modal -->
+    <div id="kns-auth-overlay" onclick="closeAuthModal()"></div>
+    <div id="kns-auth-modal">
+        <div class="kns-auth-header">
+            <span class="logo-sm">KNS FURNITECH</span>
+            <button class="kns-auth-close" onclick="closeAuthModal()" aria-label="Close">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+        <div class="kns-auth-tabs">
+            <button class="kns-auth-tab active" data-tab="login" onclick="switchAuthTab('login')">Sign In</button>
+            <button class="kns-auth-tab" data-tab="register" onclick="switchAuthTab('register')">Create Account</button>
+        </div>
+        <div class="kns-auth-body">
+            <!-- Login -->
+            <form id="kns-login-form" class="kns-auth-form active" onsubmit="handleLogin(event)">
+                <div class="kns-auth-error" id="loginError"></div>
+                <input type="email" id="loginEmail" placeholder="Email Address" required autocomplete="email">
+                <input type="password" id="loginPassword" placeholder="Password" required autocomplete="current-password">
+                <button type="submit" class="kns-auth-submit">Sign In &rarr;</button>
+                <div class="kns-auth-divider">New to KNS?</div>
+                <button type="button" class="kns-auth-submit" style="background:#f5f5f5; color:#1A1A1A;" onclick="switchAuthTab('register')">Create an Account</button>
+            </form>
+            <!-- Register -->
+            <form id="kns-register-form" class="kns-auth-form" onsubmit="handleRegister(event)">
+                <div class="kns-auth-error" id="regError"></div>
+                <input type="text" id="regName" placeholder="Full Name" required autocomplete="name">
+                <input type="email" id="regEmail" placeholder="Email Address" required autocomplete="email">
+                <input type="password" id="regPassword" placeholder="Password (min 6 chars)" required autocomplete="new-password">
+                <input type="password" id="regConfirm" placeholder="Confirm Password" required autocomplete="new-password">
+                <button type="submit" class="kns-auth-submit">Create Account &rarr;</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Cart Drawer Overlay -->
+    <div id="kns-drawer-overlay"></div>
+    <!-- Cart Drawer Panel -->
+    <aside id="kns-cart-drawer">
+        <div class="kns-drawer-head">
+            <h3>🛒 Your Cart</h3>
+            <button id="kns-drawer-close" aria-label="Close cart">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+        <div id="kns-drawer-items"></div>
+        <div class="kns-drawer-foot">
+            <div class="kns-drawer-subtotal-row">
+                <span>Subtotal</span>
+                <span id="kns-drawer-subtotal">₹0</span>
+            </div>
+            <div class="kns-drawer-actions">
+                <a href="cart.html" class="kns-ec-btn kns-ec-btn-outline">View Cart</a>
+                <a href="cart.html" class="kns-ec-btn kns-ec-btn-primary">Checkout →</a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Inquiry Modal -->
+    <div id="quote-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close" onclick="document.getElementById('quote-modal').classList.remove('active')"><i data-lucide="x" size="24"></i></button>
+            <h2 style="margin-bottom: 0.5rem; color: var(--brand-dark);">Request a Quote</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 2rem;">Our design consultants will get back to you within 24 hours.</p>
+            <form class="quote-form" onsubmit="event.preventDefault(); alert('Your inquiry has been sent! Our team will contact you shortly.'); document.getElementById('quote-modal').classList.remove('active');">
+                <input type="text" placeholder="Your Name" required>
+                <input type="email" placeholder="Email Address" required>
+                <input type="tel" placeholder="Phone Number">
+                <textarea placeholder="Tell us about the products or project you are interested in..." rows="4" required></textarea>
+                <button type="submit" class="btn-primary" style="width: 100%;">Submit Inquiry</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Essential Scripts -->
+    <script src="ui.js"></script>
+    <script src="cart.js"></script>
+    <script src="wishlist.js"></script>
+    <script src="auth.js"></script>
+    <script>
+        lucide.createIcons();
+
+        // Clients Slider Logic
+        const slider = document.getElementById('clients-slider');
+        const prevBtn = document.getElementById('clients-prev');
+        const nextBtn = document.getElementById('clients-next');
+
+        if (slider && prevBtn && nextBtn) {
+            const scrollAmount = 350; // Distance to scroll on each click
+
+            nextBtn.addEventListener('click', () => {
+                slider.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+            });
+
+            prevBtn.addEventListener('click', () => {
+                slider.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+            });
+
+            // Optional: Hide/Show arrows based on scroll position
+            slider.addEventListener('scroll', () => {
+                const maxScrollLeft = slider.scrollWidth - slider.clientWidth;
+                prevBtn.style.opacity = slider.scrollLeft <= 0 ? '0.3' : '1';
+                prevBtn.style.pointerEvents = slider.scrollLeft <= 0 ? 'none' : 'auto';
+                
+                nextBtn.style.opacity = slider.scrollLeft >= maxScrollLeft ? '0.3' : '1';
+                nextBtn.style.pointerEvents = slider.scrollLeft >= maxScrollLeft ? 'none' : 'auto';
+            });
+
+            // Initial check
+            const maxScrollLeft = slider.scrollWidth - slider.clientWidth;
+            prevBtn.style.opacity = '0.3';
+            prevBtn.style.pointerEvents = 'none';
+        }
+    </script>
+</body>
+</html>

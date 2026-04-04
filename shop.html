@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop All - KNS Furnitech</title>
+    <meta name="description"
+        content="Browse our complete collection of premium office and home furniture. Filter by category, material, and price.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="ecommerce.css">
+</head>
+
+<body class="bg-light">
+
+    <!-- Top utility bar -->
+    <div class="top-bar">
+        Welcome to KNS Furnitech. Enjoy Hassle-free Exchange & Standard Delivery!
+    </div>
+
+    <!-- Main Navigation -->
+    <header class="ecommerce-nav">
+        <div class="main-header">
+            <!-- Brand Logo from User Spec -->
+            <a href="index.html" class="logo">
+                <img src="images/logo.png" alt="KNS Furnitech" class="logo-img">
+                <span>KNS FURNITECH</span>
+            </a>
+
+            <!-- Animated Desktop Search (Centered - Hidden on Mobile) -->
+            <div class="desktop-search-container">
+                <form class="search-box-animated" action="search-results.html" method="GET">
+                    <input type="text" name="q" placeholder="Search website..." required>
+                    <button type="submit" aria-label="Search"><i data-lucide="search" size="20"></i></button>
+                </form>
+            </div>
+
+            <!-- User Actions -->
+            <div class="user-actions kns-nav-icons">
+                <!-- Auth slot -->
+                <span class="kns-auth-slot"></span>
+                <a href="orders.html" class="kns-icon-btn" title="My Orders">
+                    <i data-lucide="package" size="22"></i>
+                </a>
+                <a href="track-order.html" class="kns-icon-btn" title="Track Order">
+                    <i data-lucide="truck" size="22"></i>
+                </a>
+                <a href="wishlist.html" class="kns-icon-btn" title="Wishlist">
+                    <i data-lucide="heart" size="22"></i>
+                    <span class="kns-wish-badge">0</span>
+                </a>
+                <button class="kns-icon-btn" data-open-cart title="Cart">
+                    <i data-lucide="shopping-cart" size="22"></i>
+                    <span class="kns-cart-badge">0</span>
+                </button>
+                <!-- Premium Hamburger Toggle -->
+                <button class="hamburger-btn" title="Menu">
+                    <i data-lucide="menu" size="24"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Categories Mega Nav -->
+        <nav class="categories-nav">
+            <a href="shop.html">All</a>
+            <a href="shop.html?cat=Executive+Chair">Executive Chair</a>
+            <a href="shop.html?cat=Workstation+Chair">Workstation Chair</a>
+            <a href="shop.html?cat=Plastic+Metal+-+Cafe+Chair">Plastic Metal - Cafe Chair</a>
+            <a href="shop.html?cat=Bar+Stool+Chair">Bar Stool Chair</a>
+            <a href="shop.html?cat=Puffy+Table+Chair">Puffy Table Chair</a>
+            <a href="shop.html?cat=Sofa+Lounge+Seating">Sofa Lounge Seating</a>
+            <a href="shop.html?cat=Educational+Furniture">Educational Furniture</a>
+        </nav>
+    </header>
+
+    <!-- Premium Hero Section (Matched to Contact Us) -->
+    <section class="page-hero animate-on-scroll"
+        style="margin-top: -4.5rem; padding-top: 10rem; position: relative; background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1497215728101-856f4ea42174?w=1600&q=80') center/cover; color: white; padding: 10rem 5% 8rem; text-align: center; position: relative; overflow: hidden;">
+        <!-- Premium Breadcrumbs (Global Standard) -->
+        <ul class="kns-breadcrumb on-dark centered animate-slide-right">
+            <li><a href="index.html"><i data-lucide="home" size="14" style="margin-right:6px;"></i> Home</a><span
+                    class="sep"><i data-lucide="chevron-right" size="14"></i></span></li>
+            <li class="cur">Shop</li>
+        </ul>
+        <div style="position: relative; z-index: 2;" class="animate-scale-up">
+            <h1
+                style="font-size: 4rem; font-weight: 700; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 2px; font-family: 'Outfit', sans-serif;">
+                Shop</h1>
+            <p style="font-size: 1.2rem; color: #e0e0e0; max-width: 600px; margin: 0 auto; opacity: 0.9;">Discover
+                premium, modern, and ergonomic furniture collections.</p>
+        </div>
+    </section>
+
+    <main class="shop-layout">
+        <!-- Sidebar Filters -->
+        <aside class="shop-sidebar">
+            <div class="sidebar-block">
+                <h3>Filters</h3>
+                <button class="filter-reset-btn" onclick="resetFilters()">Reset All</button>
+            </div>
+
+            <div class="sidebar-block" style="margin-bottom: 2rem;">
+                <div class="search-box">
+                    <input type="text" id="shopSearch" placeholder="Search products..." oninput="applyFilters()">
+                    <i data-lucide="search" size="18"></i>
+                </div>
+            </div>
+
+            <div class="sidebar-block">
+                <h4>Categories</h4>
+                <div class="filter-group">
+                    <label class="filter-check"><input type="checkbox" value="Executive Chair"
+                            onchange="applyFilters()"> Executive Chair</label>
+                    <label class="filter-check"><input type="checkbox" value="Workstation Chair"
+                            onchange="applyFilters()"> Workstation Chair</label>
+                    <label class="filter-check"><input type="checkbox" value="Plastic Metal - Cafe Chair"
+                            onchange="applyFilters()"> Cafe Chair</label>
+                    <label class="filter-check"><input type="checkbox" value="Bar Stool Chair"
+                            onchange="applyFilters()"> Bar Stools</label>
+                    <label class="filter-check"><input type="checkbox" value="Puffy Table Chair"
+                            onchange="applyFilters()"> Puffy & Table</label>
+                    <label class="filter-check"><input type="checkbox" value="Sofa Lounge Seating"
+                            onchange="applyFilters()"> Sofa & Lounge</label>
+                    <label class="filter-check"><input type="checkbox" value="Educational Furniture"
+                            onchange="applyFilters()"> Educational</label>
+                </div>
+            </div>
+
+            <div class="sidebar-block">
+                <h4>Price Range</h4>
+                <div class="shop-price-range">
+                    <input type="range" id="priceRange" min="1000" max="200000" step="1000" value="200000"
+                        oninput="updatePrice(this.value); applyFilters()">
+                    <div class="price-labels">
+                        <span>₹ 1,000</span>
+                        <span id="priceLabel">₹ 2.0 L</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-block">
+                <h4>Material</h4>
+                <div class="filter-group">
+                    <label class="filter-check"><input type="checkbox" value="Solid Wood" onchange="applyFilters()">
+                        Solid Wood</label>
+                    <label class="filter-check"><input type="checkbox" value="Leatherette" onchange="applyFilters()">
+                        Leatherette</label>
+                    <label class="filter-check"><input type="checkbox" value="Fabric" onchange="applyFilters()">
+                        Fabric</label>
+                    <label class="filter-check"><input type="checkbox" value="Metal" onchange="applyFilters()">
+                        Metal</label>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <section class="shop-main">
+            <!-- Active Filter Tags -->
+            <div id="active-filters" class="active-filters-container"></div>
+
+            <div class="shop-toolbar">
+                <div class="shop-count">
+                    Showing <span id="resultCount">0</span> products
+                </div>
+                <div class="sort-box">
+                    <label for="shopSort">Sort By:</label>
+                    <select id="shopSort" class="shop-sort" onchange="applyFilters()">
+                        <option value="featured">Featured</option>
+                        <option value="newest">Newest Arrivals</option>
+                        <option value="price-asc">Price: Low to High</option>
+                        <option value="price-desc">Price: High to Low</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="shop-grid" id="shopGrid">
+                <!-- Products injected by JS -->
+            </div>
+
+            <!-- Load More Container -->
+            <div id="load-more-container" class="load-more-container" style="display:none;">
+                <button class="kns-ec-btn kns-ec-btn-outline load-more-btn" onclick="loadMore()">Load More
+                    Products</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Cart Drawer Overlay -->
+    <div id="kns-drawer-overlay"></div>
+    <!-- Cart Drawer Panel -->
+    <aside id="kns-cart-drawer">
+        <div class="kns-drawer-head">
+            <h3>🛒 Your Cart</h3>
+            <button id="kns-drawer-close" aria-label="Close cart">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor"
+                    stroke-width="2.5" viewBox="0 0 24 24">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+            </button>
+        </div>
+        <div id="kns-drawer-items"></div>
+        <div class="kns-drawer-foot">
+            <div class="kns-drawer-subtotal-row">
+                <span>Subtotal</span>
+                <span id="kns-drawer-subtotal">₹0</span>
+            </div>
+            <div class="kns-drawer-actions">
+                <a href="cart.html" class="kns-ec-btn kns-ec-btn-outline">View Cart</a>
+                <a href="cart.html" class="kns-ec-btn kns-ec-btn-primary">Checkout →</a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Godrej-Style Footer -->
+    <footer class="ecommerce-footer">
+        <div class="footer-grid">
+            <div class="footer-brand animate-on-scroll">
+                <a href="index.html" class="logo">
+                    <img src="images/logo.png" alt="KNS Furnitech" class="logo-img">
+                    <span>KNS FURNITECH</span>
+                </a>
+                <p>Elevating living spaces across India with premium, modular, and sustainable furniture. Discover the
+                    perfect blend of modern aesthetics and unparalleled comfort.</p>
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                        </svg>
+                    </a>
+                    <a href="#" aria-label="Instagram">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
+                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                            <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
+                        </svg>
+                    </a>
+                    <a href="#" aria-label="Twitter">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z">
+                            </path>
+                        </svg>
+                    </a>
+                    <a href="https://linkedin.com/company/kns-furnitech" target="_blank" aria-label="LinkedIn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z">
+                            </path>
+                            <rect width="4" height="12" x="2" y="9"></rect>
+                            <circle cx="4" cy="4" r="2"></circle>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <div class="footer-col animate-on-scroll">
+                <h4>Shop Categories</h4>
+                <ul class="footer-links">
+                    <li><a href="shop.html?cat=Executive+Chair">Executive Chair</a></li>
+                    <li><a href="shop.html?cat=Workstation+Chair">Workstation Chair</a></li>
+                    <li><a href="shop.html?cat=Plastic+Metal+-+Cafe+Chair">Plastic Metal - Cafe Chair</a></li>
+                    <li><a href="shop.html?cat=Bar+Stool+Chair">Bar Stool Chair</a></li>
+                    <li><a href="shop.html?cat=Puffy+Table+Chair">Puffy Table Chair</a></li>
+                    <li><a href="shop.html?cat=Sofa+Lounge+Seating">Sofa Lounge Seating</a></li>
+                    <li><a href="shop.html?cat=Educational+Furniture">Educational Furniture</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col animate-on-scroll">
+                <h4>Customer Service</h4>
+                <ul class="footer-links">
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="blog.html">Our Blog</a></li>
+                    <li><a href="clients.html">Our Clients</a></li>
+                    <li><a href="catalogs.html">Catalogs</a></li>
+                    <li><a href="track-order.html">Track Order</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col animate-on-scroll">
+                <h4>Newsletter</h4>
+                <p style="color: #aaa; margin-bottom: 1rem; font-size: 0.95rem;">Subscribe to get special offers, free
+                    giveaways, and design inspiration.</p>
+                <form class="newsletter-form" onsubmit="event.preventDefault();">
+                    <input type="email" placeholder="Enter your email">
+                    <button type="submit">Subscribe</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2026 KNS Furnitech. All Rights Reserved.</p>
+            <div class="footer-bottom-links">
+                <a href="privacy-policy.html">Privacy Policy</a>
+                <a href="terms-of-service.html">Terms of Service</a>
+                <a href="#">Sitemap</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Essential Modals -->
+    <div id="quote-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close" onclick="document.getElementById('quote-modal').classList.remove('active')"><i
+                    data-lucide="x" size="24"></i></button>
+            <h2 style="margin-bottom: 0.5rem; color: var(--brand-dark);">Custom Furniture Quote</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 2rem;">Our design consultants will get back to you
+                within 24 hours.</p>
+            <form class="quote-form"
+                onsubmit="event.preventDefault(); alert('Your inquiry has been sent! Our team will contact you shortly.'); document.getElementById('quote-modal').classList.remove('active');">
+                <input type="text" placeholder="Your Name" required>
+                <input type="email" placeholder="Email Address" required>
+                <input type="tel" placeholder="Phone Number">
+                <textarea placeholder="Tell us about the products or project you are interested in..." rows="4"
+                    required></textarea>
+                <button type="submit" class="btn-primary" style="width: 100%;">Submit Inquiry</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="kns-auth-overlay"></div>
+    <div id="kns-auth-modal">
+        <div class="kns-auth-header">
+            <div class="logo-sm">KNS FURNITECH</div>
+            <button class="kns-auth-close" onclick="closeAuthModal()"><i data-lucide="x"></i></button>
+        </div>
+        <div class="kns-auth-tabs">
+            <button class="kns-auth-tab active" data-tab="login">Login</button>
+            <button class="kns-auth-tab" data-tab="register">Register</button>
+        </div>
+        <div class="kns-auth-body">
+            <form id="kns-login-form" class="kns-auth-form active" onsubmit="handleLogin(event)">
+                <div class="kns-auth-error" id="loginError"></div>
+                <input type="email" id="loginEmail" placeholder="Email Address" required autocomplete="email">
+                <input type="password" id="loginPassword" placeholder="Password" required
+                    autocomplete="current-password">
+                <button type="submit" class="kns-auth-submit">Sign In &rarr;</button>
+            </form>
+            <form id="kns-register-form" class="kns-auth-form" onsubmit="handleRegister(event)">
+                <div class="kns-auth-error" id="regError"></div>
+                <input type="text" id="regName" placeholder="Full Name" required autocomplete="name">
+                <input type="email" id="regEmail" placeholder="Email Address" required autocomplete="email">
+                <input type="password" id="regPassword" placeholder="Password (min 6 chars)" required
+                    autocomplete="new-password">
+                <input type="password" id="regConfirm" placeholder="Confirm Password" required
+                    autocomplete="new-password">
+                <button type="submit" class="kns-auth-submit">Create Account &rarr;</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Quick View Modal -->
+    <div id="quick-view-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 900px; padding: 0; overflow: hidden; border-radius: 20px;">
+            <button class="modal-close" onclick="document.getElementById('quick-view-modal').classList.remove('active')"
+                style="top: 20px; right: 20px; z-index: 10; background: white; box-shadow: 0 4px 12px rgba(0,0,0,0.1);"><i
+                    data-lucide="x" size="24"></i></button>
+            <div id="qv-content"></div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK (Compat v9/v11) -->
+    <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore-compat.js"></script>
+
+    <script src="firebase-config.js?v=4"></script>
+    <script src="auth.js?v=4"></script>
+    <script src="admin_data.js?v=4"></script>
+    <script src="database.js?v=4"></script>
+    <script src="ui.js?v=4"></script>
+    <script src="cart.js?v=4"></script>
+    <script src="wishlist.js?v=4"></script>
+
+    <!-- Shop Logic -->
+    <script>
+        let PRODUCTS = KNSData.getProducts();
+
+        document.addEventListener('products:updated', () => {
+            console.log("Shop: Products updated from cloud.");
+            PRODUCTS = KNSData.getProducts();
+            applyFilters();
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            KNSData.syncWithCloud();
+        });
+
+        function stars(rating) {
+            const full = Math.floor(rating);
+            const half = rating % 1 >= 0.5;
+            let s = '';
+            for (let i = 0; i < full; i++) s += '<span class="kns-star">★</span>';
+            if (half) s += '<span class="kns-star-half">☆</span>';
+            return `<div class="kns-stars">${s}<span class="kns-star-count">(${rating})</span></div>`;
+        }
+
+        function renderCard(p) {
+            const disc = p.mrp ? Math.round((1 - p.price / p.mrp) * 100) : 0;
+            const badges = [];
+            if (p.isNew) badges.push('<span class="kns-status-badge kns-badge-new">New</span>');
+            if (p.badge === 'Trending' || p.badge === 'Best Seller' || p.badge === 'Premium') badges.push(`<span class="kns-status-badge kns-badge-hot">${p.badge}</span>`);
+            if (disc) badges.push(`<span class="kns-status-badge kns-badge-sale">${disc}% OFF</span>`);
+
+            return `
+              <div class="product-card" data-cat="${p.category}" data-price="${p.price}" data-material="${p.material}" data-new="${p.isNew}">
+                <div class="kns-card-badge-container">${badges.join('')}</div>
+                <div class="product-img-wrapper" style="position:relative; overflow:hidden; aspect-ratio:1;">
+                    <div class="product-img" style="background-image:url('${p.image}'); background-size:cover; background-position:center; height:100%;">
+                        <a href="product.html?id=${p.id}" class="kns-card-link" style="position:absolute;inset:0;z-index:1;"></a>
+                    </div>
+                    <button class="kns-wish-btn" data-wishlist-id="${p.id}" onclick="handleWish(event,'${p.id}')" style="z-index:5;">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                    </button>
+                    <button class="kns-quick-view-btn" onclick="openQuickView('${p.id}')" title="Quick View">
+                        <i data-lucide="eye" size="18"></i> Quick View
+                    </button>
+                </div>
+                <div class="product-info">
+                    <div class="product-category">${p.category}</div>
+                    ${stars(p.rating)}
+                    <h3 class="product-title">${p.name}</h3>
+                    <div class="product-price">₹ ${p.price.toLocaleString('en-IN')}${p.mrp ? ` <span class="original">₹ ${p.mrp.toLocaleString('en-IN')}</span>` : ''}</div>
+                    <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                        <button class="kns-add-cart-btn" onclick="handleAddToCart('${p.id}')" style="margin-top:0; flex: 1.2;">
+                            <i data-lucide="shopping-cart" size="16"></i> Add
+                        </button>
+                        <a href="product.html?id=${p.id}" class="kns-secondary-btn">
+                            Details
+                        </a>
+                    </div>
+                </div>
+              </div>`;
+        }
+
+        function openQuickView(id) {
+            const p = PRODUCTS.find(x => x.id === id);
+            if (!p) return;
+            const modal = document.getElementById('quick-view-modal');
+            const content = document.getElementById('qv-content');
+
+            content.innerHTML = `
+                <div class="qv-grid">
+                    <div class="qv-image" style="background-image:url('${p.image}')"></div>
+                    <div class="qv-info">
+                        <div class="product-category">${p.category}</div>
+                        <h2 style="font-size: 2rem; color: #1A1A1A; margin: 0.5rem 0;">${p.name}</h2>
+                        ${stars(p.rating)}
+                        <div class="product-price" style="font-size: 1.5rem; margin: 1rem 0;">₹ ${p.price.toLocaleString('en-IN')}${p.mrp ? ` <span class="original" style="font-size: 1.1rem;">₹ ${p.mrp.toLocaleString('en-IN')}</span>` : ''}</div>
+                        <p style="color: #666; line-height: 1.6; margin-bottom: 2rem;">Experience ultimate comfort and modern design with the ${p.name}. Crafted with premium materials to elevate your workspace or home.</p>
+                        <div style="display: flex; gap: 1rem;">
+                            <button class="kns-ec-btn kns-ec-btn-primary" onclick="handleAddToCart('${p.id}'); document.getElementById('quick-view-modal').classList.remove('active');" style="flex:1;">Add to Cart</button>
+                            <a href="product.html?id=${p.id}" class="kns-ec-btn kns-ec-btn-outline" style="flex:1;">View Full Details</a>
+                        </div>
+                    </div>
+                </div>
+            `;
+            modal.classList.add('active');
+            lucide.createIcons();
+        }
+
+        function handleAddToCart(id) {
+            const p = PRODUCTS.find(x => x.id === id);
+            if (!p) return;
+            KNSCart.addToCart({ id: p.id, name: p.name, category: p.category, price: p.price, image: p.image });
+        }
+        function handleWish(e, id) {
+            e.preventDefault();
+            const p = PRODUCTS.find(x => x.id === id);
+            if (!p) return;
+            KNSWishlist.toggle({ id: p.id, name: p.name, category: p.category, price: p.price, mrp: p.mrp, image: p.image, rating: p.rating });
+        }
+
+        function updatePrice(val) {
+            const lakh = val >= 100000;
+            document.getElementById('priceLabel').textContent = lakh
+                ? '₹ ' + (val / 100000).toFixed(1).replace('.0', '') + ' L'
+                : '₹ ' + Number(val).toLocaleString('en-IN');
+        }
+
+        let displayCount = 8;
+        let filteredProducts = [];
+
+        function applyFilters() {
+            const cats = [...document.querySelectorAll('.filter-check input[type=checkbox]:checked')].filter(c => !['Solid Wood', 'Leatherette', 'Fabric', 'Metal'].includes(c.value)).map(c => c.value);
+            const mats = [...document.querySelectorAll('.filter-check input[type=checkbox]:checked')].filter(c => ['Solid Wood', 'Leatherette', 'Fabric', 'Metal'].includes(c.value)).map(c => c.value);
+            const maxPrice = parseInt(document.getElementById('priceRange').value);
+            const search = document.getElementById('shopSearch').value.toLowerCase().trim();
+            const sort = document.getElementById('shopSort').value;
+
+            filteredProducts = PRODUCTS.filter(p => {
+                const matchesCat = !cats.length || cats.includes(p.category);
+                const matchesMat = !mats.length || mats.includes(p.material);
+                const matchesPrice = p.price <= maxPrice;
+                const matchesSearch = p.name.toLowerCase().includes(search) || p.category.toLowerCase().includes(search);
+                return matchesCat && matchesMat && matchesPrice && matchesSearch;
+            });
+
+            if (sort === 'price-asc') filteredProducts.sort((a, b) => a.price - b.price);
+            if (sort === 'price-desc') filteredProducts.sort((a, b) => b.price - a.price);
+            if (sort === 'newest') filteredProducts.sort((a, b) => (b.isNew || 0) - (a.isNew || 0));
+
+            renderActiveFilters(cats, mats);
+            renderResults();
+
+            /* Sync wishlist hearts */
+            document.querySelectorAll('[data-wishlist-id]').forEach(btn => {
+                btn.classList.toggle('is-wished', KNSWishlist.isWishlisted(btn.dataset.wishlistId));
+            });
+            lucide.createIcons();
+        }
+
+        function renderResults() {
+            const grid = document.getElementById('shopGrid');
+            const loadMoreBtn = document.getElementById('load-more-container');
+            document.getElementById('resultCount').textContent = filteredProducts.length;
+
+            const toShow = filteredProducts.slice(0, displayCount);
+            grid.innerHTML = toShow.length
+                ? toShow.map(renderCard).join('')
+                : '<div class="shop-no-results"><p>No products match your filters.</p></div>';
+
+            loadMoreBtn.style.display = (displayCount < filteredProducts.length) ? 'block' : 'none';
+            lucide.createIcons();
+        }
+
+        function loadMore() {
+            displayCount += 4;
+            renderResults();
+        }
+
+        function renderActiveFilters(cats, mats) {
+            const container = document.getElementById('active-filters');
+            let html = '';
+            cats.forEach(c => html += `<div class="filter-tag">${c}<span onclick="removeFilter('${c}')"><i data-lucide="x" size="14"></i></span></div>`);
+            mats.forEach(m => html += `<div class="filter-tag">${m}<span onclick="removeFilter('${m}')"><i data-lucide="x" size="14"></i></span></div>`);
+
+            container.innerHTML = html;
+            lucide.createIcons();
+        }
+
+        function removeFilter(val) {
+            const cb = document.querySelector(`.filter-check input[value="${val}"]`);
+            if (cb) cb.checked = false;
+            applyFilters();
+        }
+
+        function resetFilters() {
+            document.querySelectorAll('.filter-check input').forEach(c => c.checked = false);
+            document.getElementById('priceRange').value = 200000;
+            updatePrice(200000);
+            document.getElementById('shopSearch').value = '';
+            document.getElementById('shopSort').value = 'featured';
+            history.replaceState({}, '', 'shop.html');
+            applyFilters();
+        }
+
+        /* Init */
+        const urlParams = new URLSearchParams(location.search);
+        const urlCat = urlParams.get('cat');
+        const urlSearch = urlParams.get('search');
+
+        if (urlCat && urlCat !== 'all') {
+            const cb = document.querySelector(`.filter-check input[value="${urlCat}"]`);
+            if (cb) cb.checked = true;
+        }
+
+        if (urlSearch) {
+            document.getElementById('shopSearch').value = urlSearch;
+        }
+
+        applyFilters();
+    </script>
+</body>
+
+</html>

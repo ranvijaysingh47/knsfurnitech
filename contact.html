@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - KNS Furnitech</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="ecommerce.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .contact-wrapper {
+            max-width: 1200px;
+            margin: -100px auto 0;
+            position: relative;
+            z-index: 10;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+        }
+
+        .contact-info-card {
+            background: #ffffff;
+            padding: 3.5rem 3rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.08);
+            border: 1px solid rgba(0,0,0,0.03);
+            transition: transform 0.3s ease;
+        }
+
+        .contact-info-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            border-radius: 12px;
+            background: #fbfbfb;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .contact-item:hover {
+            background: #ffffff;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+            transform: translateX(10px);
+            border-color: rgba(140, 198, 63, 0.2);
+        }
+        
+        .contact-item i {
+            color: var(--brand-green);
+            transition: transform 0.3s ease;
+        }
+
+        .contact-item:hover i {
+            transform: scale(1.15) rotate(5deg);
+        }
+
+        .form-card {
+            background: #ffffff;
+            padding: 3.5rem 3rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.08);
+            border: 1px solid rgba(0,0,0,0.03);
+            transition: transform 0.3s ease;
+        }
+
+        .form-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .quote-form input, .quote-form textarea {
+            transition: all 0.3s ease;
+        }
+
+        .quote-form input:focus, .quote-form textarea:focus {
+            border-color: var(--brand-green) !important;
+            box-shadow: 0 0 0 4px rgba(140, 198, 63, 0.1) !important;
+            background: #ffffff !important;
+            transform: translateY(-2px);
+        }
+
+        .quote-form .btn-primary {
+            transition: all 0.3s ease;
+        }
+
+        .quote-form .btn-primary:hover {
+            box-shadow: 0 10px 30px rgba(140, 198, 63, 0.3);
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 900px) {
+            .contact-grid { grid-template-columns: 1fr; gap: 2rem; }
+            .contact-wrapper { margin-top: -50px; }
+            .contact-info-card, .form-card { padding: 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top utility bar -->
+    <div class="top-bar">
+        Welcome to KNS Furnitech. Enjoy Hassle-free Exchange & Standard Delivery!
+    </div>
+
+    <!-- Main Navigation -->
+    <header class="ecommerce-nav">
+        <div class="main-header">
+            <!-- Brand Logo from User Spec -->
+            <a href="index.html" class="logo">
+                <img src="images/logo.png" alt="KNS Furnitech" class="logo-img">
+                <span>KNS FURNITECH</span>
+            </a>
+
+            <!-- Animated Desktop Search (Centered - Hidden on Mobile) -->
+            <div class="desktop-search-container">
+                <form class="search-box-animated" action="search-results.html" method="GET">
+                    <input type="text" name="q" placeholder="Search website..." required>
+                    <button type="submit" aria-label="Search"><i data-lucide="search" size="20"></i></button>
+                </form>
+            </div>
+            
+            <!-- User Actions -->
+            <div class="user-actions kns-nav-icons">
+                <!-- Auth slot -->
+                <span class="kns-auth-slot"></span>
+                <a href="orders.html" class="kns-icon-btn" title="My Orders">
+                    <i data-lucide="package" size="22"></i>
+                </a>
+                <a href="track-order.html" class="kns-icon-btn" title="Track Order">
+                    <i data-lucide="truck" size="22"></i>
+                </a>
+                <a href="wishlist.html" class="kns-icon-btn" title="Wishlist">
+                    <i data-lucide="heart" size="22"></i>
+                    <span class="kns-wish-badge">0</span>
+                </a>
+                <button class="kns-icon-btn" data-open-cart title="Cart">
+                    <i data-lucide="shopping-cart" size="22"></i>
+                    <span class="kns-cart-badge">0</span>
+                </button>
+                <!-- Premium Hamburger Toggle -->
+                <button class="hamburger-btn" title="Menu">
+                    <i data-lucide="menu" size="24"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Categories Mega Nav -->
+        <nav class="categories-nav">
+            <a href="shop.html">All</a>
+            <a href="shop.html?cat=Executive%20Chair">Executive Chair</a>
+            <a href="shop.html?cat=Workstation%20Chair">Workstation Chair</a>
+            <a href="shop.html?cat=Plastic%20Metal%20-%20Cafe%20Chair">Cafe Chair</a>
+            <a href="shop.html?cat=Bar%20Stool%20Chair">Bar Stool</a>
+            <a href="shop.html?cat=Puffy%20Table%20Chair">Puffy Table</a>
+            <a href="shop.html?cat=Sofa%20Lounge%20Seating">Sofa Lounge</a>
+            <a href="shop.html?cat=Educational%20Furniture">Educational</a>
+        </nav>
+    </header>
+    <main>
+        <!-- Page Hero -->
+        <section class="page-hero animate-on-scroll" style="margin-top: -4.5rem; padding-top: 10rem; position: relative; background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=1920&h=600') center/cover; color: white; padding: 10rem 5% 8rem; text-align: center; position: relative; overflow: hidden;">
+            <!-- Premium Breadcrumbs (Global Standard) -->
+            <ul class="kns-breadcrumb on-dark centered animate-slide-right">
+                <li><a href="index.html"><i data-lucide="home" size="14" style="margin-right:6px;"></i> Home</a><span class="sep"><i data-lucide="chevron-right" size="14"></i></span></li>
+                <li class="cur">Contact Us</li>
+            </ul>
+            <div style="position: relative; z-index: 2;" class="animate-scale-up">
+                <h1 style="font-size: 4rem; font-weight: 700; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 2px;">Get in Touch</h1>
+                <p style="font-size: 1.2rem; color: #e0e0e0; max-width: 600px; margin: 0 auto;">Our ergonomic experts are here to collaborate with you to create your perfect workspace.</p>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section class="bg-white" style="padding: 0 5% 6rem;">
+            <div class="contact-wrapper">
+                
+                <!-- Google Maps Embed (Now First) -->
+                <div class="map-card animate-scale-up" style="margin-bottom: 4rem; background: #ffffff; padding: 1.5rem; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.08); border: 1px solid rgba(0,0,0,0.03);">
+                    <div style="border-radius: 12px; overflow: hidden; height: 400px; width: 100%;">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14981.25968060943!2d72.7790943!3d20.1626092!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x1505f7c55f8e862a!2sKNS%20FurniTech%20Pvt.Ltd!5e0!3m2!1sen!2sin!4v1586432560816!5m2!1sen!2sin" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </div>
+
+                <div class="contact-grid">
+                    <!-- Info Side -->
+                    <div class="contact-info-card animate-slide-right delay-1">
+                        <h2 style="font-size: 2rem; color: var(--brand-dark); margin-bottom: 2rem;">Manufacturing Facility</h2>
+                        
+                        <div class="contact-item">
+                            <i data-lucide="map-pin" size="32"></i>
+                            <div>
+                                <h3 style="margin-bottom: 0.5rem;">Corporate Manufacturing Unit</h3>
+                                <p style="color: var(--text-secondary); line-height: 1.6;">KNS Furnitech Pvt Ltd, Plot No. 603/1,<br>3rd Phase, GIDC, Umargam,<br>Gujarat 396171</p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-item">
+                            <i data-lucide="phone" size="32"></i>
+                            <div>
+                                <h3 style="margin-bottom: 0.5rem;">Direct Line</h3>
+                                <p style="color: var(--text-secondary);">Mobile: +91 73034 03811<br>Phone: +91 98243 75103</p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-item">
+                            <i data-lucide="mail" size="32"></i>
+                            <div>
+                                <h3 style="margin-bottom: 0.5rem;">Email Inquiry</h3>
+                                <p style="color: var(--text-secondary);">Knsfurnitech@gmail.com</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Add a divider -->
+                        <div style="width: 50px; height: 2px; background: rgba(255,255,255,0.2); margin: 3rem 0;"></div>
+                        
+                        <!-- Open Hours Mini-Card -->
+                        <h3 style="font-size: 1.2rem; margin-bottom: 1.2rem; font-weight: 500; letter-spacing: 1px; text-transform: uppercase;">Business Hours</h3>
+                        <div style="background: white; border-radius: 12px; padding: 1.5rem; margin-bottom: 2.5rem; color: var(--brand-dark); box-shadow: 0 6px 16px rgba(0,0,0,0.15);">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid var(--border-light); padding-bottom: 1rem;">
+                                <span style="font-weight: 700; font-size: 1.1rem; color: var(--brand-dark);">Wednesday - Monday</span>
+                                <span style="color: white; font-weight: 800; font-size: 1.05rem; background: var(--brand-green); padding: 0.4rem 1rem; border-radius: 6px;">9:00 AM - 6:00 PM</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-weight: 700; font-size: 1.1rem; color: var(--brand-dark);">Tuesday</span>
+                                <span style="color: #e53935; font-weight: 800; font-size: 1.05rem;">Closed</span>
+                            </div>
+                        </div>
+
+                        <!-- Social Media Strip -->
+                        <h3 style="font-size: 1.2rem; margin-bottom: 1.2rem; font-weight: 500; letter-spacing: 1px; text-transform: uppercase;">Connect With Us</h3>
+                        <div style="display: flex; gap: 1.2rem;">
+                            <a href="#" style="width: 50px; height: 50px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--brand-dark); text-decoration: none; transition: all 0.3s ease; box-shadow: 0 5px 15px rgba(0,0,0,0.2);" onmouseover="this.style.background='var(--brand-green)'; this.style.color='white'; this.style.transform='translateY(-4px)';" onmouseout="this.style.background='white'; this.style.color='var(--brand-dark)'; this.style.transform='translateY(0)';" aria-label="Instagram">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg>
+                            </a>
+                            <a href="#" style="width: 50px; height: 50px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--brand-dark); text-decoration: none; transition: all 0.3s ease; box-shadow: 0 5px 15px rgba(0,0,0,0.2);" onmouseover="this.style.background='var(--brand-green)'; this.style.color='white'; this.style.transform='translateY(-4px)';" onmouseout="this.style.background='white'; this.style.color='var(--brand-dark)'; this.style.transform='translateY(0)';" aria-label="Facebook">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+                            </a>
+                            <a href="#" style="width: 50px; height: 50px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--brand-dark); text-decoration: none; transition: all 0.3s ease; box-shadow: 0 5px 15px rgba(0,0,0,0.2);" onmouseover="this.style.background='var(--brand-green)'; this.style.color='white'; this.style.transform='translateY(-4px)';" onmouseout="this.style.background='white'; this.style.color='var(--brand-dark)'; this.style.transform='translateY(0)';" aria-label="LinkedIn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                            </a>
+                            <a href="#" style="width: 50px; height: 50px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--brand-dark); text-decoration: none; transition: all 0.3s ease; box-shadow: 0 5px 15px rgba(0,0,0,0.2);" onmouseover="this.style.background='var(--brand-green)'; this.style.color='white'; this.style.transform='translateY(-4px)';" onmouseout="this.style.background='white'; this.style.color='var(--brand-dark)'; this.style.transform='translateY(0)';" aria-label="Twitter">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path></svg>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Form Side -->
+                    <div class="form-card animate-slide-left delay-2">
+                        <h2 style="font-size: 2rem; color: var(--brand-dark); margin-bottom: 1rem;">Send a Message</h2>
+                        <p style="color: var(--text-secondary); margin-bottom: 2.5rem;">Fill out the form below and one of our consultants will reach out shortly.</p>
+                        
+                        <form id="mainContactForm" class="quote-form" style="display: flex; flex-direction: column; gap: 1rem;">
+                            <!-- Web3Forms Access Key -->
+                            <input type="hidden" name="access_key" value="719befc9-0973-47ab-a06f-710666b67857">
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                <input type="text" name="First Name" placeholder="First Name" style="width: 100%; padding: 1rem; border: 1px solid var(--border-light); border-radius: 8px; font-family: inherit; font-size: 0.95rem; background: #fafafa; outline: none;" required>
+                                <input type="text" name="Last Name" placeholder="Last Name" style="width: 100%; padding: 1rem; border: 1px solid var(--border-light); border-radius: 8px; font-family: inherit; font-size: 0.95rem; background: #fafafa; outline: none;" required>
+                            </div>
+                            <input type="email" name="Email" placeholder="Email Address" style="width: 100%; padding: 1rem; border: 1px solid var(--border-light); border-radius: 8px; font-family: inherit; font-size: 0.95rem; background: #fafafa; outline: none;" required>
+                            <input type="tel" name="Phone Number" placeholder="Phone Number" style="width: 100%; padding: 1rem; border: 1px solid var(--border-light); border-radius: 8px; font-family: inherit; font-size: 0.95rem; background: #fafafa; outline: none;">
+                            <textarea name="Message" placeholder="How can we help you today?" rows="6" style="width: 100%; padding: 1rem; border: 1px solid var(--border-light); border-radius: 8px; font-family: inherit; font-size: 0.95rem; background: #fafafa; outline: none; resize: vertical;" required></textarea>
+                            <button type="submit" class="btn-primary" style="width: 100%; padding: 1.2rem; font-size: 1.05rem; margin-top: 0.5rem; border-radius: 8px;">Send Message</button>
+                        </form>
+                        
+                        <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+                        <script>
+                            (function() {
+                                // EmailJS Credentials Integration
+                                const EMAILJS_PUBLIC_KEY = "2v821_ac_z9iaLaP5"; 
+                                const EMAILJS_SERVICE_ID = "service_hp4dkel"; 
+                                const EMAILJS_TEMPLATE_ID = "template_g1ac95b"; 
+                                
+                                emailjs.init(EMAILJS_PUBLIC_KEY);
+
+                                window.KNSContact = {
+                                    sendInquiry: async (data, form, submitBtn, originalBtnText) => {
+                                        submitBtn.innerText = 'Sending...';
+                                        submitBtn.disabled = true;
+
+                                        // 1. Save to Firestore (Database Backup)
+                                        try {
+                                            console.log("Saving to Firestore...");
+                                            await KNSDb.saveInquiry(data);
+                                        } catch (err) { console.error("Firestore Error:", err); }
+
+                                        // 2. Send via EmailJS (Option 3 - Frontend Notification)
+                                        let emailSent = false;
+                                        try {
+                                            await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+                                                from_name: data.name || `${data.firstName} ${data.lastName}`,
+                                                from_email: data.email,
+                                                phone: data.phone,
+                                                message: data.message,
+                                                to_name: "KNS Furnitech Support"
+                                            });
+                                            emailSent = true;
+                                            console.log("EmailJS Success!");
+                                        } catch (err) { console.warn("EmailJS failed, trying fallback...", err); }
+
+                                        // 3. Send via Hostinger PHP Mailer (Option 4 - Backend Notification)
+                                        if (!emailSent && window.location.protocol !== 'file:') {
+                                            try {
+                                                const phpRes = await fetch('mail.php', {
+                                                    method: 'POST',
+                                                    headers: { 'Content-Type': 'application/json' },
+                                                    body: JSON.stringify(data)
+                                                });
+                                                const phpResult = await phpRes.json();
+                                                if (phpResult.ok) emailSent = true;
+                                            } catch (err) { console.error("PHP Mailer Error:", err); }
+                                        }
+
+                                        if (emailSent || window.location.protocol === 'file:') {
+                                            alert('Thank you! Your inquiry has been received. Our team will contact you shortly.');
+                                            if (form) form.reset();
+                                            // Close modal if open
+                                            const modal = document.getElementById('quote-modal');
+                                            if (modal) modal.classList.remove('active');
+                                        } else {
+                                            // Ultimate Fallback: Mailto
+                                            const subject = encodeURIComponent("New Inquiry: " + (data.name || data.firstName));
+                                            const body = encodeURIComponent(`Message from ${data.name || data.firstName} (${data.email}):\n\n${data.message}`);
+                                            window.location.href = `mailto:Knsfurnitech@gmail.com?subject=${subject}&body=${body}`;
+                                        }
+
+                                        submitBtn.innerText = originalBtnText;
+                                        submitBtn.disabled = false;
+                                    }
+                                };
+                            })();
+
+                            // Main Contact Form Handler
+                            document.getElementById('mainContactForm').addEventListener('submit', function(e) {
+                                e.preventDefault();
+                                const form = e.target;
+                                const formData = new FormData(form);
+                                const data = {
+                                    firstName: formData.get('First Name'),
+                                    lastName: formData.get('Last Name'),
+                                    email: formData.get('Email'),
+                                    phone: formData.get('Phone Number'),
+                                    message: formData.get('Message')
+                                };
+                                KNSContact.sendInquiry(data, form, form.querySelector('button[type="submit"]'), 'Send Message');
+                            });
+
+                            // Quote Modal Handler
+                            document.getElementById('quote-form-actual').addEventListener('submit', function(e) {
+                                e.preventDefault();
+                                const form = e.target;
+                                const data = {
+                                    name: form.querySelector('input[placeholder="Your Name"]').value,
+                                    email: form.querySelector('input[placeholder="Email Address"]').value,
+                                    phone: form.querySelector('input[placeholder="Phone Number"]').value,
+                                    message: form.querySelector('textarea').value
+                                };
+                                KNSContact.sendInquiry(data, form, form.querySelector('button[type="submit"]'), 'Submit Inquiry');
+                            });
+                        </script>
+                </div>
+                </div> <!-- End contact-grid -->
+            </div> <!-- End contact-wrapper -->
+
+        <!-- FAQ Section -->
+        <section class="section-wrapper" style="padding: 6rem 5%; background: var(--bg-main);">
+            <div style="max-width: 800px; margin: 0 auto;">
+                <div style="text-align: center; margin-bottom: 4rem;">
+                    <h2 class="animate-scale-up" style="font-size: 2.8rem; color: var(--brand-dark); margin-bottom: 1rem; font-weight: 700; letter-spacing: -0.5px;">Frequently Asked Questions</h2>
+                    <p class="animate-slide-up delay-1" style="color: var(--text-secondary); font-size: 1.15rem;">Find quick answers before reaching out to our team.</p>
+                </div>
+
+                <div class="faq-accordion" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <!-- FAQ 1 -->
+                    <div class="animate-slide-up delay-1" style="background: white; border: 1px solid var(--border-light); border-radius: 12px; overflow: hidden;">
+                        <button class="faq-toggle" style="width: 100%; text-align: left; padding: 1.5rem; background: none; border: none; font-size: 1.15rem; font-weight: 600; color: var(--brand-dark); cursor: pointer; display: flex; justify-content: space-between; align-items: center;" onclick="toggleFaq(this);">
+                            Do you accept bulk corporate orders?
+                            <i data-lucide="chevron-down" size="20" style="transition: transform 0.3s ease;"></i>
+                        </button>
+                        <div class="faq-content" style="padding: 0 1.5rem; max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease;">
+                            <p style="color: var(--text-secondary); line-height: 1.6; padding-bottom: 1.5rem; margin-top: 0.5rem;">Yes, absolutely! We specialize in manufacturing large-volume orders for corporate showrooms, large offices, and institutions globally. Please use the contact form to provide your requirements and our B2B sales team will reach out directly.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- FAQ 2 -->
+                    <div class="animate-slide-up delay-2" style="background: white; border: 1px solid var(--border-light); border-radius: 12px; overflow: hidden;">
+                        <button class="faq-toggle" style="width: 100%; text-align: left; padding: 1.5rem; background: none; border: none; font-size: 1.15rem; font-weight: 600; color: var(--brand-dark); cursor: pointer; display: flex; justify-content: space-between; align-items: center;" onclick="toggleFaq(this);">
+                            Do you ship pan-India?
+                            <i data-lucide="chevron-down" size="20" style="transition: transform 0.3s ease;"></i>
+                        </button>
+                        <div class="faq-content" style="padding: 0 1.5rem; max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease;">
+                            <p style="color: var(--text-secondary); line-height: 1.6; padding-bottom: 1.5rem; margin-top: 0.5rem;">Yes, we safely package and ship our ergonomic furniture door-to-door anywhere in India directly from our manufacturing facility in Umargam, Gujarat.</p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 3 -->
+                    <div class="animate-slide-up delay-3" style="background: white; border: 1px solid var(--border-light); border-radius: 12px; overflow: hidden;">
+                        <button class="faq-toggle" style="width: 100%; text-align: left; padding: 1.5rem; background: none; border: none; font-size: 1.15rem; font-weight: 600; color: var(--brand-dark); cursor: pointer; display: flex; justify-content: space-between; align-items: center;" onclick="toggleFaq(this);">
+                            Can I customize the dimensions or materials?
+                            <i data-lucide="chevron-down" size="20" style="transition: transform 0.3s ease;"></i>
+                        </button>
+                        <div class="faq-content" style="padding: 0 1.5rem; max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease;">
+                            <p style="color: var(--text-secondary); line-height: 1.6; padding-bottom: 1.5rem; margin-top: 0.5rem;">For bulk corporate orders, we absolutely offer material and dimension customization to perfectly align with your interior design guidelines. Speak to our consultants for more details on Minimum Order Quantities (MOQs).</p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 4 -->
+                    <div class="animate-slide-up delay-4" style="background: white; border: 1px solid var(--border-light); border-radius: 12px; overflow: hidden;">
+                        <button class="faq-toggle" style="width: 100%; text-align: left; padding: 1.5rem; background: none; border: none; font-size: 1.15rem; font-weight: 600; color: var(--brand-dark); cursor: pointer; display: flex; justify-content: space-between; align-items: center;" onclick="toggleFaq(this);">
+                            What is the typical lead time for an order?
+                            <i data-lucide="chevron-down" size="20" style="transition: transform 0.3s ease;"></i>
+                        </button>
+                        <div class="faq-content" style="padding: 0 1.5rem; max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease;">
+                            <p style="color: var(--text-secondary); line-height: 1.6; padding-bottom: 1.5rem; margin-top: 0.5rem;">Standard inventory items generally dispatch within 7-14 business days. For customized or high-volume corporate orders, lead times are typically 3-4 weeks depending on the scale and material sourcing.</p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 5 -->
+                    <div class="animate-slide-up delay-5" style="background: white; border: 1px solid var(--border-light); border-radius: 12px; overflow: hidden;">
+                        <button class="faq-toggle" style="width: 100%; text-align: left; padding: 1.5rem; background: none; border: none; font-size: 1.15rem; font-weight: 600; color: var(--brand-dark); cursor: pointer; display: flex; justify-content: space-between; align-items: center;" onclick="toggleFaq(this);">
+                            Do you provide installation services?
+                            <i data-lucide="chevron-down" size="20" style="transition: transform 0.3s ease;"></i>
+                        </button>
+                        <div class="faq-content" style="padding: 0 1.5rem; max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease;">
+                            <p style="color: var(--text-secondary); line-height: 1.6; padding-bottom: 1.5rem; margin-top: 0.5rem;">Yes! While most of our ergonomic chairs arrive pre-assembled or require only minimal 2-step setup, we offer professional, on-site installation services for large corporate workstation and desk orders to ensure flawless execution.</p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 6 -->
+                    <div class="animate-slide-up delay-6" style="background: white; border: 1px solid var(--border-light); border-radius: 12px; overflow: hidden;">
+                        <button class="faq-toggle" style="width: 100%; text-align: left; padding: 1.5rem; background: none; border: none; font-size: 1.15rem; font-weight: 600; color: var(--brand-dark); cursor: pointer; display: flex; justify-content: space-between; align-items: center;" onclick="toggleFaq(this);">
+                            Is there a warranty on your furniture?
+                            <i data-lucide="chevron-down" size="20" style="transition: transform 0.3s ease;"></i>
+                        </button>
+                        <div class="faq-content" style="padding: 0 1.5rem; max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease;">
+                            <p style="color: var(--text-secondary); line-height: 1.6; padding-bottom: 1.5rem; margin-top: 0.5rem;">Absolutely. Being a direct manufacturer, we stand entirely by our craftsmanship. Our products come with a robust **3-year structural warranty** against manufacturing defects. Check specific product specifications or consult our sales team for exact warranty durations.</p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 7 -->
+                    <div class="animate-slide-up delay-7" style="background: white; border: 1px solid var(--border-light); border-radius: 12px; overflow: hidden;">
+                        <button class="faq-toggle" style="width: 100%; text-align: left; padding: 1.5rem; background: none; border: none; font-size: 1.15rem; font-weight: 600; color: var(--brand-dark); cursor: pointer; display: flex; justify-content: space-between; align-items: center;" onclick="toggleFaq(this);">
+                            Can I visit to see the furniture before buying?
+                            <i data-lucide="chevron-down" size="20" style="transition: transform 0.3s ease;"></i>
+                        </button>
+                        <div class="faq-content" style="padding: 0 1.5rem; max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease;">
+                            <p style="color: var(--text-secondary); line-height: 1.6; padding-bottom: 1.5rem; margin-top: 0.5rem;">Yes! We actively encourage corporate clients to visit our 25,000+ sq.ft. manufacturing facility and experience center in Umargam, Gujarat to witness our production standards and test the ergonomic comfort of our designs firsthand.</p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 8 -->
+                    <div class="animate-slide-up delay-1" style="background: white; border: 1px solid var(--border-light); border-radius: 12px; overflow: hidden;">
+                        <button class="faq-toggle" style="width: 100%; text-align: left; padding: 1.5rem; background: none; border: none; font-size: 1.15rem; font-weight: 600; color: var(--brand-dark); cursor: pointer; display: flex; justify-content: space-between; align-items: center;" onclick="toggleFaq(this);">
+                            How do KNS ergonomic chairs help with back pain?
+                            <i data-lucide="chevron-down" size="20" style="transition: transform 0.3s ease;"></i>
+                        </button>
+                        <div class="faq-content" style="padding: 0 1.5rem; max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease;">
+                            <p style="color: var(--text-secondary); line-height: 1.6; padding-bottom: 1.5rem; margin-top: 0.5rem;">Our chairs are engineered with dynamic lumbar support, synchronized tilt mechanisms, and multi-density foam. These features work together to maintain the natural S-curve of your spine and redistribute weight, significantly reducing pressure on the lower back during 8+ hour workdays.</p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 9 -->
+                    <div class="animate-slide-up delay-2" style="background: white; border: 1px solid var(--border-light); border-radius: 12px; overflow: hidden;">
+                        <button class="faq-toggle" style="width: 100%; text-align: left; padding: 1.5rem; background: none; border: none; font-size: 1.15rem; font-weight: 600; color: var(--brand-dark); cursor: pointer; display: flex; justify-content: space-between; align-items: center;" onclick="toggleFaq(this);">
+                            Can I adjust the chair to my specific height and desk level?
+                            <i data-lucide="chevron-down" size="20" style="transition: transform 0.3s ease;"></i>
+                        </button>
+                        <div class="faq-content" style="padding: 0 1.5rem; max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease;">
+                            <p style="color: var(--text-secondary); line-height: 1.6; padding-bottom: 1.5rem; margin-top: 0.5rem;">Yes. Every KNS workstation chair features class-4 gas lifts for smooth height adjustment and 3D/4D adjustable armrests (on select models) to ensure your elbows and wrists are perfectly aligned with your desk surface to prevent Repetitive Strain Injury (RSI).</p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 10 -->
+                    <div class="animate-slide-up delay-3" style="background: white; border: 1px solid var(--border-light); border-radius: 12px; overflow: hidden;">
+                        <button class="faq-toggle" style="width: 100%; text-align: left; padding: 1.5rem; background: none; border: none; font-size: 1.15rem; font-weight: 600; color: var(--brand-dark); cursor: pointer; display: flex; justify-content: space-between; align-items: center;" onclick="toggleFaq(this);">
+                            How do I maintain and clean my KNS furniture?
+                            <i data-lucide="chevron-down" size="20" style="transition: transform 0.3s ease;"></i>
+                        </button>
+                        <div class="faq-content" style="padding: 0 1.5rem; max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease;">
+                            <p style="color: var(--text-secondary); line-height: 1.6; padding-bottom: 1.5rem; margin-top: 0.5rem;">For mesh chairs, a light vacuum or a damp microfiber cloth is usually enough. For fabric or leatherette pieces, we recommend using a mild upholstery cleaner. Avoid placing furniture in direct sunlight to maintain the vibrancy of the materials over time.</p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 11 -->
+                    <div class="animate-slide-up delay-4" style="background: white; border: 1px solid var(--border-light); border-radius: 12px; overflow: hidden;">
+                        <button class="faq-toggle" style="width: 100%; text-align: left; padding: 1.5rem; background: none; border: none; font-size: 1.15rem; font-weight: 600; color: var(--brand-dark); cursor: pointer; display: flex; justify-content: space-between; align-items: center;" onclick="toggleFaq(this);">
+                            What is the maximum weight capacity of your chairs?
+                            <i data-lucide="chevron-down" size="20" style="transition: transform 0.3s ease;"></i>
+                        </button>
+                        <div class="faq-content" style="padding: 0 1.5rem; max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease;">
+                            <p style="color: var(--text-secondary); line-height: 1.6; padding-bottom: 1.5rem; margin-top: 0.5rem;">Most of our executive and workstation chairs are rigorously tested to support up to 125kg. Our heavy-duty industrial models are rated for even higher capacities.</p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 12 -->
+                    <div class="animate-slide-up delay-5" style="background: white; border: 1px solid var(--border-light); border-radius: 12px; overflow: hidden;">
+                        <button class="faq-toggle" style="width: 100%; text-align: left; padding: 1.5rem; background: none; border: none; font-size: 1.15rem; font-weight: 600; color: var(--brand-dark); cursor: pointer; display: flex; justify-content: space-between; align-items: center;" onclick="toggleFaq(this);">
+                            What happens if I receive a product damaged in transit?
+                            <i data-lucide="chevron-down" size="20" style="transition: transform 0.3s ease;"></i>
+                        </button>
+                        <div class="faq-content" style="padding: 0 1.5rem; max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease;">
+                            <p style="color: var(--text-secondary); line-height: 1.6; padding-bottom: 1.5rem; margin-top: 0.5rem;">We pride ourselves on our Hassle-free Exchange policy. If your furniture arrives with any transit damage, simply notify us within 24 hours with a few photos, and we will arrange a professional repair or a full replacement immediately at no extra cost.</p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 13 -->
+                    <div class="animate-slide-up delay-6" style="background: white; border: 1px solid var(--border-light); border-radius: 12px; overflow: hidden;">
+                        <button class="faq-toggle" style="width: 100%; text-align: left; padding: 1.5rem; background: none; border: none; font-size: 1.15rem; font-weight: 600; color: var(--brand-dark); cursor: pointer; display: flex; justify-content: space-between; align-items: center;" onclick="toggleFaq(this);">
+                            Can we request a physical sample for large-volume orders?
+                            <i data-lucide="chevron-down" size="20" style="transition: transform 0.3s ease;"></i>
+                        </button>
+                        <div class="faq-content" style="padding: 0 1.5rem; max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease;">
+                            <p style="color: var(--text-secondary); line-height: 1.6; padding-bottom: 1.5rem; margin-top: 0.5rem;">For institutional and corporate projects, we can arrange for demo units to be sent to your location so your team can experience KNS comfort firsthand before finalizing a bulk order.</p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 14 -->
+                    <div class="animate-slide-up delay-7" style="background: white; border: 1px solid var(--border-light); border-radius: 12px; overflow: hidden;">
+                        <button class="faq-toggle" style="width: 100%; text-align: left; padding: 1.5rem; background: none; border: none; font-size: 1.15rem; font-weight: 600; color: var(--brand-dark); cursor: pointer; display: flex; justify-content: space-between; align-items: center;" onclick="toggleFaq(this);">
+                            Is KNS Furnitech furniture eco-friendly?
+                            <i data-lucide="chevron-down" size="20" style="transition: transform 0.3s ease;"></i>
+                        </button>
+                        <div class="faq-content" style="padding: 0 1.5rem; max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease;">
+                            <p style="color: var(--text-secondary); line-height: 1.6; padding-bottom: 1.5rem; margin-top: 0.5rem;">We are committed to green manufacturing. Our facility in Umargam, Gujarat, utilizes recyclable high-grade polymers and low-VOC finishes to ensure our furniture is safe for both your office environment and the planet.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <style>
+                .faq-content.active {
+                    max-height: 600px !important;
+                    opacity: 1 !important;
+                    padding-bottom: 1.5rem !important;
+                }
+                .faq-toggle i.rotate,
+                .faq-toggle svg.rotate {
+                    transform: rotate(180deg);
+                }
+            </style>
+            <script>
+                function toggleFaq(btn) {
+                    const content = btn.nextElementSibling;
+                    if(content) content.classList.toggle('active');
+                    
+                    const icon = btn.querySelector('svg') || btn.querySelector('i');
+                    if(icon) icon.classList.toggle('rotate');
+                }
+            </script>
+        </section>
+
+    </main>
+
+    <!-- Catalog Email Capture Modal -->
+    <div id="catalog-modal" class="catalog-modal">
+        <div class="catalog-modal-content">
+            <button class="catalog-modal-close" onclick="closeCatalogModal()">&times;</button>
+            <div class="catalog-modal-icon">
+                <i data-lucide="mail" size="48"></i>
+            </div>
+            <h3>Almost There!</h3>
+            <p>Please enter your email address to receive your free 2026 KNS Furnitech catalog.</p>
+            <form id="catalog-email-form" onsubmit="handleCatalogEmailSubmit(event)">
+                <input type="email" id="catalog-email" class="catalog-input" placeholder="Your Work Email" required>
+                <button type="submit" class="btn-primary" style="width:100%; justify-content:center;">Get My Catalog &rarr;</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Comprehensive Godrej-Style Footer -->
+    <footer class="ecommerce-footer">
+        <div class="footer-grid">
+            <div class="footer-brand animate-on-scroll">
+                <a href="index.html" class="logo">
+                    <img src="images/logo.png" alt="KNS Furnitech" class="logo-img">
+                    <span>KNS FURNITECH</span>
+                </a>
+                <p>Elevating living spaces across India with premium, modular, and sustainable furniture. Discover the perfect blend of modern aesthetics and unparalleled comfort.</p>
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+                    </a>
+                    <a href="#" aria-label="Instagram">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg>
+                    </a>
+                    <a href="#" aria-label="Twitter">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path></svg>
+                    </a>
+                    <a href="https://linkedin.com/company/kns-furnitech" target="_blank" aria-label="LinkedIn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="footer-col animate-on-scroll">
+                <h4>Shop Categories</h4>
+                <ul class="footer-links">
+                    <li><a href="shop.html?cat=Executive+Chair">Executive Chair</a></li>
+                    <li><a href="shop.html?cat=Workstation+Chair">Workstation Chair</a></li>
+                    <li><a href="shop.html?cat=Plastic+Metal+-+Cafe+Chair">Plastic Metal - Cafe Chair</a></li>
+                    <li><a href="shop.html?cat=Bar+Stool+Chair">Bar Stool Chair</a></li>
+                    <li><a href="shop.html?cat=Puffy+Table+Chair">Puffy Table Chair</a></li>
+                    <li><a href="shop.html?cat=Sofa+Lounge+Seating">Sofa Lounge Seating</a></li>
+                    <li><a href="shop.html?cat=Educational+Furniture">Educational Furniture</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col animate-on-scroll">
+                <h4>Customer Service</h4>
+                <ul class="footer-links">
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="blog.html">Our Blog</a></li>
+                    <li><a href="clients.html">Our Clients</a></li>
+                    <li><a href="catalogs.html">Catalogs</a></li>
+                    <li><a href="track-order.html">Track Order</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col animate-on-scroll">
+                <h4>Newsletter</h4>
+                <p style="color: #aaa; margin-bottom: 1rem; font-size: 0.95rem;">Subscribe to get special offers, free giveaways, and design inspiration.</p>
+                <form class="newsletter-form" onsubmit="event.preventDefault();">
+                    <input type="email" placeholder="Enter your email">
+                    <button type="submit">Subscribe</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2026 KNS Furnitech. All Rights Reserved.</p>
+            <div class="footer-bottom-links">
+                <a href="privacy-policy.html">Privacy Policy</a>
+                <a href="terms-of-service.html">Terms of Service</a>
+                <a href="#">Sitemap</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Auth overlay + modal -->
+    <div id="kns-auth-overlay" onclick="closeAuthModal()"></div>
+    <div id="kns-auth-modal">
+        <div class="kns-auth-header">
+            <span class="logo-sm">KNS FURNITECH</span>
+            <button class="kns-auth-close" onclick="closeAuthModal()" aria-label="Close">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+        <div class="kns-auth-tabs">
+            <button class="kns-auth-tab active" data-tab="login" onclick="switchAuthTab('login')">Sign In</button>
+            <button class="kns-auth-tab" data-tab="register" onclick="switchAuthTab('register')">Create Account</button>
+        </div>
+        <div class="kns-auth-body">
+            <!-- Login -->
+            <form id="kns-login-form" class="kns-auth-form active" onsubmit="handleLogin(event)">
+                <div class="kns-auth-error" id="loginError"></div>
+                <input type="email" id="loginEmail" placeholder="Email Address" required autocomplete="email">
+                <input type="password" id="loginPassword" placeholder="Password" required autocomplete="current-password">
+                <button type="submit" class="kns-auth-submit">Sign In &rarr;</button>
+                <div class="kns-auth-divider">New to KNS?</div>
+                <button type="button" class="kns-auth-submit" style="background:#f5f5f5; color:#1A1A1A;" onclick="switchAuthTab('register')">Create an Account</button>
+            </form>
+            <!-- Register -->
+            <form id="kns-register-form" class="kns-auth-form" onsubmit="handleRegister(event)">
+                <div class="kns-auth-error" id="regError"></div>
+                <input type="text" id="regName" placeholder="Full Name" required autocomplete="name">
+                <input type="email" id="regEmail" placeholder="Email Address" required autocomplete="email">
+                <input type="password" id="regPassword" placeholder="Password (min 6 chars)" required autocomplete="new-password">
+                <input type="password" id="regConfirm" placeholder="Confirm Password" required autocomplete="new-password">
+                <button type="submit" class="kns-auth-submit">Create Account &rarr;</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Cart Drawer Overlay -->
+    <div id="kns-drawer-overlay"></div>
+    <!-- Cart Drawer Panel -->
+    <aside id="kns-cart-drawer">
+        <div class="kns-drawer-head">
+            <h3>🛒 Your Cart</h3>
+            <button id="kns-drawer-close" aria-label="Close cart">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+        <div id="kns-drawer-items"></div>
+        <div class="kns-drawer-foot">
+            <div class="kns-drawer-subtotal-row">
+                <span>Subtotal</span>
+                <span id="kns-drawer-subtotal">₹0</span>
+            </div>
+            <div class="kns-drawer-actions">
+                <a href="cart.html" class="kns-ec-btn kns-ec-btn-outline">View Cart</a>
+                <a href="cart.html" class="kns-ec-btn kns-ec-btn-primary">Checkout →</a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Inquiry Modal -->
+    <div id="quote-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close" onclick="document.getElementById('quote-modal').classList.remove('active')"><i data-lucide="x" size="24"></i></button>
+            <h2 style="margin-bottom: 0.5rem; color: var(--brand-dark);">Request a Quote</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 2rem;">Our design consultants will get back to you within 24 hours.</p>
+            <form id="quote-form-actual" class="quote-form">
+                <input type="text" placeholder="Your Name" required>
+                <input type="email" placeholder="Email Address" required>
+                <input type="tel" placeholder="Phone Number">
+                <textarea placeholder="Tell us about the products or project you are interested in..." rows="4" required></textarea>
+                <button type="submit" class="btn-primary" style="width: 100%;">Submit Inquiry</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Essential Scripts -->
+    <script src="ui.js"></script>
+    <script src="cart.js"></script>
+    <script src="wishlist.js"></script>
+    <!-- Firebase SDK (Compat v9/v11) -->
+    <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore-compat.js"></script>
+
+    <script src="firebase-config.js?v=4"></script>
+    <script src="database.js?v=4"></script>
+    <script src="auth.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+    <!-- FAQ Schema for SEO (Google Rich Snippets) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Do you accept bulk corporate orders?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, absolutely! We specialize in manufacturing large-volume orders for corporate showrooms, large offices, and institutions globally. Please use the contact form to provide your requirements and our B2B sales team will reach out directly."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do you ship pan-India?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, we safely package and ship our ergonomic furniture door-to-door anywhere in India directly from our manufacturing facility in Umargam, Gujarat."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I customize the dimensions or materials?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "For bulk corporate orders, we absolutely offer material and dimension customization to perfectly align with your interior design guidelines. Speak to our consultants for more details on Minimum Order Quantities (MOQs)."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the typical lead time for an order?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Standard inventory items generally dispatch within 7-14 business days. For customized or high-volume corporate orders, lead times are typically 3-4 weeks depending on the scale and material sourcing."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do you provide installation services?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes! While most of our ergonomic chairs arrive pre-assembled or require only minimal 2-step setup, we offer professional, on-site installation services for large corporate workstation and desk orders to ensure flawless execution."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is there a warranty on your furniture?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Absolutely. Being a direct manufacturer, we stand entirely by our craftsmanship. Our products come with a robust 3-year structural warranty against manufacturing defects. Check specific product specifications or consult our sales team for exact warranty durations."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I visit to see the furniture before buying?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes! We actively encourage corporate clients to visit our 25,000+ sq.ft. manufacturing facility and experience center in Umargam, Gujarat to witness our production standards and test the ergonomic comfort of our designs firsthand."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do KNS ergonomic chairs help with back pain?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Our chairs are engineered with dynamic lumbar support, synchronized tilt mechanisms, and multi-density foam. These features work together to maintain the natural S-curve of your spine and redistribute weight, significantly reducing pressure on the lower back during 8+ hour workdays."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I adjust the chair to my specific height and desk level?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Every KNS workstation chair features class-4 gas lifts for smooth height adjustment and 3D/4D adjustable armrests (on select models) to ensure your elbows and wrists are perfectly aligned with your desk surface to prevent Repetitive Strain Injury (RSI)."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I maintain and clean my KNS furniture?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "For mesh chairs, a light vacuum or a damp microfiber cloth is usually enough. For fabric or leatherette pieces, we recommend using a mild upholstery cleaner. Avoid placing furniture in direct sunlight to maintain the vibrancy of the materials over time."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the maximum weight capacity of your chairs?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Most of our executive and workstation chairs are rigorously tested to support up to 125kg. Our heavy-duty industrial models are rated for even higher capacities."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What happens if I receive a product damaged in transit?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "We pride ourselves on our Hassle-free Exchange policy. If your furniture arrives with any transit damage, simply notify us within 24 hours with a few photos, and we will arrange a professional repair or a full replacement immediately at no extra cost."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can we request a physical sample for large-volume orders?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "For institutional and corporate projects, we can arrange for demo units to be sent to your location so your team can experience KNS comfort firsthand before finalizing a bulk order."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is KNS Furnitech furniture eco-friendly?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "We are committed to green manufacturing. Our facility in Umargam, Gujarat, utilizes recyclable high-grade polymers and low-VOC finishes to ensure our furniture is safe for both your office environment and the planet."
+          }
+        }
+      ]
+    }
+    </script>
+</body>
+</html>

@@ -1,0 +1,382 @@
+/* ================================================================
+   hero.css — KNS Furnitech | Brand-Matched Premium Hero Slider
+   Colors: --brand-green #8CC63F  |  --brand-dark #1A1A1A
+   Font:   'Outfit', sans-serif
+   ================================================================ */
+
+/* ── Section Container ── */
+.kns-hero {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    min-height: 600px;
+    max-height: 920px;
+    overflow: hidden;
+    background: #1A1A1A;
+    font-family: 'Outfit', sans-serif;
+}
+
+/* ── Slides ── */
+.kns-slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 1.2s cubic-bezier(0.77,0,0.175,1),
+                visibility 1.2s cubic-bezier(0.77,0,0.175,1);
+    z-index: 1;
+}
+
+.kns-slide.is-active {
+    opacity: 1;
+    visibility: visible;
+    z-index: 2;
+}
+
+/* Ken Burns zoom on active slide */
+.kns-slide-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    transform: scale(1.08);
+    transition: transform 8s ease-out;
+    will-change: transform;
+}
+
+.kns-slide.is-active .kns-slide-bg {
+    transform: scale(1);
+}
+
+/* Dark gradient overlay — left-heavy so text is readable */
+.kns-slide-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        105deg,
+        rgba(26,26,26,0.88) 0%,
+        rgba(26,26,26,0.65) 50%,
+        rgba(26,26,26,0.20) 100%
+    );
+    z-index: 1;
+}
+
+/* Green accent stripe on left edge */
+.kns-slide-stripe {
+    position: absolute;
+    left: 0;
+    top: 12%;
+    height: 76%;
+    width: 4px;
+    background: linear-gradient(180deg, transparent, #8CC63F 30%, #8CC63F 70%, transparent);
+    border-radius: 0 4px 4px 0;
+    z-index: 3;
+    opacity: 0;
+    transform: scaleY(0);
+    transition: opacity 0.5s ease 0.6s, transform 0.8s cubic-bezier(0.22,1,0.36,1) 0.5s;
+}
+.kns-slide.is-active .kns-slide-stripe {
+    opacity: 1;
+    transform: scaleY(1);
+}
+
+/* ── Slide Content ── */
+.kns-slide-content {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 5% 0 7%;
+    max-width: 750px;
+}
+
+/* Tag / eyebrow */
+.kns-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    background: rgba(140,198,63,0.15);
+    border: 1px solid rgba(140,198,63,0.4);
+    color: #8CC63F;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 0.35rem 0.9rem;
+    border-radius: 30px;
+    width: fit-content;
+    margin-bottom: 1.5rem;
+
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.6s ease 0.55s, transform 0.6s ease 0.55s;
+}
+.kns-tag .tag-dot {
+    width: 6px; height: 6px;
+    background: #8CC63F;
+    border-radius: 50%;
+    animation: tagBlink 2s ease-in-out infinite;
+}
+@keyframes tagBlink {
+    0%,100% { opacity: 1; }
+    50%      { opacity: 0.2; }
+}
+
+.kns-slide.is-active .kns-tag { opacity: 1; transform: translateY(0); }
+
+/* Main heading */
+.kns-heading {
+    font-size: clamp(2.4rem, 5vw, 4.2rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    color: #fff;
+    margin-bottom: 1.2rem;
+
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.7s ease 0.7s, transform 0.7s ease 0.7s;
+}
+.kns-heading .accent {
+    color: #8CC63F;
+}
+.kns-slide.is-active .kns-heading { opacity: 1; transform: translateY(0); }
+
+/* Sub text */
+.kns-sub {
+    font-size: 1rem;
+    line-height: 1.75;
+    color: rgba(255,255,255,0.65);
+    max-width: 480px;
+    margin-bottom: 2.4rem;
+
+    opacity: 0;
+    transform: translateY(22px);
+    transition: opacity 0.6s ease 0.88s, transform 0.6s ease 0.88s;
+}
+.kns-slide.is-active .kns-sub { opacity: 1; transform: translateY(0); }
+
+/* CTA row */
+.kns-ctas {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.6s ease 1.05s, transform 0.6s ease 1.05s;
+}
+.kns-slide.is-active .kns-ctas { opacity: 1; transform: translateY(0); }
+
+.kns-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.88rem 2rem;
+    background: #8CC63F;
+    color: #fff;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    box-shadow: 0 6px 24px rgba(140,198,63,0.38);
+    transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+.kns-btn-primary:hover {
+    background: #7bb236;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 32px rgba(140,198,63,0.52);
+}
+.kns-btn-primary svg { transition: transform 0.3s; }
+.kns-btn-primary:hover svg { transform: translateX(4px); }
+
+.kns-btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.85rem 1.8rem;
+    border: 1.5px solid rgba(255,255,255,0.25);
+    color: rgba(255,255,255,0.85);
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    text-decoration: none;
+    backdrop-filter: blur(8px);
+    transition: border-color 0.3s, color 0.3s, background 0.3s, transform 0.3s;
+}
+.kns-btn-ghost:hover {
+    border-color: rgba(140,198,63,0.6);
+    color: #8CC63F;
+    background: rgba(140,198,63,0.08);
+    transform: translateY(-2px);
+}
+
+/* ── Slide Counter ── */
+.kns-counter {
+    position: absolute;
+    bottom: 2.6rem;
+    left: 7%;
+    z-index: 10;
+    display: flex;
+    align-items: baseline;
+    gap: 0.3rem;
+    color: rgba(255,255,255,0.9);
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+.kns-counter-cur { color: #8CC63F; }
+.kns-counter-sep { font-size: 1.1rem; color: rgba(255,255,255,0.3); margin: 0 0.1rem; }
+.kns-counter-tot { font-size: 1rem; color: rgba(255,255,255,0.4); font-weight: 400; }
+
+/* ── Progress Bar ── */
+.kns-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0%;
+    height: 3px;
+    background: #8CC63F;
+    z-index: 20;
+    transition: width 0s linear;
+    box-shadow: 0 0 10px rgba(140,198,63,0.7);
+}
+.kns-progress.running {
+    width: 100%;
+    transition: width 5s linear;
+}
+
+/* ── Dot Pagination ── */
+.kns-dots {
+    position: absolute;
+    bottom: 2.4rem;
+    right: 6%;
+    z-index: 10;
+    display: flex;
+    gap: 0.6rem;
+    align-items: center;
+}
+
+.kns-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.3);
+    cursor: pointer;
+    border: none;
+    padding: 0;
+    transition: background 0.3s ease, transform 0.3s ease, width 0.3s ease, border-radius 0.3s ease;
+}
+.kns-dot.is-active {
+    background: #8CC63F;
+    width: 28px;
+    border-radius: 4px;
+    transform: none;
+}
+
+/* ── Arrow Controls ── */
+.kns-arrows {
+    position: absolute;
+    right: 5%;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+}
+
+.kns-arrow {
+    width: 44px;
+    height: 44px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    transition: background 0.3s, border-color 0.3s, transform 0.2s;
+}
+.kns-arrow:hover {
+    background: #8CC63F;
+    border-color: #8CC63F;
+    transform: scale(1.08);
+}
+.kns-arrow svg { pointer-events: none; }
+
+/* ── Slide Thumbs (right rail) ── */
+.kns-thumbs {
+    position: absolute;
+    right: 5%;
+    bottom: 5.5rem;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    display: none; /* shown ≥ 1280px */
+}
+
+/* ── Scroll Indicator ── */
+.kns-scroll {
+    position: absolute;
+    bottom: 2.4rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+}
+.kns-scroll span {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+    font-family: 'Outfit', sans-serif;
+}
+.kns-scroll-mouse {
+    width: 20px; height: 32px;
+    border: 1.5px solid rgba(255,255,255,0.2);
+    border-radius: 10px;
+    display: flex; justify-content: center;
+    padding-top: 5px;
+}
+.kns-scroll-wheel {
+    width: 3px; height: 7px;
+    background: #8CC63F;
+    border-radius: 2px;
+    animation: scrollWheel 2s ease-in-out infinite;
+}
+@keyframes scrollWheel {
+    0%  { transform: translateY(0);    opacity: 1; }
+    80% { transform: translateY(9px);  opacity: 0; }
+    100%{ transform: translateY(0);    opacity: 0; }
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+    .kns-slide-content { padding: 0 5% 0 5%; max-width: 100%; }
+    .kns-heading { font-size: 2.2rem; }
+    .kns-sub { font-size: 0.95rem; margin-bottom: 2rem; }
+    .kns-arrows { display: none; }
+    .kns-counter { left: 5%; bottom: 2rem; }
+    .kns-dots { right: 5%; bottom: 1.8rem; }
+    .kns-slide-stripe { display: none; }
+}
+@media (max-width: 480px) {
+    .kns-heading { font-size: 1.8rem; }
+    .kns-ctas { flex-direction: column; align-items: stretch; gap: 0.8rem; }
+    .kns-btn-primary, .kns-btn-ghost { width: 100%; justify-content: center; }
+    .kns-sub { font-size: 0.88rem; line-height: 1.5; }
+    .kns-tag { font-size: 0.65rem; padding: 0.3rem 0.7rem; }
+}

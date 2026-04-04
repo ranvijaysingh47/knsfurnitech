@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Your Order | KNS Furnitech</title>
+    <meta name="description"
+        content="Track your KNS Furnitech order in real-time. Follow your furniture's journey from our workshop to your doorstep.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="hero.css">
+    <link rel="stylesheet" href="ecommerce.css">
+    <style>
+        .track-container {
+            max-width: 850px;
+            margin: -5rem auto 8rem;
+            padding: 0 1.5rem;
+            position: relative;
+            z-index: 10;
+        }
+        .search-card {
+            background: white;
+            padding: 3.5rem;
+            border-radius: 30px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.12);
+            text-align: center;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        .search-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 1.25rem;
+            margin-top: 2.5rem;
+        }
+        .search-input {
+            padding: 1.1rem 1.5rem;
+            border: 2px solid #f0f0f0;
+            border-radius: 15px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        .search-input:focus {
+            border-color: var(--brand-green);
+            outline: none;
+            box-shadow: 0 0 0 5px rgba(140,198,63,0.1);
+            transform: translateY(-2px);
+        }
+        .search-btn {
+            background: var(--brand-green);
+            color: white;
+            border: none;
+            padding: 0 40px;
+            border-radius: 15px;
+            font-weight: 700;
+            font-family: 'Outfit', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 25px rgba(140,198,63,0.3);
+        }
+        .search-btn:hover { 
+            transform: translateY(-3px) scale(1.02); 
+            box-shadow: 0 15px 35px rgba(140,198,63,0.4);
+            filter: brightness(1.05);
+        }
+
+        /* Results Styling */
+        #tracking-results {
+            margin-top: 4rem;
+            display: none;
+            animation: fadeInUp 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        .result-card {
+            background: white;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 30px 70px rgba(0,0,0,0.08);
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+        
+        /* Vertical Amazon-Style Tracking */
+        .order-progress-wrapper {
+            padding: 4rem 3rem;
+            background: #fff;
+            border-bottom: 1px solid #f5f5f5;
+        }
+        .vertical-timeline {
+            position: relative;
+            max-width: 500px;
+            margin: 0 auto;
+            padding-left: 50px;
+        }
+        .vertical-timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 10px;
+            bottom: 10px;
+            width: 2px;
+            background: #f0f0f0;
+            z-index: 1;
+        }
+        .timeline-item {
+            position: relative;
+            padding-bottom: 3rem;
+            display: flex;
+            align-items: flex-start;
+        }
+        .timeline-item:last-child { padding-bottom: 0; }
+        
+        .timeline-node {
+            position: absolute;
+            left: -50px;
+            width: 42px;
+            height: 42px;
+            background: #f8f8f8;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ccc;
+            box-shadow: 0 0 0 1px #eee;
+            transition: all 0.4s ease;
+        }
+        .timeline-content {
+            padding-top: 8px;
+        }
+        .timeline-label {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #ccc;
+            margin-bottom: 0.2rem;
+            transition: color 0.4s ease;
+            font-family: 'Outfit', sans-serif;
+        }
+        .timeline-desc {
+            font-size: 0.9rem;
+            color: #aaa;
+            line-height: 1.4;
+        }
+
+        /* Active/Completed States */
+        .timeline-item.completed .timeline-node {
+            background: var(--brand-green);
+            color: white;
+            box-shadow: 0 0 0 1px var(--brand-green), 0 5px 15px rgba(140,198,63,0.3);
+        }
+        .timeline-item.completed .timeline-label { color: var(--brand-dark); }
+        .timeline-item.completed .timeline-desc { color: #666; }
+        
+        .timeline-item.active .timeline-node {
+            background: #1A1A1A;
+            color: white;
+            box-shadow: 0 0 0 5px rgba(140,198,63,0.15);
+            transform: scale(1.1);
+        }
+        .timeline-item.active .timeline-label { color: var(--brand-green); font-weight: 800; }
+        .timeline-item.active .timeline-desc { color: #1A1A1A; font-weight: 500; }
+
+        /* Progress Line coloring */
+        .timeline-item.completed + .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -30px;
+            top: -2.5rem;
+            height: 3rem;
+            width: 2px;
+            background: var(--brand-green);
+            z-index: 1;
+        }
+
+        .tracking-info-bar {
+            padding: 2rem 3rem;
+            background: #fbfbfb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .order-badge-shipped { background: rgba(140,198,63,0.1); color: var(--brand-green); }
+        .order-badge-delivered { background: #E6F7FF; color: #1890FF; }
+        .order-badge-processing { background: #FFF7E6; color: #FAAD14; }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .search-form { grid-template-columns: 1fr; }
+            .track-hero { padding: 8rem 1.5rem 5rem; }
+            .search-card { padding: 2.5rem 1.5rem; }
+            .stepper-label { font-size: 0.7rem; }
+            .order-progress-wrapper { padding: 3rem 1rem; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Top utility bar -->
+    <div class="top-bar">
+        Welcome to KNS Furnitech. Enjoy Hassle-free Exchange & Standard Delivery!
+    </div>
+
+    <!-- Main Navigation -->
+    <header class="ecommerce-nav">
+        <div class="main-header">
+            <a href="index.html" class="logo">
+                <img src="images/logo.png" alt="KNS Furnitech" class="logo-img">
+                <span>KNS FURNITECH</span>
+            </a>
+
+            <!-- Animated Desktop Search (Centered - Hidden on Mobile) -->
+            <div class="desktop-search-container">
+                <form class="search-box-animated" action="search-results.html" method="GET">
+                    <input type="text" name="q" placeholder="Search website..." required>
+                    <button type="submit" aria-label="Search"><i data-lucide="search" size="20"></i></button>
+                </form>
+            </div>
+
+            <div class="user-actions kns-nav-icons">
+                <span class="kns-auth-slot"></span>
+                <a href="orders.html" class="kns-icon-btn" title="My Orders">
+                    <i data-lucide="package" size="22"></i>
+                </a>
+                <a href="track-order.html" class="kns-icon-btn active" title="Track Order">
+                    <i data-lucide="truck" size="22"></i>
+                </a>
+                <a href="wishlist.html" class="kns-icon-btn" title="Wishlist">
+                    <i data-lucide="heart" size="22"></i>
+                    <span class="kns-wish-badge">0</span>
+                </a>
+                <button class="kns-icon-btn" data-open-cart title="Cart">
+                    <i data-lucide="shopping-cart" size="22"></i>
+                    <span class="kns-cart-badge">0</span>
+                </button>
+                <button class="hamburger-btn" title="Menu">
+                    <i data-lucide="menu" size="24"></i>
+                </button>
+            </div>
+        </div>
+
+        <nav class="categories-nav">
+            <a href="shop.html">All</a>
+            <a href="shop.html?cat=Executive+Chair">Executive Chair</a>
+            <a href="shop.html?cat=Workstation+Chair">Workstation Chair</a>
+            <a href="shop.html?cat=Plastic+Metal+-+Cafe+Chair">Cafe Chair</a>
+            <a href="shop.html?cat=Bar+Stool+Chair">Bar Stool</a>
+            <a href="shop.html?cat=Puffy+Table+Chair">Puffy Table</a>
+            <a href="shop.html?cat=Sofa+Lounge+Seating">Sofa Lounge</a>
+            <a href="shop.html?cat=Educational+Furniture">Educational</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="page-hero animate-on-scroll" style="margin-top: -4.5rem; padding: 10rem 5% 8rem; text-align: center; position: relative; overflow: hidden; background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1920&q=80') center/cover; color: white;">
+            <!-- Breadcrumbs -->
+            <ul class="kns-breadcrumb on-dark centered animate-slide-right">
+                <li><a href="index.html"><i data-lucide="home" size="14" style="margin-right:6px;"></i> Home</a><span class="sep"><i data-lucide="chevron-right" size="14"></i></span></li>
+                <li class="cur">Track Order</li>
+            </ul>
+            <div style="position: relative; z-index: 2;" class="animate-scale-up">
+                <h1 style="font-size: 4rem; font-weight: 700; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 2px;">Track Your <span style="color: var(--brand-green);">Journey</span></h1>
+                <p style="font-size: 1.2rem; color: #e0e0e0; max-width: 600px; margin: 0 auto; line-height: 1.6;">Follow your furniture's journey from our workshop in Umargam directly to your sanctuary.</p>
+            </div>
+        </section>
+
+        <div class="track-container">
+            <div class="search-card animate-on-scroll">
+                <h3 style="font-family:'Outfit'; font-size: 1.8rem; color: var(--brand-dark);">Watch Your Sanctuary Arrive</h3>
+                <p id="track-instruction" style="color: #666; margin-bottom: 2rem;">Please enter your Order ID and the Email address used during purchase.</p>
+                <form class="search-form" onsubmit="handleTrack(event)">
+                    <input type="text" id="orderId" class="search-input" placeholder="Order ID (e.g. KNS-A1B2C3)" required>
+                    <input type="email" id="userEmail" class="search-input" placeholder="Email Address" required>
+                    <button type="submit" class="search-btn">Track Order</button>
+                </form>
+                <div id="search-msg" style="margin-top: 2rem; font-size: 1rem; font-weight: 500;"></div>
+            </div>
+
+            <div id="tracking-results">
+                <!-- Data Dynamically Injected -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Comprehensive Godrej-Style Footer -->
+    <footer class="ecommerce-footer">
+        <div class="footer-grid">
+            <div class="footer-brand animate-on-scroll">
+                <a href="index.html" class="logo">
+                    <img src="images/logo.png" alt="KNS Furnitech" class="logo-img">
+                    <span>KNS FURNITECH</span>
+                </a>
+                <p>Elevating living spaces across India with premium, modular, and sustainable furniture. Discover the perfect blend of modern aesthetics and unparalleled comfort.</p>
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+                    </a>
+                    <a href="#" aria-label="Instagram">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg>
+                    </a>
+                    <a href="#" aria-label="Twitter">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path></svg>
+                    </a>
+                    <a href="https://linkedin.com/company/kns-furnitech" target="_blank" aria-label="LinkedIn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="footer-col animate-on-scroll">
+                <h4>Shop Categories</h4>
+                <ul class="footer-links">
+                    <li><a href="shop.html?cat=Executive+Chair">Executive Chair</a></li>
+                    <li><a href="shop.html?cat=Workstation+Chair">Workstation Chair</a></li>
+                    <li><a href="shop.html?cat=Plastic+Metal+-+Cafe+Chair">Plastic Metal - Cafe Chair</a></li>
+                    <li><a href="shop.html?cat=Bar+Stool+Chair">Bar Stool Chair</a></li>
+                    <li><a href="shop.html?cat=Puffy+Table+Chair">Puffy Table Chair</a></li>
+                    <li><a href="shop.html?cat=Sofa+Lounge+Seating">Sofa Lounge Seating</a></li>
+                    <li><a href="shop.html?cat=Educational+Furniture">Educational Furniture</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col animate-on-scroll">
+                <h4>Customer Service</h4>
+                <ul class="footer-links">
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="blog.html">Our Blog</a></li>
+                    <li><a href="clients.html">Our Clients</a></li>
+                    <li><a href="catalogs.html">Catalogs</a></li>
+                    <li><a href="track-order.html">Track Order</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col animate-on-scroll">
+                <h4>Newsletter</h4>
+                <p style="color: #aaa; margin-bottom: 1rem; font-size: 0.95rem;">Subscribe to get special offers, free giveaways, and design inspiration.</p>
+                <form class="newsletter-form" onsubmit="event.preventDefault();">
+                    <input type="email" placeholder="Enter your email">
+                    <button type="submit">Subscribe</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2026 KNS Furnitech. All Rights Reserved.</p>
+            <div class="footer-bottom-links">
+                <a href="privacy-policy.html">Privacy Policy</a>
+                <a href="terms-of-service.html">Terms of Service</a>
+                <a href="#">Sitemap</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Global Modals -->
+    <div id="kns-auth-overlay" onclick="closeAuthModal()"></div>
+    <div id="kns-auth-modal">
+        <div class="kns-auth-header">
+            <span class="logo-sm">KNS FURNITECH</span>
+            <button class="kns-auth-close" onclick="closeAuthModal()" aria-label="Close"><i data-lucide="x" size="20"></i></button>
+        </div>
+        <div class="kns-auth-tabs">
+            <button class="kns-auth-tab active" data-tab="login" onclick="switchAuthTab('login')">Sign In</button>
+            <button class="kns-auth-tab" data-tab="register" onclick="switchAuthTab('register')">Create Account</button>
+        </div>
+        <div class="kns-auth-body">
+            <form id="kns-login-form" class="kns-auth-form active" onsubmit="handleLogin(event)">
+                <div class="kns-auth-error" id="loginError"></div>
+                <input type="email" id="loginEmail" placeholder="Email Address" required autocomplete="email">
+                <input type="password" id="loginPassword" placeholder="Password" required autocomplete="current-password">
+                <button type="submit" class="kns-auth-submit">Sign In &rarr;</button>
+                <div class="kns-auth-divider">New to KNS?</div>
+                <button type="button" class="kns-auth-submit" style="background:#f5f5f5; color:#1A1A1A;" onclick="switchAuthTab('register')">Create an Account</button>
+            </form>
+            <form id="kns-register-form" class="kns-auth-form" onsubmit="handleRegister(event)">
+                <div class="kns-auth-error" id="regError"></div>
+                <input type="text" id="regName" placeholder="Full Name" required autocomplete="name">
+                <input type="email" id="regEmail" placeholder="Email Address" required autocomplete="email">
+                <input type="password" id="regPassword" placeholder="Password (min 6 chars)" required autocomplete="new-password">
+                <input type="password" id="regConfirm" placeholder="Confirm Password" required autocomplete="new-password">
+                <button type="submit" class="kns-auth-submit">Create Account &rarr;</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Cart Drawer -->
+    <div id="kns-drawer-overlay"></div>
+    <aside id="kns-cart-drawer">
+         <div class="kns-drawer-head">
+            <h3>🛒 Your Cart</h3>
+            <button id="kns-drawer-close" aria-label="Close cart"><i data-lucide="x" size="20"></i></button>
+        </div>
+        <div id="kns-drawer-items"></div>
+        <div class="kns-drawer-foot">
+            <div class="kns-drawer-subtotal-row">
+                <span>Subtotal</span>
+                <span id="kns-drawer-subtotal">₹0</span>
+            </div>
+            <div class="kns-drawer-actions">
+                <a href="cart.html" class="kns-ec-btn kns-ec-btn-outline">View Cart</a>
+                <a href="cart.html" class="kns-ec-btn kns-ec-btn-primary">Checkout →</a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Essential Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore-compat.js"></script>
+
+    <script src="firebase-config.js?v=4"></script>
+    <script src="database.js?v=4"></script>
+    <script src="auth.js?v=4"></script>
+    <script src="admin_data.js?v=4"></script>
+    <script src="ui.js?v=4"></script>
+    <script src="cart.js?v=4"></script>
+    <script src="wishlist.js?v=4"></script>
+
+    <script>
+        lucide.createIcons();
+        KNSData.syncWithCloud();
+
+        let currentUserEmail = null;
+
+        function updateTrackingUI() {
+            const user = KNSAuth.getUser();
+            const emailInput = document.getElementById('userEmail');
+            const searchForm = document.querySelector('.search-form');
+            const trackMsg = document.getElementById('track-instruction');
+            
+            if (user && user.email) {
+                currentUserEmail = user.email;
+                if (emailInput) {
+                    emailInput.style.display = 'none';
+                    emailInput.required = false;
+                    emailInput.value = user.email; // Pre-fill just in case
+                }
+                if (searchForm) {
+                    searchForm.style.gridTemplateColumns = '1fr auto';
+                }
+                if (trackMsg) trackMsg.innerText = `Welcome back, ${user.name}! Just enter your Order ID to track your sanctuary.`;
+            } else {
+                currentUserEmail = null;
+                if (emailInput) {
+                    emailInput.style.display = 'block';
+                    emailInput.required = true;
+                }
+                if (searchForm) {
+                    searchForm.style.gridTemplateColumns = window.innerWidth > 768 ? '1fr 1fr auto' : '1fr';
+                }
+                if (trackMsg) trackMsg.innerText = "Please enter your Order ID and the Email address used during purchase.";
+            }
+        }
+
+        // Initialize UI
+        document.addEventListener('DOMContentLoaded', updateTrackingUI);
+        document.addEventListener('auth:changed', updateTrackingUI);
+        
+        // Also listen for Firebase native auth state as backup
+        firebase.auth().onAuthStateChanged(user => {
+            console.log("Track: Auth State Changed", user ? user.email : 'No user');
+            updateTrackingUI();
+        });
+
+        async function handleTrack(e) {
+            e.preventDefault();
+            const orderIdRaw = document.getElementById('orderId').value.trim();
+            const emailInput = document.getElementById('userEmail');
+            const email = currentUserEmail || (emailInput ? emailInput.value.trim().toLowerCase() : '');
+            
+            const resultsDiv = document.getElementById('tracking-results');
+            const msgDiv = document.getElementById('search-msg');
+
+            if (!email) {
+                msgDiv.innerHTML = '<span style="color:#e63946">Please provide an email address or sign in.</span>';
+                return;
+            }
+
+            msgDiv.textContent = '🔍 Fetching sanctuary details...';
+            msgDiv.style.color = 'var(--brand-dark)';
+            resultsDiv.style.display = 'none';
+
+            try {
+                const searchId = orderIdRaw.replace('KNS-', '').replace('ORD-', '').toLowerCase();
+                const orders = await KNSDb.getDocuments('orders');
+                const order = orders.find(o => {
+                    const idMatch = (o.id || o.firestoreId || '').toLowerCase().includes(searchId);
+                    const emailMatch = (o.customerEmail || o.email || '').toLowerCase() === email;
+                    return idMatch && emailMatch;
+                });
+
+                if (!order) {
+                    msgDiv.innerHTML = '<span style="color:#e63946">We couldn\'t find that order. Please verify your ID and Email.</span>';
+                    return;
+                }
+
+                msgDiv.innerHTML = '<span style="color:var(--brand-green)">✨ Order found! Tracking the journey...</span>';
+                renderTracking(order);
+                resultsDiv.style.display = 'block';
+                if(window.lucide) lucide.createIcons();
+
+            } catch (err) {
+                console.error(err);
+                msgDiv.innerHTML = '<span style="color:#e63946">Oops! Tracking service is temporarily sleepy. Try again in a bit.</span>';
+            }
+        }
+
+        function getStepIndex(status) {
+            const s = (status || '').toLowerCase();
+            if (s === 'confirmed') return 0;
+            if (s === 'processing') return 1;
+            if (s === 'shipped') return 2;
+            if (s === 'out for delivery') return 3;
+            if (s === 'delivered') return 4;
+            return -1;
+        }
+
+        function renderTracking(order) {
+            const resultsDiv = document.getElementById('tracking-results');
+            const status = order.status || 'Confirmed';
+            const currentStep = getStepIndex(status);
+            const steps = ['Confirmed', 'Processing', 'Shipped', 'Out For Delivery', 'Delivered'];
+            const displayId = order.id ? (order.id.startsWith('#') ? order.id : `#KNS-${order.id.slice(-6).toUpperCase()}`) : '#KNS-PENDING';
+
+            resultsDiv.innerHTML = `
+                <div class="result-card">
+                    <div style="padding: 2.5rem 3rem; background: #fff; border-bottom: 1px solid #f5f5f5; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1.5rem;">
+                        <div>
+                            <span style="color:#999; font-size:0.85rem; text-transform:uppercase; font-weight:700; letter-spacing:1px;">Sanctuary ID</span>
+                            <h2 style="font-family:'Outfit'; margin:0; font-size:2rem; color:var(--brand-dark);">${displayId}</h2>
+                        </div>
+                        <div class="order-status ${status.toLowerCase().replace(/ /g, '-')}" style="padding: 12px 25px; border-radius: 50px; background: rgba(140,198,63,0.08); color: var(--brand-green); font-weight:800; font-size:0.9rem; text-transform:uppercase; letter-spacing:1px; border: 1px solid rgba(140,198,63,0.2);">
+                            ${status}
+                        </div>
+                    </div>
+
+                    <div class="order-progress-wrapper">
+                        <div class="vertical-timeline">
+                            ${steps.map((label, idx) => {
+                                let state = '';
+                                if (idx < currentStep) state = 'completed';
+                                else if (idx === currentStep) state = 'active';
+
+                                let icon = idx + 1;
+                                if (idx < currentStep) icon = '<i data-lucide="check" size="20"></i>';
+                                
+                                let desc = '';
+                                if (idx === 0) desc = 'Order received and verified';
+                                if (idx === 1) desc = 'Your furniture is being crafted with care';
+                                if (idx === 2) desc = 'Handed over to our courier partner';
+                                if (idx === 3) desc = 'On its way to your sanctuary';
+                                if (idx === 4) desc = 'Succesfully delivered to your doorstep';
+
+                                return `
+                                    <div class="timeline-item ${state}">
+                                        <div class="timeline-node">${icon}</div>
+                                        <div class="timeline-content">
+                                            <div class="timeline-label">${label}</div>
+                                            <div class="timeline-desc">${desc}</div>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+
+                    ${order.trackingId ? `
+                    <div style="padding: 2.5rem 3rem; background: #FFFBE6; border-bottom: 1px solid #FFE58F; display:flex; align-items:center; gap:2rem;">
+                        <div style="background:#fff; width:60px; height:60px; border-radius:18px; display:flex; align-items:center; justify-content:center; box-shadow:0 8px 20px rgba(0,0,0,0.06);">
+                            <i data-lucide="truck" size="30" style="color:var(--brand-green)"></i>
+                        </div>
+                        <div>
+                            <div style="font-weight:800; color:#856404; font-size:1.1rem; margin-bottom:0.2rem;">Shipping via ${order.trackingCourier || 'Standard Carrier'}</div>
+                            <div style="font-size:1rem; color:#856404; opacity:0.8;">AWB Number: <b style="letter-spacing:1px; font-family:'Inter'">${order.trackingId}</b></div>
+                        </div>
+                    </div>
+                    ` : ''}
+
+                    <div class="tracking-info-bar">
+                         <div style="color:#888; font-size:0.95rem; font-weight:500;">
+                            <i data-lucide="calendar" size="16" style="vertical-align:middle; margin-right:8px; color:var(--brand-green);"></i>
+                            Commissioned on ${new Date(order.timestamp).toLocaleDateString(undefined, {day:'numeric', month:'long', year:'numeric'})}
+                         </div>
+                         <a href="contact.html" style="color:var(--brand-green); font-weight:800; text-decoration:none; font-size:0.95rem; display:flex; align-items:center; gap:8px;">
+                            Need Support? <i data-lucide="message-circle" size="18"></i>
+                         </a>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

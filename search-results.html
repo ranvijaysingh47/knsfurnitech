@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results - KNS Furnitech</title>
+    <meta name="description" content="Find products, articles, and information on KNS Furnitech.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="ecommerce.css">
+    <style>
+        .search-results-section {
+            padding: 4rem 5%;
+            background: #fff;
+            min-height: 60vh;
+        }
+        .results-header {
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+        .results-header h1 {
+            font-size: 2.5rem;
+            color: var(--brand-dark);
+            margin-bottom: 0.5rem;
+        }
+        .results-header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+        .results-category {
+            margin-bottom: 4rem;
+        }
+        .results-category h2 {
+            font-size: 1.5rem;
+            color: var(--brand-dark);
+            border-bottom: 2px solid var(--brand-green);
+            display: inline-block;
+            margin-bottom: 2rem;
+            padding-bottom: 0.5rem;
+        }
+        .page-result-card {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            border: 1px solid transparent;
+        }
+        .page-result-card:hover {
+            background: #fff;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            border-color: var(--brand-green);
+            transform: translateY(-2px);
+        }
+        .page-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(46, 125, 50, 0.1);
+            color: var(--brand-green);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .page-info h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+            color: var(--brand-dark);
+        }
+        .page-info p {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        .no-results {
+            text-align: center;
+            padding: 5rem 0;
+        }
+        .no-results i {
+            color: #ccc;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+        .search-highlight {
+            background: rgba(46, 125, 50, 0.1);
+            padding: 0 2px;
+            border-radius: 2px;
+            color: var(--brand-green);
+            font-weight: 600;
+        }
+        .product-img-wrapper {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            background: #fff;
+            overflow: hidden;
+            border-radius: 15px 15px 0 0;
+        }
+        .product-img {
+            width: 100%;
+            height: 100%;
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            transition: transform 0.5s ease;
+        }
+        .product-card:hover .product-img {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+    <!-- Top utility bar -->
+    <div class="top-bar">
+        Welcome to KNS Furnitech. Enjoy Hassle-free Exchange & Standard Delivery!
+    </div>
+
+    <!-- Main Navigation -->
+    <header class="ecommerce-nav">
+        <div class="main-header">
+            <!-- Brand Logo from User Spec -->
+            <a href="index.html" class="logo">
+                <img src="images/logo.png" alt="KNS Furnitech" class="logo-img">
+                <span>KNS FURNITECH</span>
+            </a>
+
+            <!-- Animated Desktop Search (Centered - Hidden on Mobile) -->
+            <div class="desktop-search-container">
+                <form class="search-box-animated" action="search-results.html" method="GET">
+                    <input type="text" name="q" id="topSearchInput" placeholder="Search website..." required>
+                    <button type="submit" aria-label="Search"><i data-lucide="search" size="20"></i></button>
+                </form>
+            </div>
+
+            <!-- User Actions -->
+            <div class="user-actions kns-nav-icons">
+                <!-- Auth slot -->
+                <span class="kns-auth-slot"></span>
+                <a href="orders.html" class="kns-icon-btn" title="My Orders">
+                    <i data-lucide="package" size="22"></i>
+                </a>
+                <a href="track-order.html" class="kns-icon-btn" title="Track Order">
+                    <i data-lucide="truck" size="22"></i>
+                </a>
+                <a href="wishlist.html" class="kns-icon-btn" title="Wishlist">
+                    <i data-lucide="heart" size="22"></i>
+                    <span class="kns-wish-badge">0</span>
+                </a>
+                <button class="kns-icon-btn" data-open-cart title="Cart">
+                    <i data-lucide="shopping-cart" size="22"></i>
+                    <span class="kns-cart-badge">0</span>
+                </button>
+                <!-- Premium Hamburger Toggle -->
+                <button class="hamburger-btn" title="Menu">
+                    <i data-lucide="menu" size="24"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Categories Mega Nav -->
+        <nav class="categories-nav">
+            <a href="shop.html">All</a>
+            <a href="shop.html?cat=Executive+Chair">Executive Chair</a>
+            <a href="shop.html?cat=Workstation+Chair">Workstation Chair</a>
+            <a href="shop.html?cat=Plastic+Metal+-+Cafe+Chair">Plastic Metal - Cafe Chair</a>
+            <a href="shop.html?cat=Bar+Stool+Chair">Bar Stool Chair</a>
+            <a href="shop.html?cat=Puffy+Table+Chair">Puffy Table Chair</a>
+            <a href="shop.html?cat=Sofa+Lounge+Seating">Sofa Lounge Seating</a>
+            <a href="shop.html?cat=Educational+Furniture">Educational Furniture</a>
+        </nav>
+    </header>
+
+    <main class="search-results-section">
+        <div class="results-header">
+            <h1>Search Results</h1>
+            <p id="results-count-text">Finding relevant matches for you...</p>
+        </div>
+
+        <div id="results-container">
+            <!-- Results injected here -->
+            <div class="no-results" id="loading-state">
+                <i data-lucide="loader-2" size="48" class="animate-spin"></i>
+                <p>Searching through products, blogs, and pages...</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Comprehensive Godrej-Style Footer -->
+    <footer class="ecommerce-footer">
+        <div class="footer-grid">
+            <div class="footer-brand animate-on-scroll">
+                <a href="index.html" class="logo">
+                    <img src="images/logo.png" alt="KNS Furnitech" class="logo-img">
+                    <span>KNS FURNITECH</span>
+                </a>
+                <p>Elevating living spaces across India with premium, modular, and sustainable furniture. Discover the perfect blend of modern aesthetics and unparalleled comfort.</p>
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+                    </a>
+                    <a href="#" aria-label="Instagram">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg>
+                    </a>
+                    <a href="#" aria-label="Twitter">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path></svg>
+                    </a>
+                    <a href="https://linkedin.com/company/kns-furnitech" target="_blank" aria-label="LinkedIn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="footer-col animate-on-scroll">
+                <h4>Shop Categories</h4>
+                <ul class="footer-links">
+                    <li><a href="shop.html?cat=Executive+Chair">Executive Chair</a></li>
+                    <li><a href="shop.html?cat=Workstation+Chair">Workstation Chair</a></li>
+                    <li><a href="shop.html?cat=Plastic+Metal+-+Cafe+Chair">Plastic Metal - Cafe Chair</a></li>
+                    <li><a href="shop.html?cat=Bar+Stool+Chair">Bar Stool Chair</a></li>
+                    <li><a href="shop.html?cat=Puffy+Table+Chair">Puffy Table Chair</a></li>
+                    <li><a href="shop.html?cat=Sofa+Lounge+Seating">Sofa Lounge Seating</a></li>
+                    <li><a href="shop.html?cat=Educational+Furniture">Educational Furniture</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col animate-on-scroll">
+                <h4>Customer Service</h4>
+                <ul class="footer-links">
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="blog.html">Our Blog</a></li>
+                    <li><a href="clients.html">Our Clients</a></li>
+                    <li><a href="catalogs.html">Catalogs</a></li>
+                    <li><a href="track-order.html">Track Order</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col animate-on-scroll">
+                <h4>Newsletter</h4>
+                <p style="color: #aaa; margin-bottom: 1rem; font-size: 0.95rem;">Subscribe to get special offers, free giveaways, and design inspiration.</p>
+                <form class="newsletter-form" onsubmit="event.preventDefault();">
+                    <input type="email" placeholder="Enter your email">
+                    <button type="submit">Subscribe</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2026 KNS Furnitech. All Rights Reserved.</p>
+            <div class="footer-bottom-links">
+                <a href="privacy-policy.html">Privacy Policy</a>
+                <a href="terms-of-service.html">Terms of Service</a>
+                <a href="#">Sitemap</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Auth overlay + modal -->
+    <div id="kns-auth-overlay" onclick="closeAuthModal()"></div>
+    <div id="kns-auth-modal">
+        <div class="kns-auth-header">
+            <span class="logo-sm">KNS FURNITECH</span>
+            <button class="kns-auth-close" onclick="closeAuthModal()" aria-label="Close">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor"
+                    stroke-width="2.5" viewBox="0 0 24 24">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+            </button>
+        </div>
+        <div class="kns-auth-tabs">
+            <button class="kns-auth-tab active" data-tab="login" onclick="switchAuthTab('login')">Sign In</button>
+            <button class="kns-auth-tab" data-tab="register" onclick="switchAuthTab('register')">Create Account</button>
+        </div>
+        <div class="kns-auth-body">
+            <!-- Login -->
+            <form id="kns-login-form" class="kns-auth-form active" onsubmit="handleLogin(event)">
+                <div class="kns-auth-error" id="loginError"></div>
+                <input type="email" id="loginEmail" placeholder="Email Address" required autocomplete="email">
+                <input type="password" id="loginPassword" placeholder="Password" required
+                    autocomplete="current-password">
+                <button type="submit" class="kns-auth-submit">Sign In &rarr;</button>
+                <div class="kns-auth-divider">New to KNS?</div>
+                <button type="button" class="kns-auth-submit" style="background:#f5f5f5; color:#1A1A1A;"
+                    onclick="switchAuthTab('register')">Create an Account</button>
+            </form>
+            <!-- Register -->
+            <form id="kns-register-form" class="kns-auth-form" onsubmit="handleRegister(event)">
+                <div class="kns-auth-error" id="regError"></div>
+                <input type="text" id="regName" placeholder="Full Name" required autocomplete="name">
+                <input type="email" id="regEmail" placeholder="Email Address" required autocomplete="email">
+                <input type="password" id="regPassword" placeholder="Password (min 6 chars)" required
+                    autocomplete="new-password">
+                <input type="password" id="regConfirm" placeholder="Confirm Password" required
+                    autocomplete="new-password">
+                <button type="submit" class="kns-auth-submit">Create Account &rarr;</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Cart Drawer Overlay -->
+    <div id="kns-drawer-overlay"></div>
+    <!-- Cart Drawer Panel -->
+    <aside id="kns-cart-drawer">
+        <div class="kns-drawer-head">
+            <h3>🛒 Your Cart</h3>
+            <button id="kns-drawer-close" aria-label="Close cart">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor"
+                    stroke-width="2.5" viewBox="0 0 24 24">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+            </button>
+        </div>
+        <div id="kns-drawer-items"></div>
+        <div class="kns-drawer-foot">
+            <div class="kns-drawer-subtotal-row">
+                <span>Subtotal</span>
+                <span id="kns-drawer-subtotal">₹0</span>
+            </div>
+            <div class="kns-drawer-actions">
+                <a href="cart.html" class="kns-ec-btn kns-ec-btn-outline">View Cart</a>
+                <a href="cart.html" class="kns-ec-btn kns-ec-btn-primary">Checkout →</a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Inquiry Modal -->
+    <div id="quote-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close" onclick="document.getElementById('quote-modal').classList.remove('active')"><i
+                    data-lucide="x" size="24"></i></button>
+            <h2 style="margin-bottom: 0.5rem; color: var(--brand-dark);">Request a Quote</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 2rem;">Our design consultants will get back to you
+                within 24 hours.</p>
+            <form class="quote-form" onsubmit="handleQuoteSubmit(event)">
+                <input type="text" id="quoteName" placeholder="Your Name" required>
+                <input type="email" id="quoteEmail" placeholder="Email Address" required>
+                <input type="tel" id="quotePhone" placeholder="Phone Number">
+                <textarea id="quoteMessage" placeholder="Tell us about the products or project you are interested in..."
+                    rows="4" required></textarea>
+                <button type="submit" class="btn-primary" style="width: 100%;">Submit Inquiry</button>
+            </form>
+            <script>
+                async function handleQuoteSubmit(e) {
+                    e.preventDefault();
+                    const data = {
+                        name: document.getElementById('quoteName').value,
+                        email: document.getElementById('quoteEmail').value,
+                        phone: document.getElementById('quotePhone').value,
+                        message: document.getElementById('quoteMessage').value,
+                        type: 'quote_request'
+                    };
+
+                    const res = await window.KNSDb.saveInquiry(data);
+                    if (res.ok) {
+                        alert('Your inquiry has been sent! Our team will contact you shortly.');
+                        document.getElementById('quote-modal').classList.remove('active');
+                        e.target.reset();
+                    } else {
+                        alert('Error: ' + res.msg);
+                    }
+                }
+            </script>
+        </div>
+    </div>
+
+    <!-- Firebase & Data SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore-compat.js"></script>
+    
+    <script src="firebase-config.js?v=4"></script>
+    <script src="database.js?v=4"></script>
+    <script src="auth.js?v=4"></script>
+    <script src="admin_data.js?v=4"></script>
+    <script src="ui.js?v=4"></script>
+    <script src="cart.js?v=4"></script>
+    <script src="wishlist.js?v=4"></script>
+
+    <script>
+        const STATIC_PAGES = [
+            { title: 'Home', url: 'index.html', desc: 'Welcome to KNS Furnitech. Premium office and home furniture.', tags: 'luxury, interior, design' },
+            { title: 'Shop Furniture', url: 'shop.html', desc: 'Browse our complete catalog of chairs, sofas, and tables.', tags: 'buy, price, store' },
+            { title: 'About Us', url: 'about.html', desc: 'Learn more about KNS Furnitech, our mission, and our values.', tags: 'company, mission, history' },
+            { title: 'Contact Support', url: 'contact.html', desc: 'Get in touch with our team for inquiries or support.', tags: 'email, phone, address' },
+            { title: 'Track Your Order', url: 'track-order.html', desc: 'Real-time updates on your furniture delivery status.', tags: 'delivery, shipping, status' },
+            { title: 'Privacy Policy', url: 'privacy-policy.html', desc: 'How we handle and protect your personal data.', tags: 'legal, security, data' },
+            { title: 'Terms of Service', url: 'terms-of-service.html', desc: 'Our customer agreements and legal terms.', tags: 'rules, legal, contract' },
+            { title: 'Product Catalogs', url: 'catalogs.html', desc: 'Download our latest digital catalogs for offline viewing.', tags: 'pdf, download, brochure' },
+            { title: 'Our Clients', url: 'clients.html', desc: 'Success stories and brands we have worked with.', tags: 'corporate, partners, trust' },
+            { title: 'Blog & Articles', url: 'blog.html', desc: 'Design inspiration and furniture maintenance tips.', tags: 'news, tips, guide' }
+        ];
+
+        document.addEventListener('DOMContentLoaded', async () => {
+             // Re-render when data updates from cloud
+            document.addEventListener('products:updated', () => {
+                const params = new URLSearchParams(location.search);
+                const query = params.get('q') || '';
+                if(query) performSearch(query);
+            });
+
+            const params = new URLSearchParams(location.search);
+            const query = params.get('q') || '';
+            document.getElementById('topSearchInput').value = query;
+
+            if (!query) {
+                renderNoResults();
+                return;
+            }
+
+            performSearch(query);
+            
+            // Trigger cloud sync
+            KNSData.syncWithCloud();
+        });
+
+        async function performSearch(query) {
+            // High-Performance Filter Logic
+            const normalizedQuery = query.toLowerCase().trim();
+            const results = {
+                products: [],
+                blogs: [],
+                pages: []
+            };
+
+            // 1. Fetch & Sync Live Data from Database
+            const allProducts = KNSData.getProducts();
+            results.products = allProducts.filter(p => 
+                p.name.toLowerCase().includes(normalizedQuery) || 
+                p.category.toLowerCase().includes(normalizedQuery) ||
+                (p.description && p.description.toLowerCase().includes(normalizedQuery))
+            );
+
+            // 2. Search Blogs
+            const allBlogs = KNSData.getBlogs() || [];
+            results.blogs = allBlogs.filter(b => 
+                b.title.toLowerCase().includes(normalizedQuery) || 
+                (b.content && b.content.toLowerCase().includes(normalizedQuery)) ||
+                (b.excerpt && b.excerpt.toLowerCase().includes(normalizedQuery))
+            );
+
+            // 3. Search Static Pages
+            results.pages = STATIC_PAGES.filter(p => 
+                p.title.toLowerCase().includes(normalizedQuery) || 
+                p.desc.toLowerCase().includes(normalizedQuery) ||
+                p.tags.toLowerCase().includes(normalizedQuery)
+            );
+
+            renderResults(results, query);
+        }
+
+        function renderResults(res, query) {
+            const container = document.getElementById('results-container');
+            const countText = document.getElementById('results-count-text');
+            const totalCount = res.products.length + res.blogs.length + res.pages.length;
+
+            countText.textContent = `Showing ${totalCount} results for "${query}"`;
+
+            if (totalCount === 0) {
+                renderNoResults();
+                return;
+            }
+
+            let html = '';
+
+            // Section: Products
+            if (res.products.length > 0) {
+                html += `
+                    <div class="results-category">
+                        <h2>Matching Products (${res.products.length})</h2>
+                        <div class="shop-grid">
+                            ${res.products.map(p => `
+                                <div class="product-card">
+                                    <div class="product-img-wrapper">
+                                        <div class="product-img" style="background-image:url('${p.image}')"></div>
+                                        <a href="product.html?id=${p.id}" class="kns-card-link"></a>
+                                    </div>
+                                    <div class="product-info">
+                                        <div class="product-category">${p.category}</div>
+                                        <h3 class="product-title">${highlight(p.name, query)}</h3>
+                                        <div class="product-price">₹ ${p.price.toLocaleString('en-IN')}</div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Section: Blogs
+            if (res.blogs.length > 0) {
+                html += `
+                    <div class="results-category">
+                        <h2>Blog Articles (${res.blogs.length})</h2>
+                        <div class="blog-list" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;">
+                            ${res.blogs.map(b => `
+                                <a href="blog.html#${b.firestoreId}" class="page-result-card">
+                                    <div class="page-icon"><i data-lucide="file-text"></i></div>
+                                    <div class="page-info">
+                                        <h3>${highlight(b.title, query)}</h3>
+                                        <p>${b.excerpt ? highlight(b.excerpt.substring(0, 80) + '...', query) : 'Furniture guide and inspiration.'}</p>
+                                    </div>
+                                </a>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Section: Pages
+            if (res.pages.length > 0) {
+                html += `
+                    <div class="results-category">
+                        <h2>Informational Pages (${res.pages.length})</h2>
+                        <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;">
+                            ${res.pages.map(p => `
+                                <a href="${p.url}" class="page-result-card">
+                                    <div class="page-icon"><i data-lucide="link"></i></div>
+                                    <div class="page-info">
+                                        <h3>${highlight(p.title, query)}</h3>
+                                        <p>${highlight(p.desc, query)}</p>
+                                    </div>
+                                </a>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = html;
+            if(window.lucide) lucide.createIcons();
+        }
+
+        function renderNoResults() {
+            document.getElementById('results-container').innerHTML = `
+                <div class="no-results">
+                    <i data-lucide="search-x" size="64"></i>
+                    <h2>Oops! No results found.</h2>
+                    <p>Try searching with different keywords or browse our categories.</p>
+                    <a href="shop.html" class="kns-ec-btn kns-ec-btn-primary" style="margin-top: 2rem; display: inline-block;">Browse All Products</a>
+                </div>
+            `;
+            if(window.lucide) lucide.createIcons();
+        }
+
+        function highlight(text, query) {
+            if (!query) return text;
+            const parts = text.split(new RegExp(`(${query})`, 'gi'));
+            return parts.map(part => 
+                part.toLowerCase() === query.toLowerCase() 
+                ? `<span class="search-highlight">${part}</span>` 
+                : part
+            ).join('');
+        }
+    </script>
+</body>
+</html>

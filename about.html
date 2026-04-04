@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - KNS Furnitech | Leader in Ergonomic Seating</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="ecommerce.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* New Why Choose Us Section */
+        .why-choose-section {
+            padding: 7rem 5%;
+            background: rgba(140, 198, 63, 0.03);
+            /* Extremely subtle KNS green tint */
+            position: relative;
+            overflow: hidden;
+            border-top: 1px solid var(--border-light);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .why-choose-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5rem;
+            align-items: center;
+        }
+
+        .why-content h2 {
+            font-size: 2.5rem;
+            color: var(--brand-dark);
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .why-content p.lead {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+            line-height: 1.7;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
+        }
+
+        .feature-item .icon-box {
+            position: relative;
+            width: 45px;
+            height: 45px;
+            margin-bottom: 1rem;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+        }
+
+        .feature-item .icon-box::before {
+            content: '';
+            position: absolute;
+            width: 32px;
+            height: 32px;
+            background: rgba(140, 198, 63, 0.15);
+            /* Brand green soft backing */
+            border-radius: 50%;
+            top: 2px;
+            left: 12px;
+            z-index: -1;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-item:hover .icon-box::before {
+            transform: scale(1.15);
+        }
+
+        .feature-item i {
+            color: var(--brand-green);
+            /* Primary brand green icons */
+            transition: transform 0.3s ease;
+        }
+
+        .feature-item:hover i {
+            transform: translateY(-2px);
+        }
+
+        .feature-item h3 {
+            font-size: 1.25rem;
+            color: var(--brand-dark);
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+        }
+
+        .feature-item p {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .why-image-col {
+            position: relative;
+        }
+
+        .why-image-col .img-wrap {
+            position: relative;
+            z-index: 2;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .why-image-col .img-wrap img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 20px;
+        }
+
+        /* Dots Pattern */
+        .dots-pattern {
+            position: absolute;
+            top: -40px;
+            left: -40px;
+            width: 250px;
+            height: 250px;
+            background-image: radial-gradient(var(--brand-green) 3px, transparent 3px);
+            /* Brand green dots */
+            background-size: 25px 25px;
+            z-index: 1;
+            opacity: 0.7;
+            /* Soften the intensity slightly */
+        }
+
+        @media (max-width: 900px) {
+            .why-choose-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dots-pattern {
+                display: none;
+            }
+        }
+
+        /* Cinematic Clean CTA Redesign Styles */
+        .clean-cta-section {
+            padding: 10rem 5%;
+            background: linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)),
+                url('https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=1920') center/cover fixed;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 600px;
+        }
+
+        .clean-cta-content {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+            padding: 0;
+            /* Removing extra padding for a cleaner cinematic feel */
+            background: transparent;
+            backdrop-filter: none;
+            border: none;
+            box-shadow: none;
+        }
+
+        .clean-cta-title {
+            font-size: clamp(2.5rem, 6vw, 4.2rem);
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 2rem;
+            line-height: 1.1;
+            letter-spacing: -2px;
+        }
+
+        .clean-cta-text {
+            font-size: 1.35rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 4rem;
+            line-height: 1.6;
+            max-width: 750px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .clean-cta-btns {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        /* Reference Style: Vibrant Green Button */
+        .vibrant-quote-btn {
+            background: #8CC63F;
+            /* KNS Brand Green */
+            color: white;
+            padding: 1.25rem 3.5rem;
+            font-size: 1.15rem;
+            border-radius: 50px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 10px 40px rgba(140, 198, 63, 0.4);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .vibrant-quote-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 20px 60px rgba(140, 198, 63, 0.6);
+            background: #9add45;
+        }
+
+        /* Reference Style: Dark Glass Button */
+        .glass-dark-btn {
+            padding: 1.25rem 3.5rem;
+            font-size: 1.15rem;
+            border-radius: 50px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            text-decoration: none;
+            border: 1.5px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .glass-dark-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-3px);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Top utility bar -->
+    <div class="top-bar">
+        Welcome to KNS Furnitech. Enjoy Hassle-free Exchange & Standard Delivery!
+    </div>
+
+    <!-- Main Navigation -->
+    <header class="ecommerce-nav">
+        <div class="main-header">
+            <!-- Brand Logo from User Spec -->
+            <a href="index.html" class="logo">
+                <img src="images/logo.png" alt="KNS Furnitech" class="logo-img">
+                <span>KNS FURNITECH</span>
+            </a>
+
+            <!-- Animated Desktop Search (Centered - Hidden on Mobile) -->
+            <div class="desktop-search-container">
+                <form class="search-box-animated" action="search-results.html" method="GET">
+                    <input type="text" name="q" placeholder="Search website..." required>
+                    <button type="submit" aria-label="Search"><i data-lucide="search" size="20"></i></button>
+                </form>
+            </div>
+
+            <!-- Godrej Style Search -->
+            <!-- Corporate Navigation -->
+
+            <!-- User Actions -->
+            <div class="user-actions kns-nav-icons">
+                <!-- Auth slot -->
+                <span class="kns-auth-slot"></span>
+                <a href="orders.html" class="kns-icon-btn" title="My Orders">
+                    <i data-lucide="package" size="22"></i>
+                </a>
+                <a href="track-order.html" class="kns-icon-btn" title="Track Order">
+                    <i data-lucide="truck" size="22"></i>
+                </a>
+                <a href="wishlist.html" class="kns-icon-btn" title="Wishlist">
+                    <i data-lucide="heart" size="22"></i>
+                    <span class="kns-wish-badge">0</span>
+                </a>
+                <button class="kns-icon-btn" data-open-cart title="Cart">
+                    <i data-lucide="shopping-cart" size="22"></i>
+                    <span class="kns-cart-badge">0</span>
+                </button>
+                <!-- Premium Hamburger Toggle -->
+                <button class="hamburger-btn" title="Menu">
+                    <i data-lucide="menu" size="24"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Categories Mega Nav (Hidden by CSS) -->
+        <nav class="categories-nav">
+            <a href="shop.html">All</a>
+            <a href="shop.html?cat=Executive%20Chair">Executive Chair</a>
+            <a href="shop.html?cat=Workstation%20Chair">Workstation Chair</a>
+            <a href="shop.html?cat=Plastic%20Metal%20-%20Cafe%20Chair">Cafe Chair</a>
+            <a href="shop.html?cat=Bar%20Stool%20Chair">Bar Stool</a>
+            <a href="shop.html?cat=Puffy%20Table%20Chair">Puffy Table</a>
+            <a href="shop.html?cat=Sofa%20Lounge%20Seating">Sofa Lounge</a>
+            <a href="shop.html?cat=Educational%20Furniture">Educational</a>
+        </nav>
+    </header>
+    <main>
+        <!-- Page Hero -->
+        <section class="page-hero animate-on-scroll"
+            style="margin-top: -4.5rem; padding-top: 10rem; position: relative; background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('images/hero_banner.png') center/cover; color: white; padding: 10rem 5% 5rem; text-align: center; overflow: hidden;">
+            <!-- Premium Breadcrumbs (Global Standard) -->
+            <ul class="kns-breadcrumb on-dark centered animate-slide-right">
+                <li><a href="index.html"><i data-lucide="home" size="14" style="margin-right:6px;"></i> Home</a><span
+                        class="sep"><i data-lucide="chevron-right" size="14"></i></span></li>
+                <li class="cur">About Us</li>
+            </ul>
+            <div style="position: relative; z-index: 2;" class="animate-scale-up">
+                <h1
+                    style="font-size: 4rem; font-weight: 700; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 2px;">
+                    About Us</h1>
+                <p style="font-size: 1.2rem; color: #e0e0e0; max-width: 600px; margin: 0 auto;">Discover the heritage,
+                    craftsmanship, and passionate vision behind India's premier ergonomic seating systems manufacturer.
+                </p>
+            </div>
+        </section>
+
+        <style>
+            .about-intro-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 6rem;
+                align-items: center;
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+
+            .about-image-collage {
+                position: relative;
+                height: 100%;
+                min-height: 550px;
+            }
+
+            @media (max-width: 900px) {
+                .about-intro-grid {
+                    grid-template-columns: 1fr;
+                    gap: 5rem;
+                }
+            }
+        </style>
+
+        <!-- Company Intro (Redesigned) -->
+        <section class="section-wrapper bg-white" style="padding: 8rem 5%; overflow: hidden;">
+            <div class="about-intro-grid">
+
+                <!-- Left: Beautiful Typography & Highlights -->
+                <div style="position: relative; z-index: 2;" class="animate-slide-right delay-1">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                        <span
+                            style="width: 40px; height: 3px; background: var(--brand-dark); display: inline-block;"></span>
+                        <span
+                            style="color: var(--brand-dark); font-weight: 700; text-transform: uppercase; letter-spacing: 2.5px; font-size: 0.95rem;">Who
+                            We Are</span>
+                    </div>
+
+                    <h2
+                        style="font-size: 3.5rem; color: var(--brand-dark); margin-bottom: 2rem; line-height: 1.15; font-weight: 700; letter-spacing: -1px;">
+                        Crafting Comfort.<br>Building Trust.
+                    </h2>
+
+                    <div
+                        style="position: relative; padding-left: 2rem; border-left: 4px solid var(--border-light); margin-bottom: 2.5rem;">
+                        <p
+                            style="font-size: 1.15rem; color: var(--text-secondary); line-height: 1.8; margin-bottom: 1.5rem; text-align: left;">
+                            We are proud manufacturers of premier ergonomic seating systems in India. Founded on the
+                            core principles of customer service, unmatched quality, and continuous innovation, we've
+                            successfully gained the trust of countless workspaces.
+                        </p>
+                        <p
+                            style="font-size: 1.1rem; color: var(--text-secondary); line-height: 1.8; margin-bottom: 1.5rem; text-align: left;">
+                            Improper seating posture is directly related to lower back pain, increased medical costs,
+                            and decreased productivity. Your present seating system could unknowingly damage your most
+                            crucial asset—your people. <strong>KNS Furnitech</strong> engineers solutions strictly to
+                            prevent this.
+                        </p>
+                        <p style="font-size: 1.1rem; color: var(--text-secondary); line-height: 1.8; text-align: left;">
+                            To serve you better, KNS took a strategic decision to provide pan-India door-to-door service
+                            for maximum customer convenience. Lower price points never mean a compromise on the quality
+                            we are renowned for.
+                        </p>
+                    </div>
+
+                    <!-- Floating Feature List -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                        <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem; background: #fbfbfb; border-radius: 12px; border: 1px solid var(--border-light); transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='translateY(-5px)'"
+                            onmouseout="this.style.transform='translateY(0)'">
+                            <div
+                                style="width: 45px; height: 45px; border-radius: 50%; background: rgba(140, 198, 63, 0.1); display: flex; align-items: center; justify-content: center; color: var(--brand-green);">
+                                <i data-lucide="check-circle" size="22"></i>
+                            </div>
+                            <span style="font-weight: 600; color: var(--brand-dark); font-size: 1.05rem;">Ergonomic
+                                Masters</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem; background: #fbfbfb; border-radius: 12px; border: 1px solid var(--border-light); transition: transform 0.3s ease;"
+                            onmouseover="this.style.transform='translateY(-5px)'"
+                            onmouseout="this.style.transform='translateY(0)'">
+                            <div
+                                style="width: 45px; height: 45px; border-radius: 50%; background: rgba(140, 198, 63, 0.1); display: flex; align-items: center; justify-content: center; color: var(--brand-green);">
+                                <i data-lucide="heart-handshake" size="22"></i>
+                            </div>
+                            <span style="font-weight: 600; color: var(--brand-dark); font-size: 1.05rem;">Door-to-Door
+                                Care</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Staggered Image Collage with Animation -->
+                <div class="about-image-collage animate-slide-left delay-2">
+                    <!-- Back dotted block -->
+                    <div
+                        style="position: absolute; top: -30px; right: -30px; width: 60%; height: 60%; background-image: radial-gradient(var(--brand-green) 2px, transparent 2px); background-size: 20px 20px; opacity: 0.35; border-radius: 20px; z-index: 0;">
+                    </div>
+
+                    <!-- Main Large Image -->
+                    <div
+                        style="position: absolute; top: 0; left: 0; width: 75%; height: 80%; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.1); z-index: 1;">
+                        <img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&q=80&w=800&h=1000"
+                            alt="KNS Furnitech Craftsmanship"
+                            style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s ease;"
+                            onmouseover="this.style.transform='scale(1.08)'"
+                            onmouseout="this.style.transform='scale(1)'">
+                    </div>
+
+                    <!-- Offset Overlapping Image -->
+                    <div class="animate-scale-up delay-3"
+                        style="position: absolute; bottom: 0; right: 0; width: 60%; height: 55%; border-radius: 20px; overflow: hidden; box-shadow: -15px -15px 40px rgba(0,0,0,0.2); border: 12px solid white; z-index: 2;">
+                        <img src="https://images.unsplash.com/photo-1581428982868-e410dd047a90?auto=format&fit=crop&q=80&w=800&h=800"
+                            alt="Detail Craftsmanship"
+                            style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s ease;"
+                            onmouseover="this.style.transform='scale(1.08)'"
+                            onmouseout="this.style.transform='scale(1)'">
+                    </div>
+
+                    <!-- Floating Experience Badge -->
+                    <div class="animate-slide-up delay-4"
+                        style="position: absolute; top: 50%; left: -50px; transform: translateY(-50%); background: white; padding: 1.5rem 2rem; border-radius: 16px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); text-align: center; z-index: 3; border-bottom: 4px solid var(--brand-green);">
+                        <div style="display: flex; flex-direction: column; align-items: center;">
+                            <i data-lucide="shield-check" size="36"
+                                style="color: var(--brand-green); margin-bottom: 0.5rem;"></i>
+                            <div
+                                style="font-size: 1.5rem; font-weight: 800; color: var(--brand-dark); line-height: 1.2;">
+                                100%</div>
+                            <div
+                                style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 700; text-transform: uppercase; margin-top: 0.4rem; letter-spacing: 1.5px;">
+                                Quality<br>Assured</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- New Why Choose Us Section -->
+        <section class="why-choose-section">
+            <div class="why-choose-grid">
+                <div class="why-content animate-slide-right delay-1">
+                    <h2>Why Choose Us</h2>
+                    <p class="lead">We focus on our core principles of customer service, high standards of quality, and
+                        value for money, enabling us to consistently deliver excellence.</p>
+
+                    <div class="feature-grid">
+                        <div class="feature-item">
+                            <div class="icon-box">
+                                <i data-lucide="truck" size="28"></i>
+                            </div>
+                            <h3>Fast Delivery</h3>
+                            <p>Reliable and efficient shipping across India directly from our manufacturing unit.</p>
+                        </div>
+                        <div class="feature-item">
+                            <div class="icon-box">
+                                <i data-lucide="shopping-bag" size="28"></i>
+                            </div>
+                            <h3>Easy to Shop</h3>
+                            <p>Browse our extensive collection and order seamlessly through our platform.</p>
+                        </div>
+                        <div class="feature-item">
+                            <div class="icon-box">
+                                <i data-lucide="life-buoy" size="28"></i>
+                            </div>
+                            <h3>24/7 Support</h3>
+                            <p>Dedicated customer service available around the clock for any inquiries.</p>
+                        </div>
+                        <div class="feature-item">
+                            <div class="icon-box">
+                                <i data-lucide="refresh-cw" size="28"></i>
+                            </div>
+                            <h3>Hassle Free Exchange</h3>
+                            <p>Simple post-sales service and flexible policies to guarantee satisfaction.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="why-image-col animate-slide-left delay-2">
+                    <div class="dots-pattern"></div>
+                    <div class="img-wrap">
+                        <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=1000&h=1000"
+                            alt="Beautiful Modern Furniture Setting">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Manufacturing Process Timeline -->
+        <section class="section-wrapper bg-white" style="padding: 6rem 5%; border-top: 1px solid var(--border-light);">
+            <div style="max-width: 1200px; margin: 0 auto;">
+                <div style="text-align: center; margin-bottom: 4rem;">
+                    <h2 class="animate-scale-up"
+                        style="font-size: 2.8rem; color: var(--brand-dark); margin-bottom: 1rem; font-weight: 700; letter-spacing: -0.5px;">
+                        How We Build Excellence</h2>
+                    <p class="animate-slide-up delay-1"
+                        style="color: var(--text-secondary); font-size: 1.15rem; max-width: 600px; margin: 0 auto;">Our
+                        end-to-end manufacturing process ensures quality is never compromised.</p>
+                </div>
+
+                <div
+                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; position: relative;">
+                    <!-- Connecting Line (Desktop Only) -->
+                    <div style="position: absolute; top: 35px; left: 10%; right: 10%; height: 2px; background: var(--border-light); z-index: 0; display: none;"
+                        class="process-line"></div>
+
+                    <!-- Step 1 -->
+                    <div class="animate-slide-up delay-1" style="text-align: center; position: relative; z-index: 1;">
+                        <div
+                            style="width: 70px; height: 70px; background: white; border: 2px solid var(--brand-green); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: var(--brand-green); box-shadow: 0 10px 20px rgba(140,198,63,0.15);">
+                            <i data-lucide="pen-tool" size="28"></i>
+                        </div>
+                        <h3 style="font-size: 1.3rem; margin-bottom: 0.8rem; color: var(--brand-dark);">1. Ergonomic
+                            Design</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">Our engineers
+                            draft seating architectures optimized specifically for the human body.</p>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="animate-slide-up delay-2" style="text-align: center; position: relative; z-index: 1;">
+                        <div
+                            style="width: 70px; height: 70px; background: white; border: 2px solid var(--brand-green); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: var(--brand-green); box-shadow: 0 10px 20px rgba(140,198,63,0.15);">
+                            <i data-lucide="trees" size="28"></i>
+                        </div>
+                        <h3 style="font-size: 1.3rem; margin-bottom: 0.8rem; color: var(--brand-dark);">2. Premium
+                            Sourcing</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">We select only
+                            the highest grade, sustainable raw materials for extreme durability.</p>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="animate-slide-up delay-3" style="text-align: center; position: relative; z-index: 1;">
+                        <div
+                            style="width: 70px; height: 70px; background: white; border: 2px solid var(--brand-green); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: var(--brand-green); box-shadow: 0 10px 20px rgba(140,198,63,0.15);">
+                            <i data-lucide="hammer" size="28"></i>
+                        </div>
+                        <h3 style="font-size: 1.3rem; margin-bottom: 0.8rem; color: var(--brand-dark);">3. Precision
+                            Assembly</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">Expert artisans
+                            construct each piece at our state-of-the-art facility in Umargam.</p>
+                    </div>
+
+                    <!-- Step 4 -->
+                    <div class="animate-slide-up delay-4" style="text-align: center; position: relative; z-index: 1;">
+                        <div
+                            style="width: 70px; height: 70px; background: white; border: 2px solid var(--brand-green); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: var(--brand-green); box-shadow: 0 10px 20px rgba(140,198,63,0.15);">
+                            <i data-lucide="truck" size="28"></i>
+                        </div>
+                        <h3 style="font-size: 1.3rem; margin-bottom: 0.8rem; color: var(--brand-dark);">4. Door-to-Door
+                        </h3>
+                        <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">Rigorous quality
+                            assurance followed by secure, direct shipping straight to your space.</p>
+                    </div>
+                </div>
+            </div>
+            <style>
+                @media (min-width: 900px) {
+                    .process-line {
+                        display: block !important;
+                    }
+                }
+            </style>
+        </section>
+
+        <!-- Lifestyle Imagery -->
+        <section style="padding: 5rem 5%; background: white;">
+            <div style="max-width: 1200px; margin: 0 auto; text-align: center;">
+                <h2 class="section-title animate-scale-up">Experience the Craftsmanship</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 2rem;">
+                    <div class="animate-scale-up delay-1"
+                        style="border-radius: 16px; overflow: hidden; height: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+                        <img src="images/hero_banner.png" alt="Interior Craftsmanship"
+                            style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s;"
+                            onmouseover="this.style.transform='scale(1.05)'"
+                            onmouseout="this.style.transform='scale(1)'">
+                    </div>
+                    <div class="animate-scale-up delay-2"
+                        style="border-radius: 16px; overflow: hidden; height: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+                        <img src="images/premium_sofa.png" alt="Premium Sofa"
+                            style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s;"
+                            onmouseover="this.style.transform='scale(1.05)'"
+                            onmouseout="this.style.transform='scale(1)'">
+                    </div>
+                    <div class="animate-scale-up delay-3"
+                        style="border-radius: 16px; overflow: hidden; height: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+                        <img src="images/premium_desk.png" alt="Premium Desk"
+                            style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s;"
+                            onmouseover="this.style.transform='scale(1.05)'"
+                            onmouseout="this.style.transform='scale(1)'">
+                    </div>
+                    <div class="animate-scale-up delay-4"
+                        style="border-radius: 16px; overflow: hidden; height: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+                        <img src="images/hero_slide_2.png" alt="Luxury Living"
+                            style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s;"
+                            onmouseover="this.style.transform='scale(1.05)'"
+                            onmouseout="this.style.transform='scale(1)'">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Vision & Mission (Modernized) -->
+        <style>
+            .vm-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 4rem;
+                align-items: stretch;
+            }
+
+            @media (max-width: 900px) {
+                .vm-grid {
+                    grid-template-columns: 1fr;
+                    gap: 2.5rem;
+                }
+            }
+        </style>
+        <section class="section-wrapper"
+            style="background: var(--brand-dark); padding: 8rem 5%; color: white; position: relative;">
+            <div style="max-width: 1200px; margin: 0 auto;">
+                <div style="text-align: center; margin-bottom: 5rem;" class="animate-scale-up">
+                    <h2 style="font-size: 3rem; font-weight: 700; margin-bottom: 1rem;">Our Core Principles</h2>
+                    <div
+                        style="width: 60px; height: 4px; background: var(--brand-green); margin: 0 auto; border-radius: 2px;">
+                    </div>
+                </div>
+
+                <div class="vm-grid">
+                    <!-- Vision -->
+                    <div class="animate-slide-right delay-1"
+                        style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; padding: 4rem; position: relative; overflow: hidden; transition: transform 0.4s ease, border-color 0.4s ease;"
+                        onmouseover="this.style.transform='translateY(-10px)'; this.style.borderColor='rgba(140,198,63,0.5)';"
+                        onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(255,255,255,0.1)';">
+                        <!-- Decorative blurry blob -->
+                        <div
+                            style="position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; background: rgba(140,198,63,0.15); filter: blur(50px); border-radius: 50%;">
+                        </div>
+                        <i data-lucide="eye" size="48"
+                            style="color: var(--brand-green); margin-bottom: 2rem; position: relative; z-index: 2;"></i>
+                        <h3
+                            style="font-size: 2.2rem; font-weight: 700; margin-bottom: 1.5rem; letter-spacing: -0.5px; position: relative; z-index: 2;">
+                            Our Vision</h3>
+                        <p style="font-size: 1.1rem; line-height: 1.8; color: #b3b3b3; position: relative; z-index: 2;">
+                            To become the most trusted and preferred furniture brand in India, recognized for our
+                            commitment to ergonomic excellence, sustainable practices, and unwavering focus on enhancing
+                            the well-being and productivity of our customers through innovative seating solutions.
+                        </p>
+                    </div>
+
+                    <!-- Mission -->
+                    <div class="animate-slide-left delay-2"
+                        style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; padding: 4rem; position: relative; overflow: hidden; transition: transform 0.4s ease, border-color 0.4s ease;"
+                        onmouseover="this.style.transform='translateY(-10px)'; this.style.borderColor='rgba(140,198,63,0.5)';"
+                        onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(255,255,255,0.1)';">
+                        <!-- Decorative blurry blob -->
+                        <div
+                            style="position: absolute; bottom: -50px; left: -50px; width: 200px; height: 200px; background: rgba(140,198,63,0.15); filter: blur(50px); border-radius: 50%;">
+                        </div>
+                        <i data-lucide="target" size="48"
+                            style="color: var(--brand-green); margin-bottom: 2rem; position: relative; z-index: 2;"></i>
+                        <h3
+                            style="font-size: 2.2rem; font-weight: 700; margin-bottom: 1.5rem; letter-spacing: -0.5px; position: relative; z-index: 2;">
+                            Our Mission</h3>
+                        <p style="font-size: 1.1rem; line-height: 1.8; color: #b3b3b3; position: relative; z-index: 2;">
+                            To design and manufacture superior quality furniture that bridges the gap between industrial
+                            durability and modern aesthetics. We strive to provide unparalleled customer service,
+                            ethical manufacturing processes, and continuous innovation to deliver exceptional value
+                            seamlessly.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Team Group Focus Section -->
+        <section class="section-wrapper bg-white" style="padding: 2rem 5% 5rem;">
+            <div style="max-width: 1200px; margin: 0 auto;">
+                <div class="animate-scale-up delay-1"
+                    style="position: relative; border-radius: 20px; overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.15);">
+
+                    <!-- Group Image -->
+                    <div style="width: 100%; height: 550px; overflow: hidden;">
+                        <!-- The source points to the custom image. If the image is missing, it temporarily defaults back to the aesthetic stock image. -->
+                        <img src="images/team_group.jpeg" alt="KNS Furnitech Team"
+                            style="width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 15s ease;"
+                            onmouseover="this.style.transform='scale(1.15)'"
+                            onmouseout="this.style.transform='scale(1)'"
+                            onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=1600&h=800';">
+                    </div>
+
+                    <!-- Overlay Text Content -->
+                    <div
+                        style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(26, 26, 26, 0.98) 0%, rgba(26, 26, 26, 0.6) 70%, transparent 100%); padding: 5rem 4rem 3rem; color: white; display: flex; flex-direction: column; justify-content: flex-end; z-index: 2;">
+
+                        <div class="animate-on-scroll delay-2"
+                            style="display: inline-block; background: var(--brand-green); color: white; padding: 0.4rem 1.2rem; border-radius: 50px; font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1rem; width: max-content; box-shadow: 0 4px 15px rgba(140, 198, 63, 0.4);">
+                            The Strength Behind KNS
+                        </div>
+
+                        <h2 class="animate-slide-right delay-3"
+                            style="font-size: 3rem; font-weight: 700; margin-bottom: 1rem; letter-spacing: -0.5px;">
+                            United by Craftsmanship</h2>
+
+                        <p class="animate-slide-right delay-4"
+                            style="max-width: 800px; font-size: 1.15rem; line-height: 1.7; color: #e0e0e0;">
+                            Our journey isn’t just built on premium materials and modern machinery—it is powered by our
+                            dedicated family of artisans, designers, and engineers. We work seamlessly as one unit at
+                            our facility to ensure every piece of furniture meets the absolute highest standards of
+                            ergonomic excellence and durability before it reaches your space.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Department Breakdown -->
+        <section class="section-wrapper" style="background: #fbfbfb; padding: 5rem 5%;">
+            <div style="max-width: 1200px; margin: 0 auto; text-align: center;">
+                <h2 class="section-title animate-scale-up">Meet Our Team</h2>
+                <div
+                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2.5rem; text-align: left;">
+                    <!-- Team Member 1 -->
+                    <div class="animate-on-scroll delay-1"
+                        style="background: white; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-light); text-align: center; padding-bottom: 1.5rem; isolation: isolate; transform: translateZ(0);">
+                        <div
+                            style="height: 280px; background: #eaeaea; overflow: hidden; border-radius: 12px 12px 0 0;">
+                            <img src="images/kamlesh_singh.jpg" alt="Kamlesh Singh"
+                                style="width: 100%; height: 100%; object-fit: cover; object-position: center top; border-radius: 12px 12px 0 0;">
+                        </div>
+                        <h3 style="margin: 1.5rem 0 0.5rem; color: var(--brand-dark); font-size: 1.3rem;">Kamlesh Singh
+                        </h3>
+                        <p style="color: var(--brand-green); font-weight: 500; margin-bottom: 1rem;">Managing Director
+                        </p>
+                        <p style="color: var(--text-secondary); font-size: 0.95rem; padding: 0 1.5rem;">Visionary leader
+                            driving innovation and uncompromised quality.</p>
+                    </div>
+                    <!-- Team Member 2 -->
+                    <div class="animate-on-scroll delay-2"
+                        style="background: white; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-light); text-align: center; padding-bottom: 1.5rem; isolation: isolate; transform: translateZ(0);">
+                        <div
+                            style="height: 280px; background: #eaeaea; overflow: hidden; border-radius: 12px 12px 0 0;">
+                            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=400&h=400"
+                                alt="Design Team"
+                                style="width: 100%; height: 100%; object-fit: cover; object-position: center top; border-radius: 12px 12px 0 0;">
+                        </div>
+                        <h3 style="margin: 1.5rem 0 0.5rem; color: var(--brand-dark); font-size: 1.3rem;">Design Team
+                        </h3>
+                        <p style="color: var(--brand-green); font-weight: 500; margin-bottom: 1rem;">Lead Designers</p>
+                        <p style="color: var(--text-secondary); font-size: 0.95rem; padding: 0 1.5rem;">Crafting
+                            aesthetically pleasing and highly ergonomic structures.</p>
+                    </div>
+                    <!-- Team Member 3 -->
+                    <div class="animate-on-scroll delay-3"
+                        style="background: white; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-light); text-align: center; padding-bottom: 1.5rem; isolation: isolate; transform: translateZ(0);">
+                        <div
+                            style="height: 280px; background: #eaeaea; overflow: hidden; border-radius: 12px 12px 0 0;">
+                            <img src="images/team_member_3.jpg" alt="Milind Mule"
+                                style="width: 100%; height: 100%; object-fit: cover; object-position: center top; border-radius: 12px 12px 0 0;">
+                        </div>
+                        <h3 style="margin: 1.5rem 0 0.5rem; color: var(--brand-dark); font-size: 1.3rem;">Milind Mule
+                        </h3>
+                        <p style="color: var(--brand-green); font-weight: 500; margin-bottom: 1rem;">Plant Head</p>
+                        <p style="color: var(--text-secondary); font-size: 0.95rem; padding: 0 1.5rem;">Overseeing
+                            manufacturing excellence and ensuring top-tier product quality.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section (Cinematic Clean Redesign) -->
+        <section class="clean-cta-section animate-on-scroll">
+            <div class="clean-cta-content">
+                <h1 class="clean-cta-title">
+                    Ready to transform your workspace?
+                </h1>
+
+                <p class="clean-cta-text">
+                    Whether you're upgrading a single home office or outfitting a massive corporate headquarters, our
+                    expert design team is ready to build something exceptional.
+                </p>
+
+                <div class="clean-cta-btns">
+                    <button class="vibrant-quote-btn quote-btn">
+                        Get a Free Quote <i data-lucide="arrow-right" size="20"></i>
+                    </button>
+                    <a href="contact.html" class="glass-dark-btn">
+                        Contact Us
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Catalog Email Capture Modal -->
+    <div id="catalog-modal" class="catalog-modal">
+        <div class="catalog-modal-content">
+            <button class="catalog-modal-close" onclick="closeCatalogModal()">&times;</button>
+            <div class="catalog-modal-icon">
+                <i data-lucide="mail" size="48"></i>
+            </div>
+            <h3>Almost There!</h3>
+            <p>Please enter your email address to receive your free 2026 KNS Furnitech catalog.</p>
+            <form id="catalog-email-form" onsubmit="handleCatalogEmailSubmit(event)">
+                <input type="email" id="catalog-email" class="catalog-input" placeholder="Your Work Email" required>
+                <button type="submit" class="btn-primary" style="width:100%; justify-content:center;">Get My Catalog
+                    &rarr;</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Comprehensive Godrej-Style Footer -->
+    <footer class="ecommerce-footer">
+        <div class="footer-grid">
+            <div class="footer-brand animate-on-scroll">
+                <a href="index.html" class="logo">
+                    <img src="images/logo.png" alt="KNS Furnitech" class="logo-img">
+                    <span>KNS FURNITECH</span>
+                </a>
+                <p>Elevating living spaces across India with premium, modular, and sustainable furniture. Discover the
+                    perfect blend of modern aesthetics and unparalleled comfort.</p>
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                        </svg>
+                    </a>
+                    <a href="#" aria-label="Instagram">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
+                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                            <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
+                        </svg>
+                    </a>
+                    <a href="#" aria-label="Twitter">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z">
+                            </path>
+                        </svg>
+                    </a>
+                    <a href="https://linkedin.com/company/kns-furnitech" target="_blank" aria-label="LinkedIn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z">
+                            </path>
+                            <rect width="4" height="12" x="2" y="9"></rect>
+                            <circle cx="4" cy="4" r="2"></circle>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <div class="footer-col animate-on-scroll">
+                <h4>Shop Categories</h4>
+                <ul class="footer-links">
+                    <li><a href="shop.html?cat=Executive+Chair">Executive Chair</a></li>
+                    <li><a href="shop.html?cat=Workstation+Chair">Workstation Chair</a></li>
+                    <li><a href="shop.html?cat=Plastic+Metal+-+Cafe+Chair">Plastic Metal - Cafe Chair</a></li>
+                    <li><a href="shop.html?cat=Bar+Stool+Chair">Bar Stool Chair</a></li>
+                    <li><a href="shop.html?cat=Puffy+Table+Chair">Puffy Table Chair</a></li>
+                    <li><a href="shop.html?cat=Sofa+Lounge+Seating">Sofa Lounge Seating</a></li>
+                    <li><a href="shop.html?cat=Educational+Furniture">Educational Furniture</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col animate-on-scroll">
+                <h4>Customer Service</h4>
+                <ul class="footer-links">
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="blog.html">Our Blog</a></li>
+                    <li><a href="clients.html">Our Clients</a></li>
+                    <li><a href="catalogs.html">Catalogs</a></li>
+                    <li><a href="#" class="quote-btn">Book Consultation</a></li>
+                    <li><a href="track-order.html">Track Order</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col animate-on-scroll">
+                <h4>Newsletter</h4>
+                <p style="color: #aaa; margin-bottom: 1rem; font-size: 0.95rem;">Subscribe to get special offers, free
+                    giveaways, and design inspiration.</p>
+                <form class="newsletter-form" onsubmit="event.preventDefault();">
+                    <input type="email" placeholder="Enter your email">
+                    <button type="submit">Subscribe</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2026 KNS Furnitech. All Rights Reserved.</p>
+            <div class="footer-bottom-links">
+                <a href="privacy-policy.html">Privacy Policy</a>
+                <a href="terms-of-service.html">Terms of Service</a>
+                <a href="#">Sitemap</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Auth overlay + modal -->
+    <div id="kns-auth-overlay" onclick="closeAuthModal()"></div>
+    <div id="kns-auth-modal">
+        <div class="kns-auth-header">
+            <span class="logo-sm">KNS FURNITECH</span>
+            <button class="kns-auth-close" onclick="closeAuthModal()" aria-label="Close">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor"
+                    stroke-width="2.5" viewBox="0 0 24 24">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+            </button>
+        </div>
+        <div class="kns-auth-tabs">
+            <button class="kns-auth-tab active" data-tab="login" onclick="switchAuthTab('login')">Sign In</button>
+            <button class="kns-auth-tab" data-tab="register" onclick="switchAuthTab('register')">Create Account</button>
+        </div>
+        <div class="kns-auth-body">
+            <!-- Login -->
+            <form id="kns-login-form" class="kns-auth-form active" onsubmit="handleLogin(event)">
+                <div class="kns-auth-error" id="loginError"></div>
+                <input type="email" id="loginEmail" placeholder="Email Address" required autocomplete="email">
+                <input type="password" id="loginPassword" placeholder="Password" required
+                    autocomplete="current-password">
+                <button type="submit" class="kns-auth-submit">Sign In &rarr;</button>
+                <div class="kns-auth-divider">New to KNS?</div>
+                <button type="button" class="kns-auth-submit" style="background:#f5f5f5; color:#1A1A1A;"
+                    onclick="switchAuthTab('register')">Create an Account</button>
+            </form>
+            <!-- Register -->
+            <form id="kns-register-form" class="kns-auth-form" onsubmit="handleRegister(event)">
+                <div class="kns-auth-error" id="regError"></div>
+                <input type="text" id="regName" placeholder="Full Name" required autocomplete="name">
+                <input type="email" id="regEmail" placeholder="Email Address" required autocomplete="email">
+                <input type="password" id="regPassword" placeholder="Password (min 6 chars)" required
+                    autocomplete="new-password">
+                <input type="password" id="regConfirm" placeholder="Confirm Password" required
+                    autocomplete="new-password">
+                <button type="submit" class="kns-auth-submit">Create Account &rarr;</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Cart Drawer Overlay -->
+    <div id="kns-drawer-overlay"></div>
+    <!-- Cart Drawer Panel -->
+    <aside id="kns-cart-drawer">
+        <div class="kns-drawer-head">
+            <h3>🛒 Your Cart</h3>
+            <button id="kns-drawer-close" aria-label="Close cart">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor"
+                    stroke-width="2.5" viewBox="0 0 24 24">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+            </button>
+        </div>
+        <div id="kns-drawer-items"></div>
+        <div class="kns-drawer-foot">
+            <div class="kns-drawer-subtotal-row">
+                <span>Subtotal</span>
+                <span id="kns-drawer-subtotal">₹0</span>
+            </div>
+            <div class="kns-drawer-actions">
+                <a href="cart.html" class="kns-ec-btn kns-ec-btn-outline">View Cart</a>
+                <a href="cart.html" class="kns-ec-btn kns-ec-btn-primary">Checkout →</a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Inquiry Modal -->
+    <div id="quote-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close" onclick="document.getElementById('quote-modal').classList.remove('active')"><i
+                    data-lucide="x" size="24"></i></button>
+            <h2 style="margin-bottom: 0.5rem; color: var(--brand-dark);">Request a Quote</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 2rem;">Our design consultants will get back to you
+                within 24 hours.</p>
+            <form class="quote-form"
+                onsubmit="event.preventDefault(); alert('Your inquiry has been sent! Our team will contact you shortly.'); document.getElementById('quote-modal').classList.remove('active');">
+                <input type="text" placeholder="Your Name" required>
+                <input type="email" placeholder="Email Address" required>
+                <input type="tel" placeholder="Phone Number">
+                <textarea placeholder="Tell us about the products or project you are interested in..." rows="4"
+                    required></textarea>
+                <button type="submit" class="btn-primary" style="width: 100%;">Submit Inquiry</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Essential Scripts -->
+    <script src="ui.js"></script>
+    <script src="cart.js"></script>
+    <script src="wishlist.js"></script>
+    <script src="auth.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+    <script>
+        // Mouse Parallax Effect for CTA Section
+        const ctaZone = document.getElementById('cta-interact-zone');
+        if (ctaZone) {
+            ctaZone.addEventListener('mousemove', (e) => {
+                const { left, top, width, height } = ctaZone.getBoundingClientRect();
+                const x = (e.clientX - left) / width - 0.5;
+                const y = (e.clientY - top) / height - 0.5;
+
+                const parallaxItems = ctaZone.querySelectorAll('.cta-parallax');
+                parallaxItems.forEach((item, index) => {
+                    const depth = (index + 1) * 20;
+                    const moveX = x * depth;
+                    const moveY = y * depth;
+                    item.style.transform = `translate(${moveX}px, ${moveY}px)`;
+                });
+            });
+
+            ctaZone.addEventListener('mouseleave', () => {
+                const parallaxItems = ctaZone.querySelectorAll('.cta-parallax');
+                parallaxItems.forEach(item => {
+                    item.style.transform = `translate(0, 0)`;
+                });
+            });
+        }
+    </script>
+</body>
+
+</html>

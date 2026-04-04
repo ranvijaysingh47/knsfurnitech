@@ -1,0 +1,2234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details - KNS Furnitech</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Core Styles -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="ecommerce.css">
+
+    <style>
+        /* 
+           PREMIUM CINEMATIC PDP STYLES
+           (Internalized to ensure design integrity and 'earlier' look)
+        */
+        :root {
+            --pdp-green: #8CC63F;
+            --pdp-dark: #1A1A1A;
+            --pdp-text: #4A4A4A;
+            --pdp-bg: #fdfdfd;
+        }
+
+        body {
+            background-color: var(--pdp-bg);
+            font-family: 'Outfit', sans-serif;
+            margin: 0;
+        }
+
+        /* --- Cinematic Hero --- */
+        .pdp-hero {
+            height: 400px;
+            position: relative;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-top: -4.5rem;
+            padding-top: 6rem;
+        }
+
+        .pdp-hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.85));
+            z-index: 1;
+        }
+
+        .pdp-hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            color: #fff;
+        }
+
+        /* Breadcrumb (Matched to Contact Us perfectly) */
+        .kns-breadcrumb.on-dark {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            list-style: none;
+            padding: 0;
+            margin: 0 0 1.5rem;
+        }
+
+        .kns-breadcrumb.on-dark li {
+            display: flex;
+            align-items: center;
+        }
+
+        .kns-breadcrumb.on-dark a {
+            color: #fff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+        }
+
+        .kns-breadcrumb.on-dark a:hover {
+            color: var(--pdp-green);
+        }
+
+        .kns-breadcrumb.on-dark .sep {
+            margin: 0 10px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+        }
+
+        .kns-breadcrumb.on-dark .cur {
+            color: var(--pdp-green);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        /* --- Main PDP Layout --- */
+        .pdp-main {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 5rem;
+            padding: 4rem 5% 6rem;
+        }
+
+        /* --- Gallery Section --- */
+        .pdp-gallery {
+            position: sticky;
+            top: 120px;
+        }
+
+        .pdp-main-img-wrap {
+            position: relative;
+            background: #fff;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.06);
+            aspect-ratio: 4/3;
+            margin-bottom: 2rem;
+            border: 1px solid #f0f0f0;
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pdp-main-img-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        .pdp-expand-btn {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #fff;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+        }
+
+        .pdp-expand-btn:hover {
+            transform: scale(1.1);
+            color: var(--pdp-green);
+        }
+
+        .pdp-thumbs {
+            display: flex;
+            gap: 1.2rem;
+        }
+
+        .pdp-thumb {
+            width: 85px;
+            height: 85px;
+            border-radius: 14px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2.5px solid transparent;
+            transition: 0.3s;
+            background: #fff;
+        }
+
+        .pdp-thumb.active {
+            border-color: var(--pdp-green);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(140, 198, 63, 0.2);
+        }
+
+        .pdp-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* --- Info Section --- */
+        .pdp-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .pdp-category {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--pdp-green);
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+        }
+
+        .pdp-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--pdp-dark);
+            line-height: 1.1;
+            margin: 0;
+        }
+
+        .pdp-stars {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #f6ad55;
+            font-size: 1.2rem;
+        }
+
+        .pdp-stars span {
+            color: #888;
+            font-size: 1rem;
+            margin-left: 0.5rem;
+            font-weight: 500;
+        }
+
+        .pdp-pricing {
+            display: flex;
+            align-items: baseline;
+            gap: 1.5rem;
+            margin: 0.5rem 0;
+        }
+
+        .pdp-price {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--pdp-green);
+        }
+
+        .pdp-mrp {
+            font-size: 1.4rem;
+            text-decoration: line-through;
+            color: #ccc;
+        }
+
+        .pdp-save-badge {
+            background: rgba(140, 198, 63, 0.12);
+            color: var(--pdp-green);
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .pdp-desc {
+            font-size: 1.15rem;
+            color: var(--pdp-text);
+            line-height: 1.8;
+            margin: 0;
+            max-width: 95%;
+        }
+
+        .pdp-actions {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .pdp-qty-wrap {
+            display: flex;
+            align-items: center;
+            border: 2px solid #eee;
+            border-radius: 14px;
+            overflow: hidden;
+            background: #fff;
+            height: 56px;
+        }
+
+        .pdp-qty-btn {
+            width: 56px;
+            height: 100%;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 1.3rem;
+            transition: 0.25s;
+            color: var(--pdp-dark);
+        }
+
+        .pdp-qty-btn:hover {
+            background: #f9f9f9;
+            color: var(--pdp-green);
+        }
+
+        .pdp-qty-input {
+            width: 56px;
+            text-align: center;
+            border: none;
+            font-family: inherit;
+            font-weight: 700;
+            font-size: 1.2rem;
+            background: #fff;
+        }
+
+        .pdp-add-btn {
+            flex: 1;
+            height: 56px;
+            border-radius: 14px;
+            background: var(--pdp-dark);
+            color: #fff;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            cursor: pointer;
+            transition: 0.35s ease;
+        }
+
+        .pdp-add-btn:hover {
+            background: var(--pdp-green);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(140, 198, 63, 0.35);
+        }
+
+        .pdp-wish-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            background: #fff;
+            border: 2.5px solid #eee;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+        }
+
+        .pdp-wish-btn:hover {
+            border-color: #ef4444;
+            color: #ef4444;
+            transform: scale(1.05);
+        }
+
+        .pdp-wish-btn.active {
+            background: #ef4444;
+            border-color: #ef4444;
+            color: #fff;
+        }
+
+        .pdp-features {
+            margin-top: 2.5rem;
+            padding-top: 2.5rem;
+            border-top: 1px solid #eee;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
+        }
+
+        .pdp-feature {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+        }
+
+        .pdp-feature-icon {
+            width: 54px;
+            height: 54px;
+            border-radius: 14px;
+            background: #f5faf0;
+            color: var(--pdp-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+        }
+
+        .pdp-feature-text strong {
+            display: block;
+            font-size: 1rem;
+            color: var(--pdp-dark);
+            margin-bottom: 2px;
+        }
+
+        .pdp-feature-text span {
+            font-size: 0.85rem;
+            color: #888;
+            font-weight: 500;
+        }
+
+        /* --- Tabs & Review System --- */
+        .pdp-tabs-container {
+            max-width: 1400px;
+            margin: 0 auto 8rem;
+            padding: 0 5%;
+        }
+
+        .pdp-tabs-nav {
+            display: flex;
+            gap: 4rem;
+            border-bottom: 2px solid #eee;
+            margin-bottom: 4rem;
+        }
+
+        .pdp-tab-btn {
+            padding: 1.4rem 0;
+            border: none;
+            background: none;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #aaa;
+            cursor: pointer;
+            position: relative;
+            transition: 0.3s;
+            font-family: inherit;
+        }
+
+        .pdp-tab-btn.active {
+            color: var(--pdp-dark);
+        }
+
+        .pdp-tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--pdp-green);
+        }
+
+        .pdp-tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease both;
+        }
+
+        .pdp-tab-content.active {
+            display: block;
+        }
+
+        /* Review Styles */
+        .review-layout {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 5rem;
+        }
+
+        .review-form-side h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--pdp-dark);
+        }
+
+        .star-picker {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 2rem;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+        }
+
+        .star-picker i,
+        .star-picker svg {
+            cursor: pointer;
+            color: #ccc;
+            font-size: 2.2rem;
+            transition: 0.2s;
+            fill: none;
+            pointer-events: auto;
+        }
+
+        .star-picker i:hover,
+        .star-picker i:hover~i,
+        .star-picker i.selected,
+        .star-picker i.selected~i,
+        .star-picker svg:hover,
+        .star-picker svg:hover~svg,
+        .star-picker svg.selected,
+        .star-picker svg.selected~svg {
+            color: #f6ad55;
+            fill: #f6ad55;
+        }
+
+        .review-input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .review-input-group input,
+        .review-input-group textarea {
+            width: 100%;
+            padding: 1.2rem;
+            border-radius: 14px;
+            border: 2px solid #eee;
+            font-family: inherit;
+            font-size: 1rem;
+            outline: none;
+            transition: 0.3s;
+            background: #fafafa;
+        }
+
+        .review-input-group input:focus,
+        .review-input-group textarea:focus {
+            border-color: var(--pdp-green);
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(140, 198, 63, 0.1);
+        }
+
+        .review-list {
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+        }
+
+        .review-card {
+            padding: 2.5rem;
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 24px;
+            transition: 0.35s;
+        }
+
+        .review-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.06);
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1.2rem;
+            align-items: center;
+        }
+
+        .review-author {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--pdp-dark);
+        }
+
+        .review-stars {
+            color: #f6ad55;
+            font-size: 1rem;
+            letter-spacing: 2px;
+        }
+
+        .review-date {
+            font-size: 0.9rem;
+            color: #bbb;
+            font-weight: 500;
+        }
+
+        .review-text {
+            color: #555;
+            font-size: 1.05rem;
+            line-height: 1.8;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* --- Related --- */
+        .pdp-related {
+            background: #fff;
+            padding: 7rem 5%;
+            border-top: 1px solid #eee;
+        }
+
+        .pdp-related .section-title {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: var(--pdp-dark);
+            text-align: center;
+            margin-bottom: 4.5rem;
+        }
+
+        /* Product Deck Styles (Strict Consistency) */
+        .shop-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .product-card {
+            border-radius: 24px;
+            overflow: hidden;
+            background: #fff;
+            border: 1px solid #f0f0f0;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            isolation: isolate;
+            /* Ironclad clipping */
+            transform: translateZ(0);
+        }
+
+        .product-card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-card>a,
+        .product-card .product-img {
+            border-radius: inherit !important;
+            overflow: hidden !important;
+            isolation: isolate;
+        }
+
+        .product-img {
+            width: 100%;
+            height: 220px;
+            /* Match shop page standard box size */
+            background-size: contain;
+            /* Match shop page framing */
+            background-repeat: no-repeat;
+            background-position: center;
+            background-color: #f9f9f9;
+            /* Subtle light background for framing */
+            padding: 1rem;
+            /* Balanced Shop-style framing */
+            box-sizing: border-box;
+            position: relative;
+            transition: transform 0.6s ease;
+            overflow: hidden;
+        }
+
+        .product-card:hover .product-img {
+            transform: scale(1.05);
+        }
+
+        .product-info {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-category {
+            font-size: 0.8rem;
+            color: var(--pdp-green);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.8px;
+            margin-bottom: 10px;
+        }
+
+        .product-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--pdp-dark);
+            margin: 0 0 12px;
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--pdp-green);
+        }
+
+        .pdp-sticky-bar .logo-icon i {
+            color: var(--pdp-green);
+        }
+
+        .pdp-sticky-bar .btn-primary {
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            background: #1A1A1A;
+            border: none;
+            font-family: 'Outfit';
+        }
+
+        /* Color Selector Styling */
+        .pdp-colors {
+            margin-bottom: 2rem;
+        }
+
+        .pdp-colors-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .pdp-color-list {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .pdp-color-swatch {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            box-shadow: 0 0 0 1px #eee;
+            cursor: pointer;
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .pdp-color-swatch:hover {
+            transform: scale(1.1);
+        }
+
+        .pdp-color-swatch.active {
+            box-shadow: 0 0 0 2px var(--pdp-green, #8CC63F);
+            transform: scale(1.1);
+        }
+
+        .pdp-color-name {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            white-space: nowrap;
+            color: #888;
+            opacity: 0;
+            transition: 0.3s;
+            pointer-events: none;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .pdp-color-swatch:hover .pdp-color-name {
+            opacity: 1;
+            bottom: -20px;
+        }
+
+        .kns-add-cart-btn {
+            width: 100%;
+            padding: 0.9rem;
+            border-radius: 12px;
+            border: none;
+            background: var(--pdp-dark);
+            color: #fff;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: auto;
+        }
+
+        .kns-add-cart-btn:hover {
+            background: var(--pdp-green);
+        }
+
+        .btn-outline {
+            display: block;
+            width: 100%;
+            border: 2.5px solid #eee;
+            padding: 0.8rem;
+            border-radius: 12px;
+            text-align: center;
+            color: #555;
+            font-weight: 700;
+            margin-top: 12px;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--pdp-green);
+            color: var(--pdp-green);
+            background: #fdfdfd;
+        }
+
+        /* --- Lightbox (Ironclad Fix) --- */
+        .pdp-lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.98);
+            z-index: 9999999;
+            display: none;
+            place-items: center;
+            backdrop-filter: blur(15px);
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+        }
+
+        .pdp-lightbox.active {
+            display: grid !important;
+        }
+
+        .pdp-lightbox img {
+            max-width: 90%;
+            max-height: 85vh;
+            border-radius: 12px;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8);
+            object-fit: contain;
+            background: #fff;
+            display: block;
+            margin: auto;
+        }
+
+        .pdp-lightbox-close {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            font-size: 2.5rem;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid #fff;
+            cursor: pointer;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+            z-index: 10000000;
+        }
+
+        .pdp-lightbox-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        body.no-scroll {
+            overflow: hidden !important;
+            height: 100vh !important;
+            width: 100% !important;
+            position: fixed !important;
+            touch-action: none;
+            -ms-touch-action: none;
+        }
+
+        @media (max-width: 991px) {
+            .pdp-lightbox-close {
+                top: 15px;
+                right: 15px;
+                width: 50px;
+                height: 50px;
+                font-size: 2rem;
+                background: #000;
+                border-width: 1px;
+            }
+
+            .pdp-lightbox img {
+                max-width: 95%;
+                max-height: 75vh;
+            }
+
+            .pdp-tabs-nav {
+                display: flex;
+                overflow-x: auto;
+                white-space: nowrap;
+                gap: 1.5rem;
+                padding-bottom: 0.5rem;
+                scrollbar-width: none;
+                /* Hide scrollbar Firefox */
+                -ms-overflow-style: none;
+                /* Hide scrollbar IE/Edge */
+                border-bottom: 1px solid #eee;
+                margin-bottom: 2rem;
+            }
+
+            .pdp-tabs-nav::-webkit-scrollbar {
+                display: none;
+                /* Hide scrollbar Chrome/Safari */
+            }
+
+            .pdp-tab-btn {
+                padding: 0.8rem 0;
+                flex-shrink: 0;
+                font-size: 0.95rem;
+            }
+        }
+
+        @media (max-width: 991px) {
+            .pdp-lightbox-close {
+                top: 20px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
+                font-size: 2.2rem;
+            }
+
+            .pdp-lightbox img {
+                max-width: 95%;
+                max-height: 85vh;
+                border-radius: 8px;
+            }
+        }
+
+        /* Sticky Buy Bar */
+        .sticky-buy-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 85px;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(15px);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 5%;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            transform: translateY(-100%);
+            transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .sticky-buy-bar.active {
+            transform: translateY(0);
+        }
+
+        .sticky-bar-content {
+            max-width: 1400px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .sticky-prod-info {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .sticky-prod-img {
+            width: 54px;
+            height: 54px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 1px solid #eee;
+        }
+
+        .sticky-prod-details {
+            min-width: 0;
+        }
+
+        .sticky-prod-name {
+            font-weight: 700;
+            color: var(--pdp-dark);
+            font-size: 1.1rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: block;
+        }
+
+        .sticky-prod-price {
+            color: var(--pdp-green);
+            font-weight: 800;
+            font-size: 1.2rem;
+        }
+
+        /* --- Recommendations Base --- */
+        .pdp-recommendations-scroll {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .pdp-recommendations-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+        }
+
+        .pdp-recommendation-card {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: 20px;
+            border: 1px solid #eee;
+            transition: 0.3s;
+        }
+
+        .pdp-recommendation-card:hover {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transform: translateY(-3px);
+        }
+
+        .pdp-rec-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
+        .pdp-rec-details {
+            flex: 1;
+        }
+
+        .pdp-rec-name {
+            margin: 0 0 5px;
+            font-size: 1.1rem;
+            color: var(--pdp-dark);
+        }
+
+        .pdp-rec-price {
+            color: var(--pdp-green);
+            font-weight: 700;
+            margin: 0 0 12px;
+        }
+
+        .pdp-rec-btn {
+            padding: 0.6rem 1.2rem;
+            font-size: 0.85rem;
+            width: fit-content;
+        }
+
+        @media (max-width: 1000px) {
+            .pdp-main {
+                grid-template-columns: 1fr;
+                gap: 4rem;
+            }
+
+            .pdp-gallery {
+                position: relative;
+                top: 0;
+            }
+
+            .review-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .sticky-prod-info {
+                display: none;
+            }
+
+            /* Typography Scaling */
+            #pdp-hero-title {
+                font-size: 2.4rem !important;
+                letter-spacing: 2px !important;
+            }
+
+            .pdp-hero {
+                height: 320px;
+                padding-top: 5rem;
+                margin-top: -3.5rem;
+            }
+
+            /* Action Row Sync & Balance */
+            .mobile-action-row {
+                gap: 1rem !important;
+                align-items: center !important;
+                flex-wrap: wrap;
+            }
+
+            .mobile-qty-wrap,
+            .mobile-add-btn,
+            .mobile-wish-btn {
+                height: 54px !important;
+                box-sizing: border-box;
+                border-radius: 14px !important;
+            }
+
+            .mobile-qty-wrap {
+                border: 2px solid #eee !important;
+                width: 125px !important;
+                /* Strict compact width */
+                margin: 0 auto 0.75rem !important;
+                display: flex !important;
+                height: 52px !important;
+                flex: none !important;
+                justify-content: space-evenly !important;
+                /* Eliminate internal whitespace */
+                background: #fff !important;
+            }
+
+            .mobile-qty-btn {
+                width: 40px !important;
+                border: none !important;
+                background: none !important;
+                cursor: pointer;
+            }
+
+            .mobile-qty-input {
+                width: 35px !important;
+                font-size: 1.1rem !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                background: transparent !important;
+            }
+
+            .mobile-add-btn {
+                flex: 1 !important;
+                height: 52px !important;
+                font-size: 1rem !important;
+                min-width: 0 !important;
+            }
+
+            .mobile-wish-btn {
+                width: 52px !important;
+                height: 52px !important;
+                flex: none !important;
+            }
+
+            /* Recommendations Vertical Stack */
+            .pdp-recommendations-scroll {
+                overflow: visible !important;
+                margin: 0;
+                padding: 0 0 2rem;
+            }
+
+            .pdp-recommendations-grid {
+                display: grid !important;
+                grid-template-columns: 1fr !important;
+                gap: 1.5rem !important;
+                width: 100% !important;
+            }
+
+            .pdp-recommendation-card {
+                width: 100% !important;
+                max-width: none !important;
+                min-width: 0 !important;
+            }
+        }
+
+        @media (max-width: 600px) {
+            #pdp-hero-title {
+                font-size: 1.8rem !important;
+                letter-spacing: 1px !important;
+            }
+
+            .pdp-hero {
+                height: 280px;
+            }
+
+            .pdp-title {
+                font-size: 2.5rem;
+            }
+
+            .pdp-price {
+                font-size: 2rem;
+            }
+
+            .mobile-action-row {
+                flex-wrap: wrap;
+            }
+
+            .mobile-qty-wrap {
+                width: 100% !important;
+                flex: none !important;
+            }
+
+            .mobile-add-btn {
+                flex: 1 !important;
+            }
+
+            .pdp-recommendation-card {
+                min-width: 280px;
+                padding: 1rem;
+                gap: 1rem;
+            }
+
+            .pdp-rec-img {
+                width: 90px;
+                height: 90px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Sticky Buy Bar -->
+    <div id="sticky-buy-bar" class="sticky-buy-bar">
+        <div class="sticky-bar-content">
+            <div class="sticky-prod-info">
+                <img id="sticky-img" src="" alt="" class="sticky-prod-img">
+                <div class="sticky-prod-details">
+                    <span id="sticky-name" class="sticky-prod-name">Product Name</span>
+                    <span id="sticky-price" class="sticky-prod-price">₹ 0</span>
+                </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 1.5rem;">
+                <div class="pdp-qty-wrap" style="height: 48px; border-width: 1px;">
+                    <button class="pdp-qty-btn" style="width: 40px;" onclick="qty(-1)">-</button>
+                    <input type="number" id="pdp-qty-val-sticky" value="1" min="1" class="pdp-qty-input"
+                        style="width: 40px; font-size: 1rem;">
+                    <button class="pdp-qty-btn" style="width: 40px;" onclick="qty(1)">+</button>
+                </div>
+                <button class="pdp-add-btn" style="height: 48px; padding: 0 2.5rem; flex: none;" onclick="addToCart()">
+                    <i data-lucide="shopping-cart" size="18"></i>
+                    Add to Cart
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="top-bar">
+        Welcome to KNS Furnitech. Enjoy Hassle-free Exchange & Standard Delivery!
+    </div>
+
+    <!-- Main Navigation -->
+    <header class="ecommerce-nav">
+        <div class="main-header">
+            <a href="index.html" class="logo">
+                <img src="images/logo.png" alt="KNS Furnitech" class="logo-img">
+                <span>KNS FURNITECH</span>
+            </a>
+
+            <!-- Animated Desktop Search (Centered - Hidden on Mobile) -->
+            <div class="desktop-search-container">
+                <form class="search-box-animated" action="search-results.html" method="GET">
+                    <input type="text" name="q" placeholder="Search website..." required>
+                    <button type="submit" aria-label="Search"><i data-lucide="search" size="20"></i></button>
+                </form>
+            </div>
+            <div class="user-actions kns-nav-icons">
+                <span class="kns-auth-slot"></span>
+                <a href="orders.html" class="kns-icon-btn" title="My Orders">
+                    <i data-lucide="package" size="22"></i>
+                </a>
+                <a href="track-order.html" class="kns-icon-btn" title="Track Order">
+                    <i data-lucide="truck" size="22"></i>
+                </a>
+                <a href="wishlist.html" class="kns-icon-btn" title="Wishlist">
+                    <i data-lucide="heart" size="22"></i>
+                    <span class="kns-wish-badge">0</span>
+                </a>
+                <button class="kns-icon-btn" data-open-cart title="Cart">
+                    <i data-lucide="shopping-cart" size="22"></i>
+                    <span class="kns-cart-badge">0</span>
+                </button>
+                <!-- Premium Hamburger Toggle -->
+                <button class="hamburger-btn" title="Menu">
+                    <i data-lucide="menu" size="24"></i>
+                </button>
+            </div>
+        </div>
+        <nav class="categories-nav">
+            <a href="shop.html">All</a>
+            <a href="shop.html?cat=Executive+Chair">Executive Chair</a>
+            <a href="shop.html?cat=Workstation+Chair">Workstation Chair</a>
+            <a href="shop.html?cat=Plastic+Metal+-+Cafe+Chair">Cafe Chair</a>
+            <a href="shop.html?cat=Bar+Stool+Chair">Bar Stools</a>
+            <a href="shop.html?cat=Puffy+Table+Chair">Puffy & Table</a>
+            <a href="shop.html?cat=Sofa+Lounge+Seating">Sofa & Lounge</a>
+            <a href="shop.html?cat=Educational+Furniture">Educational</a>
+        </nav>
+    </header>
+
+    <!-- Cinematic Hero Section -->
+    <section class="pdp-hero" id="pdp-hero-node">
+        <div class="pdp-hero-overlay"></div>
+        <div class="pdp-hero-content">
+            <!-- Global Standard White Breadcrumbs (Matched to Contact Us) -->
+            <ul class="kns-breadcrumb on-dark centered animate-slide-right">
+                <li><a href="index.html"><i data-lucide="home" size="14" style="margin-right:8px;"></i> Home</a><span
+                        class="sep"><i data-lucide="chevron-right" size="14" color="white"></i></span></li>
+                <li><a href="shop.html">Shop</a><span class="sep"><i data-lucide="chevron-right" size="14"
+                            color="white"></i></span></li>
+                <li class="cur" id="breadcrumb-cur">Product</li>
+            </ul>
+            <h1 id="pdp-hero-title"
+                style="font-size: 4.5rem; font-weight: 800; text-transform: uppercase; letter-spacing: 4px; margin: 0;">
+                Product</h1>
+        </div>
+    </section>
+
+    <!-- PDP Main Content -->
+    <main class="pdp-main">
+        <!-- Gallery -->
+        <div class="pdp-gallery">
+            <div class="pdp-main-img-wrap" id="main-img-node">
+                <img id="pdp-target-img" src="" alt="Main Image">
+                <button class="pdp-expand-btn" onclick="openLightbox()"><i data-lucide="maximize-2"></i></button>
+            </div>
+            <div class="pdp-thumbs" id="pdp-thumbs-node"></div>
+        </div>
+
+        <!-- Info -->
+        <div class="pdp-info">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <div class="pdp-category" id="pdp-cat-node">Category</div>
+                <!-- Social Sharing Icons -->
+                <div class="pdp-share-links" style="display: flex; gap: 12px;">
+                    <a href="#" id="share-wa" title="Share on WhatsApp" style="color: #25D366; transition: 0.3s;"><i
+                            data-lucide="message-circle" size="18"></i></a>
+                    <a href="#" id="share-fb" title="Share on Facebook" style="color: #1877F2; transition: 0.3s;"><i
+                            data-lucide="facebook" size="18"></i></a>
+                    <a href="#" id="share-pn" title="Share on Pinterest" style="color: #BD081C; transition: 0.3s;"><i
+                            data-lucide="pin" size="18"></i></a>
+                </div>
+            </div>
+            <div id="pdp-badges-node" style="display: flex; gap: 8px; margin-bottom: 0.8rem;"></div>
+            <h1 class="pdp-title" id="pdp-name-node">Product Name</h1>
+            <div class="pdp-stars" id="pdp-stars-node"></div>
+
+            <div class="pdp-pricing">
+                <div class="pdp-price" id="pdp-pr-node">₹ 0</div>
+                <div class="pdp-mrp" id="pdp-mrp-node">₹ 0</div>
+                <div class="pdp-save-badge" id="pdp-save-node">Save 0%</div>
+            </div>
+
+            <p class="pdp-desc" id="pdp-desc-node">
+                Experience the pinnacle of craftsmanship with KNS Furnitech. Our designs blend modern luxury with
+                unmatched ergonomic support for your lifestyle.
+            </p>
+
+            <div id="pdp-colors-node" class="pdp-colors" style="display:none;"></div>
+
+            <div class="pdp-actions mobile-action-row">
+                <div class="pdp-qty-wrap mobile-qty-wrap">
+                    <button class="pdp-qty-btn" onclick="qty(-1)">-</button>
+                    <input type="number" id="pdp-qty-val" value="1" min="1" class="pdp-qty-input">
+                    <button class="pdp-qty-btn" onclick="qty(1)">+</button>
+                </div>
+                <button class="pdp-add-btn mobile-add-btn" onclick="addToCart()">
+                    <i data-lucide="shopping-cart"></i>
+                    Add to Cart
+                </button>
+                <button class="pdp-wish-btn mobile-wish-btn" id="wish-btn" onclick="toggleWish()">
+                    <i data-lucide="heart"></i>
+                </button>
+            </div>
+
+            <!-- Inquiries Row -->
+            <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                <a href="#" id="wa-inquiry" class="btn-outline"
+                    style="flex: 1; margin-top: 0; display: flex; align-items: center; justify-content: center; gap: 10px; border-color: #25D366; color: #25D366;">
+                    <i data-lucide="phone" size="18"></i> WhatsApp Inquiry
+                </a>
+                <button onclick="document.getElementById('bulk-modal').classList.add('active')" class="btn-outline"
+                    style="flex: 1; margin-top: 0; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                    <i data-lucide="building-2" size="18"></i> Bulk/Corporate
+                </button>
+            </div>
+
+            <div class="pdp-features">
+                <div class="pdp-feature">
+                    <div class="pdp-feature-icon"><i data-lucide="truck"></i></div>
+                    <div class="pdp-feature-text">
+                        <strong>Standard Delivery</strong>
+                        <span>Charges Applicable</span>
+                    </div>
+                </div>
+                <div class="pdp-feature">
+                    <div class="pdp-feature-icon"><i data-lucide="shield-check"></i></div>
+                    <div class="pdp-feature-text">
+                        <strong>3 Year Warranty</strong>
+                        <span>Quality Assured</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trust & Quality Badges (Premium Row) -->
+            <div class="pdp-trust-badges"
+                style="margin-top: 3rem; display: flex; gap: 2rem; padding: 1.5rem; background: #f8faf5; border-radius: 18px; border: 1px dashed var(--pdp-green);">
+                <div style="flex: 1; text-align: center;">
+                    <i data-lucide="award" style="color: var(--pdp-green); margin-bottom: 8px;"></i>
+                    <span
+                        style="display: block; font-size: 0.75rem; font-weight: 700; color: var(--pdp-dark); text-transform: uppercase;">Premium
+                        Finish</span>
+                </div>
+                <div style="flex: 1; text-align: center;">
+                    <i data-lucide="leaf" style="color: #2D6A4F; margin-bottom: 8px;"></i>
+                    <span
+                        style="display: block; font-size: 0.75rem; font-weight: 700; color: var(--pdp-dark); text-transform: uppercase;">Eco
+                        Friendly</span>
+                </div>
+                <div style="flex: 1; text-align: center;">
+                    <i data-lucide="hammer" style="color: #B08968; margin-bottom: 8px;"></i>
+                    <span
+                        style="display: block; font-size: 0.75rem; font-weight: 700; color: var(--pdp-dark); text-transform: uppercase;">Handcrafted</span>
+                </div>
+                <div style="flex: 1; text-align: center;">
+                    <i data-lucide="check-circle" style="color: #1B4332; margin-bottom: 8px;"></i>
+                    <span
+                        style="display: block; font-size: 0.75rem; font-weight: 700; color: var(--pdp-dark); text-transform: uppercase;">QC
+                        Certified</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Tabs Section -->
+    <section class="pdp-tabs-container">
+        <div class="pdp-tabs-nav">
+            <button class="pdp-tab-btn active" onclick="tab('specs')">Specifications</button>
+            <button class="pdp-tab-btn" onclick="tab('dimens')">Dimensions</button>
+            <button class="pdp-tab-btn" onclick="tab('desc')">Description</button>
+            <button class="pdp-tab-btn" data-reviews-count onclick="tab('reviews')">Reviews (2)</button>
+        </div>
+
+        <div id="tab-specs" class="pdp-tab-content active">
+            <div class="spec-grid"
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+                <div class="spec-card"
+                    style="padding: 1.5rem; background: #fff; border: 1px solid #eee; border-radius: 16px;">
+                    <span
+                        style="font-size: 0.85rem; color: #888; display: block; margin-bottom: 0.5rem; font-weight: 600;">Main
+                        Material</span>
+                    <strong id="spec-mat" style="color: var(--pdp-dark); font-size: 1.2rem;">Premium Seating</strong>
+                </div>
+                <div class="spec-card"
+                    style="padding: 1.5rem; background: #fff; border: 1px solid #eee; border-radius: 16px;">
+                    <span
+                        style="font-size: 0.85rem; color: #888; display: block; margin-bottom: 0.5rem; font-weight: 600;">Warranty
+                        Period</span>
+                    <strong style="color: var(--pdp-dark); font-size: 1.2rem;">24 Months</strong>
+                </div>
+                <div class="spec-card"
+                    style="padding: 1.5rem; background: #fff; border: 1px solid #eee; border-radius: 16px;">
+                    <span
+                        style="font-size: 0.85rem; color: #888; display: block; margin-bottom: 0.5rem; font-weight: 600;">Origin</span>
+                    <strong style="color: var(--pdp-dark); font-size: 1.2rem;">Proudly Made in India</strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Dimensions Diagram -->
+        <div id="tab-dimens" class="pdp-tab-content">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;">
+                <div
+                    style="background: #fdfdfd; border: 1px solid #eee; border-radius: 20px; padding: 2rem; text-align: center;">
+                    <!-- Simple CSS-based Dimension Drawing -->
+                    <div
+                        style="width: 250px; height: 300px; margin: 0 auto; border: 2px solid #ccc; position: relative; border-radius: 8px;">
+                        <div
+                            style="position: absolute; left: -40px; top: 0; bottom: 0; display: flex; align-items: center;">
+                            <div style="width: 1px; height: 100%; background: #999; position: relative;"><span
+                                    style="position: absolute; left: -20px; top: 50%; transform: translateY(-50%) rotate(-90deg); font-size: 0.7rem; white-space: nowrap;">HEIGHT:
+                                    45"</span></div>
+                        </div>
+                        <div
+                            style="position: absolute; bottom: -40px; left: 0; right: 0; display: flex; justify-content: center;">
+                            <div style="height: 1px; width: 100%; background: #999; position: relative;"><span
+                                    style="position: absolute; top: 10px; left: 50%; transform: translateX(-50%); font-size: 0.7rem;">WIDTH:
+                                    28"</span></div>
+                        </div>
+                        <div style="position: absolute; top: 20%; left: 0; right: 0; height: 2px; background: #eee;">
+                        </div>
+                        <div style="position: absolute; top: 60%; left: 0; right: 0; height: 2px; background: #eee;">
+                        </div>
+                        <i data-lucide="package" size="48"
+                            style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #eee;"></i>
+                    </div>
+                </div>
+                <div class="spec-grid" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <div
+                        style="padding: 1rem; border-bottom: 1px solid #eee; display: flex; justify-content: space-between;">
+                        <span style="color: #888; font-weight: 500;">Overall Height</span>
+                        <strong style="color: var(--pdp-dark);">45 inches</strong>
+                    </div>
+                    <div
+                        style="padding: 1rem; border-bottom: 1px solid #eee; display: flex; justify-content: space-between;">
+                        <span style="color: #888; font-weight: 500;">Overall Width</span>
+                        <strong style="color: var(--pdp-dark);">28 inches</strong>
+                    </div>
+                    <div
+                        style="padding: 1rem; border-bottom: 1px solid #eee; display: flex; justify-content: space-between;">
+                        <span style="color: #888; font-weight: 500;">Seat Depth</span>
+                        <strong style="color: var(--pdp-dark);">22 inches</strong>
+                    </div>
+                    <div
+                        style="padding: 1rem; border-bottom: 1px solid #eee; display: flex; justify-content: space-between;">
+                        <span style="color: #888; font-weight: 500;">Seat Height</span>
+                        <strong style="color: var(--pdp-dark);">18 - 22 inches (Adj.)</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-desc" class="pdp-tab-content">
+            <div style="max-width: 900px; color: #555; line-height: 2;">
+                <p>Designed with meticulous attention to detail, this piece signifies the fusion of beauty and utility.
+                    KNS Furnitech utilizes high-grade materials and ergonomic principles to create furniture that not
+                    only looks stunning but supports your well-being.</p>
+                <p>Whether for your home or office, our modular solutions offer the flexibility and durability required
+                    in modern living spaces.</p>
+            </div>
+        </div>
+
+        <div id="tab-reviews" class="pdp-tab-content">
+            <div class="review-layout">
+                <div class="review-form-side">
+                    <h3>Leave a Review</h3>
+                    <div class="star-picker" id="star-picker">
+                        <i data-lucide="star" data-star="5"></i>
+                        <i data-lucide="star" data-star="4"></i>
+                        <i data-lucide="star" data-star="3"></i>
+                        <i data-lucide="star" data-star="2"></i>
+                        <i data-lucide="star" data-star="1"></i>
+                    </div>
+                    <form onsubmit="handleReview(event)">
+                        <div class="review-input-group">
+                            <input type="text" id="rev-name" placeholder="Your Full Name" required>
+                        </div>
+                        <div class="review-input-group">
+                            <textarea id="rev-text" placeholder="Share your experience with this product..." rows="5"
+                                required></textarea>
+                        </div>
+                        <button type="submit" class="pdp-add-btn" style="width: auto; padding: 0 3rem;">Submit
+                            Review</button>
+                    </form>
+                </div>
+                <div class="review-list" id="review-list">
+                    <div class="review-card">
+                        <div class="review-header">
+                            <span class="review-author">Anjali Sharma</span>
+                            <span class="review-stars">★★★★★</span>
+                            <span class="review-date">Oct 12, 2025</span>
+                        </div>
+                        <p class="review-text">Extremely comfortable and the finish is top-notch. Truly premium quality
+                            furniture!</p>
+                    </div>
+                    <div class="review-card">
+                        <div class="review-header">
+                            <span class="review-author">Vikram Malhotra</span>
+                            <span class="review-stars">★★★★☆</span>
+                            <span class="review-date">Sep 28, 2025</span>
+                        </div>
+                        <p class="review-text">Great addition to my office. The delivery was timely and assembly was
+                            professional.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Complete the Look -->
+    <section id="complete-the-look-section" class="pdp-related section-wrapper"
+        style="background: #fdfdfd; padding-bottom: 0; display: none;">
+        <h2 class="section-title animate-on-scroll" style="font-size: 2.2rem; margin-bottom: 3rem;">Complete the Look
+        </h2>
+        <div class="pdp-recommendations-scroll">
+            <div class="pdp-recommendations-grid" id="complete-the-look-node">
+                <!-- Dynamically populated complementary products -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Related Products -->
+    <section class="pdp-related section-wrapper">
+        <h2 class="section-title animate-on-scroll">More from this Category</h2>
+        <div class="shop-grid" id="related-node"></div>
+    </section>
+
+    <!-- Recently Viewed -->
+    <section id="recently-viewed-section" class="pdp-related section-wrapper"
+        style="display: none; background: #fafafa; padding-top: 5rem;">
+        <h2 class="section-title" style="font-size: 2rem; margin-bottom: 3rem;">Products You Recently Viewed</h2>
+        <div class="shop-grid" id="recently-viewed-node"></div>
+    </section>
+
+    <!-- Comprehensive Godrej-Style Footer -->
+    <footer class="ecommerce-footer">
+        <div class="footer-grid">
+            <div class="footer-brand animate-on-scroll">
+                <a href="index.html" class="logo">
+                    <img src="images/logo.png" alt="KNS Furnitech" class="logo-img">
+                    <span>KNS FURNITECH</span>
+                </a>
+                <p>Elevating living spaces across India with premium, modular, and sustainable furniture. Discover the
+                    perfect blend of modern aesthetics and unparalleled comfort.</p>
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                        </svg>
+                    </a>
+                    <a href="#" aria-label="Instagram">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
+                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                            <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
+                        </svg>
+                    </a>
+                    <a href="#" aria-label="Twitter">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z">
+                            </path>
+                        </svg>
+                    </a>
+                    <a href="https://linkedin.com/company/kns-furnitech" target="_blank" aria-label="LinkedIn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z">
+                            </path>
+                            <rect width="4" height="12" x="2" y="9"></rect>
+                            <circle cx="4" cy="4" r="2"></circle>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <div class="footer-col animate-on-scroll">
+                <h4>Shop Categories</h4>
+                <ul class="footer-links">
+                    <li><a href="shop.html?cat=Executive+Chair">Executive Chair</a></li>
+                    <li><a href="shop.html?cat=Workstation+Chair">Workstation Chair</a></li>
+                    <li><a href="shop.html?cat=Plastic+Metal+-+Cafe+Chair">Plastic Metal - Cafe Chair</a></li>
+                    <li><a href="shop.html?cat=Bar+Stool+Chair">Bar Stool Chair</a></li>
+                    <li><a href="shop.html?cat=Puffy+Table+Chair">Puffy Table Chair</a></li>
+                    <li><a href="shop.html?cat=Sofa+Lounge+Seating">Sofa Lounge Seating</a></li>
+                    <li><a href="shop.html?cat=Educational+Furniture">Educational Furniture</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col animate-on-scroll">
+                <h4>Customer Service</h4>
+                <ul class="footer-links">
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="blog.html">Our Blog</a></li>
+                    <li><a href="clients.html">Our Clients</a></li>
+                    <li><a href="catalogs.html">Catalogs</a></li>
+                    <li><a href="track-order.html">Track Order</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col animate-on-scroll">
+                <h4>Newsletter</h4>
+                <p style="color: #aaa; margin-bottom: 1rem; font-size: 0.95rem;">Subscribe to get special offers, free
+                    giveaways, and design inspiration.</p>
+                <form class="newsletter-form" onsubmit="event.preventDefault();">
+                    <input type="email" placeholder="Enter your email">
+                    <button type="submit">Subscribe</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2026 KNS Furnitech. All Rights Reserved.</p>
+            <div class="footer-bottom-links">
+                <a href="privacy-policy.html">Privacy Policy</a>
+                <a href="terms-of-service.html">Terms of Service</a>
+                <a href="#">Sitemap</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Essential Modals -->
+    <div id="quote-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close" onclick="document.getElementById('quote-modal').classList.remove('active')"><i
+                    data-lucide="x" size="24"></i></button>
+            <h2 style="margin-bottom: 0.5rem; color: var(--brand-dark);">Request a Quote</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 2rem;">Our design consultants will get back to you
+                within 24 hours.</p>
+            <form class="quote-form"
+                onsubmit="event.preventDefault(); alert('Your inquiry has been sent! Our team will contact you shortly.'); document.getElementById('quote-modal').classList.remove('active');">
+                <input type="text" placeholder="Your Name" required>
+                <input type="email" placeholder="Email Address" required>
+                <input type="tel" placeholder="Phone Number">
+                <textarea placeholder="Tell us about your requirements..." rows="4" required></textarea>
+                <button type="submit" class="btn-primary" style="width: 100%;">Submit Inquiry</button>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- Bulk Inquiry Modal -->
+    <div id="bulk-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 600px;">
+            <button class="modal-close" onclick="document.getElementById('bulk-modal').classList.remove('active')"><i
+                    data-lucide="x" size="24"></i></button>
+            <h2 style="margin-bottom: 0.5rem; color: var(--pdp-dark);">Corporate & Bulk Inquiry</h2>
+            <p style="color: #666; margin-bottom: 2rem;">Planning a large office setup or commercial project? Request a
+                special quote.</p>
+            <form
+                onsubmit="event.preventDefault(); alert('Your bulk inquiry has been submitted! Our corporate team will contact you shortly.'); document.getElementById('bulk-modal').classList.remove('active');">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                    <input type="text" placeholder="Company Name"
+                        style="width:100%; padding:12px; border:1px solid #eee; border-radius:10px;" required>
+                    <input type="number" placeholder="Estimated Quantity"
+                        style="width:100%; padding:12px; border:1px solid #eee; border-radius:10px;" required>
+                </div>
+                <input type="text" placeholder="Your Name"
+                    style="width:100%; padding:12px; border:1px solid #eee; border-radius:10px; margin-bottom:1rem;"
+                    required>
+                <input type="email" placeholder="Business Email"
+                    style="width:100%; padding:12px; border:1px solid #eee; border-radius:10px; margin-bottom:1rem;"
+                    required>
+                <textarea placeholder="Tell us about your project requirements..." rows="4"
+                    style="width:100%; padding:12px; border:1px solid #eee; border-radius:10px; margin-bottom:1rem;"
+                    required></textarea>
+                <button type="submit" class="pdp-add-btn" style="width: 100%;">Submit Corporate Inquiry</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Cart Drawer Overlay -->
+    <div id="kns-drawer-overlay"></div>
+    <!-- Cart Drawer Panel -->
+    <aside id="kns-cart-drawer">
+        <div class="kns-drawer-head">
+            <h3>🛒 Your Cart</h3>
+            <button id="kns-drawer-close" aria-label="Close cart">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor"
+                    stroke-width="2.5" viewBox="0 0 24 24">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+            </button>
+        </div>
+        <div id="kns-drawer-items"></div>
+        <div class="kns-drawer-foot">
+            <div class="kns-drawer-subtotal-row">
+                <span>Subtotal</span>
+                <span id="kns-drawer-subtotal">₹0</span>
+            </div>
+            <div class="kns-drawer-actions">
+                <a href="cart.html" class="kns-ec-btn kns-ec-btn-outline">View Cart</a>
+                <a href="cart.html" class="kns-ec-btn kns-ec-btn-primary">Checkout →</a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Firebase SDK (Compat v9/v11) -->
+    <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore-compat.js"></script>
+
+    <script src="firebase-config.js?v=4"></script>
+    <script src="admin_data.js?v=4"></script>
+    <script src="ui.js?v=4"></script>
+    <script src="cart.js?v=4"></script>
+    <script src="wishlist.js?v=4"></script>
+    <script src="auth.js?v=4"></script>
+    <script src="database.js?v=4"></script>
+    <script>
+        let PRODUCTS = KNSData.getProducts();
+        let q = 1; let p = null; let chosenRating = 5; let reviewCount = 2;
+
+        function findProd(id) {
+            const currentProducts = KNSData.getProducts();
+            return KNSData.getProductById(id) || currentProducts[0];
+        }
+
+        async function init() {
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+
+            // Try to find product
+            p = KNSData.getProductById(id);
+
+            // If not found and we haven't synced yet, try syncing
+            if (!p && id) {
+                console.log("Product not found in local cache, attempting sync...");
+                await KNSData.syncWithCloud();
+                p = KNSData.getProductById(id);
+            }
+
+            // Fallback to p1 only if absolutely necessary
+            if (!p) p = KNSData.getProductById('p1') || KNSData.getProducts()[0];
+
+            if (!p) {
+                console.error("No products available to display.");
+                return;
+            }
+            renderProductDetails();
+        }
+
+        function safeText(id, val) {
+            const el = document.getElementById(id);
+            if (el) el.textContent = val;
+        }
+
+        async function renderProductDetails() {
+            if (!p) return;
+            window.ActiveProduct = p;
+            safeText('pdp-name-node', p.name);
+            safeText('pdp-hero-title', p.name);
+            safeText('breadcrumb-cur', p.name);
+            safeText('pdp-cat-node', p.category);
+            safeText('pdp-pr-node', `₹ ${p.price.toLocaleString('en-IN')}`);
+            if (p.mrp) {
+                safeText('pdp-mrp-node', `₹ ${p.mrp.toLocaleString('en-IN')}`);
+                safeText('pdp-save-node', `Save ${Math.round((1 - p.price / p.mrp) * 100)}%`);
+            }
+            const mainImg = document.getElementById('pdp-target-img');
+            if (mainImg) mainImg.src = p.image;
+            const hero = document.getElementById('pdp-hero-node');
+            if (hero) hero.style.backgroundImage = `url('${p.image}')`;
+
+            safeText('pdp-desc-node', p.description || p.overview || '');
+            const tabDesc = document.querySelector('#tab-desc div');
+            if (tabDesc) tabDesc.innerHTML = `<p>${p.longDescription || p.description || p.overview || ''}</p>`;
+
+            // Render Badges
+            const badgeNode = document.getElementById('pdp-badges-node');
+            if (badgeNode) {
+                let badgeHtml = '';
+                if (p.isNew) badgeHtml += '<span class="kns-status-badge kns-badge-new">New Arrival</span>';
+                if (p.badge === 'Trending') badgeHtml += '<span class="kns-status-badge kns-badge-hot">Trending</span>';
+                badgeNode.innerHTML = badgeHtml;
+            }
+
+            // Render Dynamic Specs if available
+            if (p.specs) {
+                const specGrid = document.querySelector('#tab-specs .spec-grid');
+                if (specGrid) {
+                    specGrid.innerHTML = Object.entries(p.specs).map(([label, val]) => `
+                        <div class="spec-card" style="padding: 1.5rem; background: #fff; border: 1px solid #eee; border-radius: 16px;">
+                            <span style="font-size: 0.85rem; color: #888; display: block; margin-bottom: 0.5rem; font-weight: 600; text-transform: capitalize;">${label}</span>
+                            <strong style="color: var(--pdp-dark); font-size: 1.2rem;">${val}</strong>
+                        </div>
+                    `).join('');
+                }
+            }
+
+
+            // Render Dynamic Dimensions if available
+            if (p.dimensions) {
+                const dimGrid = document.querySelector('#tab-dimens .spec-grid');
+                if (dimGrid) {
+                    dimGrid.innerHTML = Object.entries(p.dimensions).map(([label, val]) => `
+                        <div style="padding: 1rem; border-bottom: 1px solid #eee; display: flex; justify-content: space-between;">
+                            <span style="color: #888; font-weight: 500; text-transform: capitalize;">${label}</span>
+                            <strong style="color: var(--pdp-dark);">${val}</strong>
+                        </div>
+                    `).join('');
+                }
+            }
+
+            // Sync Sticky Bar
+            const stickyImg = document.getElementById('sticky-img');
+            if (stickyImg) stickyImg.src = p.image;
+            safeText('sticky-name', p.name);
+            safeText('sticky-price', `₹ ${p.price.toLocaleString('en-IN')}`);
+
+            const starsArr = [];
+            for (let i = 0; i < Math.floor(p.rating); i++) starsArr.push('★');
+            if (p.rating % 1 >= 0.5) starsArr.push('☆');
+            document.getElementById('pdp-stars-node').innerHTML = `${starsArr.map(s => `<span>${s}</span>`).join('')} <span>(${p.rating})</span>`;
+
+            const thumbs = (p.images && p.images.length > 0) ? p.images : [p.image];
+            const validThumbs = thumbs.filter(Boolean); // Remove empty values
+
+            document.getElementById('pdp-thumbs-node').innerHTML = validThumbs.map((t, i) => `
+                <div class="pdp-thumb ${i === 0 ? 'active' : ''}" onclick="setImg(this, '${t}')"><img src="${t}"></div>
+            `).join('');
+
+            // Render Color Swatches
+            const colorNodeContainer = document.getElementById('pdp-colors-node');
+            if (colorNodeContainer) {
+                if (p.colors && p.colors.length > 0) {
+                    let colorsHtml = `<div class="pdp-colors-title" style="margin-top: 1rem;">Color Options</div><div class="pdp-color-list">`;
+                    p.colors.forEach((c, idx) => {
+                        const rawBg = c.code || c.hex || c.color || c.value || c.name || '#ffffff';
+                        const safeBg = (rawBg && !rawBg.startsWith('#') && /^[0-9A-Fa-f]{3,8}$/.test(rawBg)) ? '#' + rawBg : rawBg;
+                        colorsHtml += `
+                            <div class="pdp-color-swatch ${idx === 0 ? 'active' : ''}" 
+                                 style="background-color: ${safeBg}"
+                                 title="${c.name}"
+                                 onclick="changeProductColor('${c.name.replace(/'/g, "\\'")}', this)">
+                                <span class="pdp-color-name">${c.name}</span>
+                            </div>
+                        `;
+                    });
+                    colorsHtml += `</div><div id="selected-color-name" style="font-size: 0.85rem; font-weight: 600; color: #888; margin-top: 8px;">Selected: ${p.colors[0].name}</div>`;
+                    colorNodeContainer.innerHTML = colorsHtml;
+                    colorNodeContainer.style.display = 'block';
+                } else {
+                    colorNodeContainer.style.display = 'none';
+                    colorNodeContainer.innerHTML = '';
+                }
+            }
+
+            const currentProducts = KNSData.getProducts();
+
+            // Complete the Look Logic (Complementary Categories)
+            const complementMap = {
+                'Executive Chairs': ['Workstations', 'Puffy & Tables', 'Educational'],
+                'Workstations': ['Executive Chairs', 'Puffy & Tables', 'Educational'],
+                'Cafeteria Chairs': ['Puffy & Tables', 'Bar Stools'],
+                'Bar Stools': ['Cafeteria Chairs', 'Puffy & Tables'],
+                'Puffy & Tables': ['Sofa & Lounge', 'Executive Chairs', 'Bar Stools'],
+                'Sofa & Lounge': ['Puffy & Tables', 'Executive Chairs'],
+                'Educational': ['Cafeteria Chairs', 'Workstations']
+            };
+
+            const pCat = p.category || '';
+            const allCats = Array.from(new Set(currentProducts.map(x => x.category)));
+            let targetCats = complementMap[pCat] || allCats.filter(c => c !== pCat);
+
+            let complements = currentProducts.filter(x => targetCats.includes(x.category) && x.id !== p.id && x.image);
+            complements = complements.sort(() => 0.5 - Math.random());
+            let finalComplements = complements.slice(0, 2);
+
+            // Fallback: Just grab any random products if maps fail
+            if (finalComplements.length < 2) {
+                const pureRandom = currentProducts.filter(x => x.id !== p.id && x.image && !finalComplements.find(fc => fc.id === x.id)).sort(() => 0.5 - Math.random()).slice(0, 2 - finalComplements.length);
+                finalComplements.push(...pureRandom);
+            }
+
+            const ctlNode = document.getElementById('complete-the-look-node');
+            const ctlSection = document.getElementById('complete-the-look-section');
+            if (ctlNode && ctlSection) {
+                if (finalComplements.length > 0) {
+                    ctlNode.innerHTML = finalComplements.map(x => {
+                        const safeName = (x.name || '').replace(/'/g, "\\'");
+                        const safeCat = (x.category || '').replace(/'/g, "\\'");
+                        return `
+                        <div class="pdp-recommendation-card">
+                            <a href="product.html?id=${x.id}" style="display:block;"><img src="${(x.image || '').split('?')[0]}?w=400" alt="${safeName}" class="pdp-rec-img"></a>
+                            <div class="pdp-rec-details">
+                                <a href="product.html?id=${x.id}" style="text-decoration:none; color:inherit;"><h4 class="pdp-rec-name">${x.name}</h4></a>
+                                <p class="pdp-rec-price">₹ ${(x.price || 0).toLocaleString('en-IN')}</p>
+                                <button class="kns-add-cart-btn pdp-rec-btn" onclick="KNSCart.addToCart({id:'${x.id}',name:'${safeName}',category:'${safeCat}',price:${x.price},image:'${x.image}'})">+ Add to Set</button>
+                            </div>
+                        </div>
+                    `}).join('');
+                    ctlSection.style.display = 'block';
+                } else {
+                    ctlSection.style.display = 'none';
+                }
+            }
+
+            // More from this category logic
+            const rel = currentProducts.filter(x => x.category === p.category && x.id !== p.id).slice(0, 4);
+            // If fewer than 4 in same category, fill with others
+            if (rel.length < 4) {
+                const extras = currentProducts.filter(x => x.id !== p.id && !rel.find(r => r.id === x.id)).slice(0, 4 - rel.length);
+                rel.push(...extras);
+            }
+
+            const relatedNode = document.getElementById('related-node');
+            if (relatedNode) {
+                relatedNode.innerHTML = rel.map(x => `
+                <div class="product-card animate-on-scroll">
+                    <a href="product.html?id=${x.id}" class="kns-card-link" style="overflow:hidden;">
+                        <div class="product-img" style="background-image:url('${x.image}');">
+                            <button class="kns-wish-btn" onclick="event.preventDefault(); this.classList.toggle('is-wished'); KNSWishlist.toggle({id:'${x.id}',name:'${x.name}',category:'${x.category}',price:${x.price},image:'${x.image}'})">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                            </button>
+                        </div>
+                    </a>
+                    <div class="product-info">
+                        <div class="product-category">${x.category}</div>
+                        <a href="product.html?id=${x.id}" style="text-decoration:none; color:inherit;"><h3 class="product-title">${x.name}</h3></a>
+                        <div class="product-price">₹ ${x.price.toLocaleString('en-IN')}</div>
+                        <button class="kns-add-cart-btn" style="margin-top: 1.2rem;" onclick="KNSCart.addToCart({id:'${x.id}',name:'${x.name}',category:'${x.category}',price:${x.price},image:'${x.image}'})">
+                            <i data-lucide="shopping-cart" size="16"></i> Add to Cart
+                        </button>
+                        <a href="product.html?id=${x.id}" class="btn-outline">View Details</a>
+                    </div>
+                </div>
+                `).join('');
+
+                // Trigger intersection observer for dynamically added animated elements
+                if (window.animateObserver) {
+                    relatedNode.querySelectorAll('.animate-on-scroll').forEach(el => window.animateObserver.observe(el));
+                }
+                if (window.lucide) window.lucide.createIcons();
+            }
+
+            lucide.createIcons();
+            syncWish();
+            initStarPicker();
+            initStickyBar();
+            initSharing();
+            initRecentlyViewed();
+            await renderReviews();
+        }
+
+        async function renderReviews() {
+            const reviews = await KNSData.getReviewsForProduct(p.id);
+            const list = document.getElementById('review-list');
+            if (!list) return;
+
+            const revCount = document.querySelector('[data-reviews-count]');
+            if (revCount) revCount.textContent = `Reviews (${reviews.length})`;
+
+            list.innerHTML = reviews.map(r => {
+                const starsArr = "★".repeat(r.rating) + "☆".repeat(5 - r.rating);
+                const dateStr = new Date(r.date).toLocaleDateString();
+                return `
+                    <div class="review-card">
+                        <div class="review-header">
+                            <span class="review-author">${r.userName}</span>
+                            <span class="review-stars">${starsArr}</span>
+                            <span class="review-date">${dateStr}</span>
+                        </div>
+                        <p class="review-text">${r.comment}</p>
+                    </div>
+                `;
+            }).join('') || '<p style="text-align:center; padding: 2rem; color: #888;">No reviews yet. Be the first to review!</p>';
+        }
+
+        function setImg(el, src) {
+            document.querySelectorAll('.pdp-thumb').forEach(t => t.classList.remove('active'));
+            if (el) el.classList.add('active');
+            document.getElementById('pdp-target-img').src = src;
+        }
+
+        function changeProductColor(colorName, el) {
+            if (!window.ActiveProduct || !window.ActiveProduct.colors) return;
+            const c = window.ActiveProduct.colors.find(x => x.name === colorName);
+            if (!c) return;
+
+            const colorImages = (c.images && c.images.length > 0) ? c.images : (c.image ? [c.image] : []);
+            if (colorImages.length === 0) return;
+
+            const mainImgUrl = colorImages[0];
+
+            const mainImg = document.getElementById('pdp-target-img');
+            if (mainImg) mainImg.src = mainImgUrl;
+
+            const stickyImg = document.getElementById('sticky-img');
+            if (stickyImg) stickyImg.src = mainImgUrl;
+
+            const hero = document.getElementById('pdp-hero-node');
+            if (hero) hero.style.backgroundImage = `url('${mainImgUrl}')`;
+
+            const thumbsNode = document.getElementById('pdp-thumbs-node');
+            if (thumbsNode) {
+                thumbsNode.innerHTML = colorImages.map((t, i) => `
+                    <div class="pdp-thumb ${i === 0 ? 'active' : ''}" onclick="setImg(this, '${t}')"><img src="${t}"></div>
+                `).join('');
+            }
+
+            document.querySelectorAll('.pdp-color-swatch').forEach(s => s.classList.remove('active'));
+            if (el) el.classList.add('active');
+
+            const nameNode = document.getElementById('selected-color-name');
+            if (nameNode) nameNode.innerText = 'Selected: ' + colorName;
+        }
+
+        function qty(d) {
+            q = Math.max(1, q + d);
+            document.getElementById('pdp-qty-val').value = q;
+            document.getElementById('pdp-qty-val-sticky').value = q;
+        }
+
+        function addToCart() {
+            KNSCart.addToCart({
+                ...p,
+                qty: q
+            });
+        }
+        function toggleWish() { KNSWishlist.toggle(p); syncWish(); }
+        function syncWish() { document.getElementById('wish-btn').classList.toggle('active', KNSWishlist.isWishlisted(p.id)); }
+
+        function openLightbox() {
+            document.getElementById('lightbox-img-node').src = document.getElementById('pdp-target-img').src;
+            document.getElementById('lightbox-node').classList.add('active');
+            document.body.classList.add('no-scroll');
+        }
+        function closeLightbox() {
+            document.getElementById('lightbox-node').classList.remove('active');
+            document.body.classList.remove('no-scroll');
+        }
+
+        function tab(t) {
+            document.querySelectorAll('.pdp-tab-btn, .pdp-tab-content').forEach(x => x.classList.remove('active'));
+            document.querySelector(`[onclick*='${t}']`).classList.add('active');
+            document.getElementById(`tab-${t}`).classList.add('active');
+        }
+
+        function initStarPicker() {
+            const picker = document.getElementById('star-picker');
+            if (!picker) return;
+            picker.addEventListener('click', (e) => {
+                const star = e.target.closest('[data-star]');
+                if (star) {
+                    chosenRating = parseInt(star.getAttribute('data-star'));
+                    updateStars();
+                }
+            });
+            updateStars();
+        }
+
+        function updateStars() {
+            const picker = document.getElementById('star-picker');
+            if (!picker) return;
+            const stars = picker.querySelectorAll('[data-star]');
+            stars.forEach(s => {
+                const val = parseInt(s.getAttribute('data-star'));
+                if (val <= chosenRating) {
+                    s.classList.add('selected');
+                } else {
+                    s.classList.remove('selected');
+                }
+            });
+        }
+
+        async function handleReview(e) {
+            e.preventDefault();
+            const userName = document.getElementById('rev-name').value;
+            const comment = document.getElementById('rev-text').value;
+
+            await KNSData.addReview({
+                productId: p.id,
+                userName: userName,
+                rating: chosenRating,
+                comment: comment
+            });
+
+            alert('Thank you! Your review has been submitted.');
+            e.target.reset(); chosenRating = 5; updateStars();
+            await renderReviews();
+        }
+
+        function initStickyBar() {
+            const bar = document.getElementById('sticky-buy-bar');
+            const trigger = document.querySelector('.pdp-main');
+            if (!bar || !trigger) return;
+
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 600) {
+                    bar.classList.add('active');
+                } else {
+                    bar.classList.remove('active');
+                }
+            });
+
+            document.getElementById('pdp-qty-val-sticky').addEventListener('change', (e) => {
+                q = Math.max(1, parseInt(e.target.value));
+                document.getElementById('pdp-qty-val').value = q;
+            });
+        }
+
+        function initSharing() {
+            const url = encodeURIComponent(window.location.href);
+            const title = encodeURIComponent(`Check out this ${p.name} from KNS Furnitech!`);
+
+            document.getElementById('share-wa').href = `https://wa.me/?text=${title}%20${url}`;
+            document.getElementById('share-fb').href = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+            document.getElementById('share-pn').href = `https://pinterest.com/pin/create/button/?url=${url}&description=${title}`;
+
+            // WhatsApp Inquiry
+            const waInq = document.getElementById('wa-inquiry');
+            const msg = encodeURIComponent(`Hi KNS, I'm interested in the ${p.name} (₹ ${p.price}). Can you provide more details?`);
+            waInq.href = `https://wa.me/919999999999?text=${msg}`; // Replace with actual number
+        }
+
+        function initRecentlyViewed() {
+            let history = JSON.parse(localStorage.getItem('kns_recent') || '[]');
+
+            // Render section items
+            let filtered = history.filter(id => id !== p.id);
+
+            // If empty, show some default suggestions so the section exists as requested
+            if (filtered.length === 0) {
+                filtered = ['p2', 'p3', 'p11'];
+            }
+
+            const recentNode = document.getElementById('recently-viewed-node');
+            const section = document.getElementById('recently-viewed-section');
+            if (recentNode && section) {
+                section.style.display = 'block';
+                // Map the filtered IDs back to product objects to maintain the correct historical order
+                const recentProds = filtered.map(id => PRODUCTS.find(x => x.id === id)).filter(Boolean).slice(0, 4);
+                recentNode.innerHTML = recentProds.map(x => `
+                    <div class="product-card">
+                        <a href="product.html?id=${x.id}" class="kns-card-link">
+                            <div class="product-img" style="background-image:url('${x.image}');"></div>
+                        </a>
+                        <div class="product-info">
+                            <div class="product-category">${x.category}</div>
+                            <h3 class="product-title" style="font-size:1.1rem;">${x.name}</h3>
+                            <div class="product-price">₹ ${x.price.toLocaleString('en-IN')}</div>
+                            <a href="product.html?id=${x.id}" class="btn-outline" style="margin-top:0;">View Details</a>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // Update history (add current, keep unique, limit 5)
+            history = [p.id, ...history.filter(id => id !== p.id)].slice(0, 5);
+            localStorage.setItem('kns_recent', JSON.stringify(history));
+        }
+
+        const wrap = document.getElementById('main-img-node');
+        const zoomImg = document.getElementById('pdp-target-img');
+        if (wrap && zoomImg) {
+            wrap.addEventListener('mousemove', (e) => {
+                const rect = wrap.getBoundingClientRect();
+                const x = e.clientX - rect.left; const y = e.clientY - rect.top;
+                zoomImg.style.transformOrigin = `${x}px ${y}px`; zoomImg.style.transform = "scale(1.8)";
+            });
+            wrap.addEventListener('mouseleave', () => { zoomImg.style.transform = "scale(1)"; });
+        }
+
+        // Listen for data updates (e.g. from cloud sync)
+        document.addEventListener('products:updated', () => {
+            console.log("Product Page: Products updated, refreshing view...");
+            PRODUCTS = KNSData.getProducts();
+            init(); // Re-initialize with new data
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            init();
+            // Also trigger a background sync just in case
+            KNSData.syncWithCloud();
+        });
+    </script>
+    <!-- Lightbox (Moved to end for stacking) -->
+    <div id="lightbox-node" class="pdp-lightbox">
+        <button class="pdp-lightbox-close" onclick="closeLightbox()">&times;</button>
+        <img id="lightbox-img-node" src="" alt="Full View">
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders - KNS Furnitech</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="ecommerce.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .orders-container {
+            max-width: 1200px;
+            margin: 2rem auto 6rem;
+            position: relative;
+            padding: 0 1.5rem;
+        }
+        .order-card {
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .order-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        }
+        .order-header {
+            background: #fafafa;
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+        .order-meta {
+            display: flex;
+            gap: 2.5rem;
+        }
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+        .meta-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #999;
+            font-weight: 600;
+        }
+        .meta-value {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1A1A1A;
+        }
+        .order-status {
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            background: rgba(140,198,63,0.1);
+            color: #8CC63F;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .order-body {
+            padding: 2rem;
+        }
+        .order-item {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+        .order-item:last-child {
+            border-bottom: none;
+        }
+        .item-img {
+            width: 80px;
+            height: 80px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+            flex-shrink: 0;
+        }
+        .item-details {
+            flex-grow: 1;
+        }
+        .item-name {
+            font-weight: 700;
+            color: #1A1A1A;
+            font-size: 1.1rem;
+            display: block;
+            margin-bottom: 0.2rem;
+            text-decoration: none;
+        }
+        .item-name:hover { color: #8CC63F; }
+        .item-meta {
+            font-size: 0.85rem;
+            color: #888;
+        }
+        .item-price {
+            font-weight: 700;
+            color: #1A1A1A;
+            white-space: nowrap;
+        }
+        .order-sub-header {
+            padding: 0.8rem 2rem;
+            margin-top: -0.5rem;
+            display: flex;
+            gap: 2rem;
+            font-size: 0.85rem;
+            border-bottom: 1px solid #f5f5f5;
+            background: #fff;
+        }
+        
+        @media (max-width: 768px) {
+            .orders-container { padding: 0 1rem; margin-top: 1rem; }
+            .order-header { padding: 1.2rem; flex-direction: column; align-items: flex-start; gap: 1rem; }
+            .order-meta { gap: 1rem; width: 100%; justify-content: space-between; flex-wrap: wrap; }
+            .meta-item { min-width: 45%; }
+            .order-sub-header { padding: 0.8rem 1.2rem; flex-direction: column; gap: 0.5rem; }
+            .order-body { padding: 1.2rem; }
+            .order-item { flex-direction: column; align-items: flex-start; gap: 1rem; position: relative; }
+            .item-img { 
+                width: 100%; 
+                height: 200px; 
+                background-size: contain; 
+                background-repeat: no-repeat;
+                background-position: center;
+                background-color: #f9f9f9; 
+                padding: 1rem; 
+                box-sizing: border-box;
+                border: 1px solid #f0f0f0;
+            }
+            .item-price { align-self: flex-end; font-size: 1.1rem; color: #8CC63F; }
+            .orders-empty h2 { font-size: 1.8rem; }
+        }
+        .orders-empty {
+            text-align: center;
+            padding: 8rem 2rem;
+            background: #fff;
+            border-radius: 24px;
+            border: 1px solid #f0f0f0;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.03);
+            max-width: 800px;
+            margin: 4rem auto;
+        }
+        .orders-empty i { 
+            color: #8CC63F; 
+            margin-bottom: 2rem; 
+            background: rgba(140,198,63,0.1);
+            padding: 2.5rem;
+            border-radius: 50%;
+            display: inline-flex;
+        }
+        .orders-empty h2 { 
+            margin-bottom: 1.2rem; 
+            color: #1A1A1A; 
+            font-size: 2.2rem;
+            font-weight: 700;
+        }
+        .orders-empty p { 
+            color: #666; 
+            margin-bottom: 2.5rem; 
+            font-size: 1.15rem; 
+            line-height: 1.6;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* --- Visual Stepper CSS --- */
+        .order-progress-wrapper {
+            padding: 2rem 2rem 1rem;
+            background: #fff;
+            border-bottom: 1px solid #f5f5f5;
+        }
+        .stepper-container {
+            display: flex;
+            justify-content: bbetween;
+            align-items: flex-start;
+            position: relative;
+            margin-top: 1rem;
+        }
+        .stepper-item {
+            flex: 1;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            z-index: 1;
+        }
+        .stepper-item::before {
+            content: "";
+            position: absolute;
+            top: 15px;
+            left: -50%;
+            width: 100%;
+            height: 2px;
+            background: #eee;
+            z-index: -1;
+        }
+        .stepper-item:first-child::before { display: none; }
+        .stepper-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #eee;
+            color: #999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.8rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            transition: 0.3s;
+            border: 2px solid #fff;
+            box-shadow: 0 0 0 1px #eee;
+        }
+        .stepper-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        /* Active States */
+        .stepper-item.completed .stepper-icon {
+            background: var(--brand-green);
+            color: white;
+            box-shadow: 0 0 0 1px var(--brand-green);
+        }
+        .stepper-item.completed .stepper-label { color: var(--brand-green); }
+        .stepper-item.completed::before { background: var(--brand-green); }
+        
+        .stepper-item.active .stepper-icon {
+            background: #1A1A1A;
+            color: #fff;
+            box-shadow: 0 0 0 4px rgba(140,198,63,0.1);
+        }
+        .stepper-item.active .stepper-label { color: #1A1A1A; font-weight: 800; }
+
+        .tracking-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px dashed #dee2e6;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            color: #495057;
+        }
+        
+        @media (max-width: 600px) {
+            .stepper-label { display: none; }
+            .order-progress-wrapper { padding: 1.5rem 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top utility bar -->
+    <div class="top-bar">
+        Welcome to KNS Furnitech. Enjoy Hassle-free Exchange & Standard Delivery!
+    </div>
+
+    <!-- Main Navigation -->
+    <header class="ecommerce-nav">
+        <div class="main-header">
+            <!-- Brand Logo from User Spec -->
+            <a href="index.html" class="logo">
+                <img src="images/logo.png" alt="KNS Furnitech" class="logo-img">
+                <span>KNS FURNITECH</span>
+            </a>
+
+            <!-- Animated Desktop Search (Centered - Hidden on Mobile) -->
+            <div class="desktop-search-container">
+                <form class="search-box-animated" action="search-results.html" method="GET">
+                    <input type="text" name="q" placeholder="Search website..." required>
+                    <button type="submit" aria-label="Search"><i data-lucide="search" size="20"></i></button>
+                </form>
+            </div>
+            
+            <!-- User Actions -->
+            <div class="user-actions kns-nav-icons">
+                <!-- Auth slot -->
+                <span class="kns-auth-slot"></span>
+                <a href="orders.html" class="kns-icon-btn active" title="My Orders">
+                    <i data-lucide="package" size="22"></i>
+                </a>
+                <a href="track-order.html" class="kns-icon-btn" title="Track Order">
+                    <i data-lucide="truck" size="22"></i>
+                </a>
+                <a href="wishlist.html" class="kns-icon-btn" title="Wishlist">
+                    <i data-lucide="heart" size="22"></i>
+                    <span class="kns-wish-badge">0</span>
+                </a>
+                <button class="kns-icon-btn" data-open-cart title="Cart">
+                    <i data-lucide="shopping-cart" size="22"></i>
+                    <span class="kns-cart-badge">0</span>
+                </button>
+                <!-- Premium Hamburger Toggle -->
+                <button class="hamburger-btn" title="Menu">
+                    <i data-lucide="menu" size="24"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Categories Mega Nav -->
+        <nav class="categories-nav">
+            <a href="shop.html">All</a>
+            <a href="shop.html?cat=Executive%20Chair">Executive Chair</a>
+            <a href="shop.html?cat=Workstation%20Chair">Workstation Chair</a>
+            <a href="shop.html?cat=Plastic%20Metal%20-%20Cafe%20Chair">Cafe Chair</a>
+            <a href="shop.html?cat=Bar%20Stool%20Chair">Bar Stool</a>
+            <a href="shop.html?cat=Puffy%20Table%20Chair">Puffy Table</a>
+            <a href="shop.html?cat=Sofa%20Lounge%20Seating">Sofa Lounge</a>
+            <a href="shop.html?cat=Educational%20Furniture">Educational</a>
+        </nav>
+    </header>
+
+    <main>
+
+        <!-- Orders Section -->
+        <section class="orders-container">
+            <ul class="kns-breadcrumb" style="margin-bottom: 2rem;">
+                <li><a href="index.html"><i data-lucide="home" size="14" style="margin-right:6px;"></i> Home</a><span class="sep"><i data-lucide="chevron-right" size="14"></i></span></li>
+                <li class="cur">My Orders</li>
+            </ul>
+
+            <h1 style="margin-bottom: 2.5rem; font-family:'Outfit',sans-serif; color: var(--brand-dark);">My Orders</h1>
+
+            <div id="ordersList">
+                <!-- Orders injected by JS -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Comprehensive Godrej-Style Footer -->
+    <footer class="ecommerce-footer">
+        <div class="footer-grid">
+            <div class="footer-brand animate-on-scroll">
+                <a href="index.html" class="logo">
+                    <img src="images/logo.png" alt="KNS Furnitech" class="logo-img">
+                    <span>KNS FURNITECH</span>
+                </a>
+                <p>Elevating living spaces across India with premium, modular, and sustainable furniture. Discover the perfect blend of modern aesthetics and unparalleled comfort.</p>
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+                    </a>
+                    <a href="#" aria-label="Instagram">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg>
+                    </a>
+                    <a href="#" aria-label="Twitter">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path></svg>
+                    </a>
+                    <a href="https://linkedin.com/company/kns-furnitech" target="_blank" aria-label="LinkedIn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="footer-col animate-on-scroll">
+                <h4>Shop Categories</h4>
+                <ul class="footer-links">
+                    <li><a href="shop.html?cat=Executive+Chair">Executive Chair</a></li>
+                    <li><a href="shop.html?cat=Workstation+Chair">Workstation Chair</a></li>
+                    <li><a href="shop.html?cat=Plastic+Metal+-+Cafe+Chair">Plastic Metal - Cafe Chair</a></li>
+                    <li><a href="shop.html?cat=Bar+Stool+Chair">Bar Stool Chair</a></li>
+                    <li><a href="shop.html?cat=Puffy+Table+Chair">Puffy Table Chair</a></li>
+                    <li><a href="shop.html?cat=Sofa+Lounge+Seating">Sofa Lounge Seating</a></li>
+                    <li><a href="shop.html?cat=Educational+Furniture">Educational Furniture</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col animate-on-scroll">
+                <h4>Customer Service</h4>
+                <ul class="footer-links">
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="blog.html">Our Blog</a></li>
+                    <li><a href="clients.html">Our Clients</a></li>
+                    <li><a href="catalogs.html">Catalogs</a></li>
+                    <li><a href="track-order.html">Track Order</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col animate-on-scroll">
+                <h4>Newsletter</h4>
+                <p style="color: #aaa; margin-bottom: 1rem; font-size: 0.95rem;">Subscribe to get special offers, free giveaways, and design inspiration.</p>
+                <form class="newsletter-form" onsubmit="event.preventDefault();">
+                    <input type="email" placeholder="Enter your email">
+                    <button type="submit">Subscribe</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2026 KNS Furnitech. All Rights Reserved.</p>
+            <div class="footer-bottom-links">
+                <a href="privacy-policy.html">Privacy Policy</a>
+                <a href="terms-of-service.html">Terms of Service</a>
+                <a href="#">Sitemap</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Auth overlay + modal -->
+    <div id="kns-auth-overlay" onclick="closeAuthModal()"></div>
+    <div id="kns-auth-modal">
+        <div class="kns-auth-header">
+            <span class="logo-sm">KNS FURNITECH</span>
+            <button class="kns-auth-close" onclick="closeAuthModal()" aria-label="Close">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+        <div class="kns-auth-tabs">
+            <button class="kns-auth-tab active" data-tab="login" onclick="switchAuthTab('login')">Sign In</button>
+            <button class="kns-auth-tab" data-tab="register" onclick="switchAuthTab('register')">Create Account</button>
+        </div>
+        <div class="kns-auth-body">
+            <!-- Login -->
+            <form id="kns-login-form" class="kns-auth-form active" onsubmit="handleLogin(event)">
+                <div class="kns-auth-error" id="loginError"></div>
+                <input type="email" id="loginEmail" placeholder="Email Address" required autocomplete="email">
+                <input type="password" id="loginPassword" placeholder="Password" required autocomplete="current-password">
+                <button type="submit" class="kns-auth-submit">Sign In &rarr;</button>
+                <div class="kns-auth-divider">New to KNS?</div>
+                <button type="button" class="kns-auth-submit" style="background:#f5f5f5; color:#1A1A1A;" onclick="switchAuthTab('register')">Create an Account</button>
+            </form>
+            <!-- Register -->
+            <form id="kns-register-form" class="kns-auth-form" onsubmit="handleRegister(event)">
+                <div class="kns-auth-error" id="regError"></div>
+                <input type="text" id="regName" placeholder="Full Name" required autocomplete="name">
+                <input type="email" id="regEmail" placeholder="Email Address" required autocomplete="email">
+                <input type="password" id="regPassword" placeholder="Password (min 6 chars)" required autocomplete="new-password">
+                <input type="password" id="regConfirm" placeholder="Confirm Password" required autocomplete="new-password">
+                <button type="submit" class="kns-auth-submit">Create Account &rarr;</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Cart Drawer Overlay -->
+    <div id="kns-drawer-overlay"></div>
+    <aside id="kns-cart-drawer">
+        <div class="kns-drawer-head">
+            <h3>🛒 Your Cart</h3>
+            <button id="kns-drawer-close" aria-label="Close cart">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+        <div id="kns-drawer-items"></div>
+        <div class="kns-drawer-foot">
+            <div class="kns-drawer-subtotal-row"><span>Subtotal</span><span id="kns-drawer-subtotal">₹0</span></div>
+            <div class="kns-drawer-actions">
+                <a href="cart.html" class="kns-ec-btn kns-ec-btn-outline">View Cart</a>
+                <a href="cart.html" class="kns-ec-btn kns-ec-btn-primary">Checkout →</a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Firebase SDK (Compat v9/v11) -->
+    <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore-compat.js"></script>
+
+    <script src="firebase-config.js?v=4"></script>
+    <script src="ui.js?v=4"></script>
+    <script src="cart.js?v=4"></script>
+    <script src="wishlist.js?v=4"></script>
+    <script src="auth.js?v=4"></script>
+    <script src="database.js?v=4"></script>
+    <script>
+        lucide.createIcons();
+
+        function getStatusClass(status) {
+            const s = (status || '').toLowerCase();
+            if (s.includes('delivered')) return 'status-delivered';
+            if (s.includes('shipped') || s.includes('out for delivery')) return 'status-shipped';
+            if (s.includes('processing')) return 'status-processing';
+            if (s.includes('cancelled')) return 'status-cancelled';
+            return 'status-confirmed';
+        }
+
+        function getStepIndex(status) {
+            const s = (status || '').toLowerCase();
+            if (s === 'confirmed') return 0;
+            if (s === 'processing') return 1;
+            if (s === 'shipped') return 2;
+            if (s === 'out for delivery') return 3;
+            if (s === 'delivered') return 4;
+            return -1;
+        }
+
+        let waitAttempts = 0;
+        async function renderOrders() {
+            const container = document.getElementById('ordersList');
+            if (!container) return;
+
+            try {
+                // 1. SHOW LOADING INSTANTLY
+                if (waitAttempts === 0) {
+                    container.innerHTML = `
+                        <div id="kns-orders-loader" style="text-align:center; padding: 6rem 2rem;">
+                            <div class="spinner" style="margin: 0 auto 2rem;"></div>
+                            <h2 style="font-family:'Outfit'; color:#333; margin-bottom:0.5rem;">One moment...</h2>
+                            <p style="color:#666; font-size:1.1rem; font-family:'Inter'">Polishing your furniture records for you.</p>
+                        </div>
+                    `;
+                }
+
+                // 2. WAIT FOR FIREBASE & AUTH (with timeout)
+                if (window.KNSAuth && KNSAuth.waitUntilReady) await KNSAuth.waitUntilReady();
+
+                if (!window.KNSDb || !window.firebase || !window.firebase.db) {
+                    waitAttempts++;
+                    console.log("Waiting for services... attempt", waitAttempts);
+                    
+                    const loaderText = document.querySelector('#kns-orders-loader p');
+                    if (loaderText) {
+                        if (waitAttempts > 15) loaderText.textContent = "Your sanctuary's data is on its way...";
+                        if (waitAttempts > 45) loaderText.textContent = "Finalizing secure connection to KNS Cloud...";
+                    }
+
+                    if (waitAttempts > 100) {
+                        container.innerHTML = `
+                            <div class="orders-empty" style="max-width: 500px; margin: 0 auto; padding: 4rem 2rem; border: 1px solid #eee; border-radius: 20px;">
+                                <div style="background: #fff5f5; padding: 1.5rem; border-radius: 50%; display: inline-flex; margin-bottom: 1.5rem;">
+                                    <i data-lucide="cloud-off" size="32" style="color:#ff4d4f"></i>
+                                </div>
+                                <h2 style="font-family:'Outfit'">Temporary Connection Pause</h2>
+                                <p style="color:#666; margin-bottom: 2rem;">We're having trouble fetching your records right now. This usually clears up with a quick refresh!</p>
+                                <button onclick="location.reload()" class="kns-ec-btn kns-ec-btn-primary" style="padding: 0.8rem 2rem;">Refresh Page</button>
+                            </div>
+                        `;
+                        lucide.createIcons();
+                        return;
+                    }
+                    setTimeout(renderOrders, 200);
+                    return;
+                }
+
+                const user = KNSAuth.getUser();
+                if (!user) {
+                    container.innerHTML = `
+                        <div class="orders-empty">
+                            <i data-lucide="user-x" size="48"></i>
+                            <h2 style="font-family:'Outfit'">Sign in to view orders</h2>
+                            <p>Access your furniture history and tracking by logging into your account.</p>
+                            <a href="signin.html" class="kns-ec-btn kns-ec-btn-primary" style="padding: 1rem 3rem; border-radius: 50px;">Sign In Now</a>
+                        </div>
+                    `;
+                    lucide.createIcons();
+                    return;
+                }
+
+                const orders = await KNSDb.getOrdersByUser(user.email);
+                console.log("Found orders for user:", orders?.length);
+
+                if (!orders || !orders.length) {
+                    container.innerHTML = `
+                        <div class="orders-empty" style="animation: fadeInUp 0.8s ease;">
+                            <div style="background: rgba(140,198,63,0.1); padding: 2.5rem; border-radius: 50%; display: inline-flex; margin-bottom: 2rem;">
+                                <i data-lucide="shopping-bag" size="56" style="color:#8CC63F"></i>
+                            </div>
+                            <h2 style="font-family:'Outfit'; font-size: 2.5rem;">Your sanctuary awaits!</h2>
+                            <p style="font-size: 1.2rem; margin-bottom: 3rem;">You haven't placed any orders yet. Discover our premium collection of modular furniture today and transform your space.</p>
+                            <div style="display:flex; flex-direction:column; align-items:center; gap:1.5rem;">
+                                <a href="shop.html" class="kns-ec-btn kns-ec-btn-primary" style="padding: 1.2rem 4rem; font-size: 1.2rem; border-radius: 50px; box-shadow: 0 10px 20px rgba(140,198,63,0.3);">Explore Collection</a>
+                                <a href="index.html" style="color: #888; text-decoration: none; font-weight: 600; font-size: 0.9rem;">Back to Homepage</a>
+                            </div>
+                        </div>
+                    `;
+                    lucide.createIcons();
+                    return;
+                }
+
+                container.innerHTML = orders.map(order => {
+                    const status = order.status || 'Confirmed';
+                    const sClass = getStatusClass(status);
+                    const orderId = order.firestoreId || order.id || 'Pending';
+                    const displayId = orderId.startsWith('#') ? orderId.toUpperCase() : `#KNS-${orderId.substring(0, 6).toUpperCase()}`;
+                    
+                    const currentStep = getStepIndex(status);
+                    const steps = ['Confirmed', 'Processing', 'Shipped', 'Out for Delivery', 'Delivered'];
+
+                    return `
+                    <div class="order-card">
+                        <div class="order-header">
+                            <div class="order-meta">
+                                <div class="meta-item">
+                                    <span class="meta-label">Order Placed</span>
+                                    <span class="meta-value">${new Date(order.timestamp || order.date).toLocaleDateString('en-IN', {day:'numeric', month:'long', year:'numeric'})}</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span class="meta-label">Total Amount</span>
+                                    <span class="meta-value">₹${(order.total || 0).toLocaleString('en-IN')}</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span class="meta-label">Order ID</span>
+                                    <span class="meta-value">${displayId}</span>
+                                </div>
+                            </div>
+                            <div class="order-status ${sClass}">
+                                <i data-lucide="${status === 'Delivered' ? 'check-circle' : 'clock'}" size="16"></i>
+                                ${status}
+                            </div>
+                            <button onclick='viewInvoice(${JSON.stringify(order).replace(/'/g, "&apos;")})' class="kns-ec-btn" style="padding: 0.5rem 1rem; font-size: 0.8rem; background: #1A1A1A; color: #fff; border-radius: 4px; display: flex; align-items: center; gap: 6px; margin-top: 5px;">
+                                <i data-lucide="file-text" size="14"></i> Invoice
+                            </button>
+                        </div>
+
+                        <!-- Progress Stepper -->
+                        <div class="order-progress-wrapper" style="${status === 'Cancelled' ? 'display:none;' : ''}">
+                            <div class="stepper-container">
+                                ${steps.map((label, idx) => {
+                                    let state = '';
+                                    if (idx < currentStep) state = 'completed';
+                                    else if (idx === currentStep) state = 'active';
+                                    
+                                    let icon = idx + 1;
+                                    if (idx < currentStep) icon = '<i data-lucide="check" size="14"></i>';
+
+                                    return `
+                                        <div class="stepper-item ${state}">
+                                            <div class="stepper-icon">${icon}</div>
+                                            <div class="stepper-label">${label}</div>
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                            
+                            ${order.trackingId ? `
+                                <div class="tracking-badge">
+                                    <i data-lucide="truck" size="16" style="color:var(--brand-green)"></i>
+                                    <span>Tracked via <b>${order.trackingCourier || 'Courier'}</b>: 
+                                    <a href="#" style="color:var(--brand-green); font-weight:700;">${order.trackingId}</a></span>
+                                </div>
+                            ` : ''}
+                        </div>
+
+                        <div class="order-sub-header">
+                            <div style="color: #666; display:flex; align-items:center; gap:6px;"><i data-lucide="credit-card" size="14"></i> Payment: <span style="font-weight:700; color: #1A1A1A;">${order.paymentMethod || 'COD'}</span></div>
+                            <div style="color: #666; display:flex; align-items:center; gap:6px;"><i data-lucide="shield-check" size="14"></i> Status: <span style="font-weight:700; color: ${order.paymentStatus === 'Completed' ? '#2e7d32' : '#ef6c00'};">${order.paymentStatus || 'Pending'}</span></div>
+                        </div>
+                        <div class="order-body">
+                            ${(order.items || []).map(item => `
+                                <div class="order-item">
+                                    <div class="item-img" style="background-image:url('${item.image}')"></div>
+                                    <div class="item-details">
+                                        <a href="product.html?id=${item.id}" class="item-name">${item.name}</a>
+                                        <div class="item-meta">Qty: ${item.qty || item.quantity} | ₹${(item.price || 0).toLocaleString('en-IN')} each</div>
+                                    </div>
+                                    <div class="item-price">₹${((item.price || 0) * (item.qty || item.quantity || 1)).toLocaleString('en-IN')}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `}).join('');
+                lucide.createIcons();
+            } catch (err) {
+                console.error("Order render failed:", err);
+                container.innerHTML = `<div style="text-align:center; padding: 4rem;"><p style="color:red;">Error: ${err.message}</p></div>`;
+            }
+        }
+
+        function viewInvoice(order) {
+            localStorage.setItem('kns_last_order', JSON.stringify(order));
+            window.open('invoice.html', '_blank');
+        }
+
+        document.addEventListener('DOMContentLoaded', renderOrders);
+    </script>
+</body>
+</html>

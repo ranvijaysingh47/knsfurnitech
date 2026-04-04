@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice - KNS Furnitech</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --brand-green: #8CC63F;
+            --brand-dark: #1A1A1A;
+            --text-secondary: #666;
+            --border: #ececec;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Inter', sans-serif; color:var(--brand-dark); line-height:1.5; background:#f9f9f9; padding: 40px 0; }
+        
+        .invoice-box {
+            max-width: 800px;
+            margin: auto;
+            padding: 50px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+        }
+
+        .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; border-bottom: 2px solid var(--brand-green); padding-bottom: 30px; }
+        .logo { font-family:'Outfit', sans-serif; font-size: 24px; font-weight: 700; color:var(--brand-dark); display: flex; align-items: center; gap: 8px; }
+        .logo-box { width: 32px; height: 32px; background: var(--brand-green); border-radius: 6px; display: flex; align-items: center; justify-content: center; color:#fff; }
+        .invoice-title { text-align: right; }
+        .invoice-title h1 { font-family:'Outfit', sans-serif; font-size: 32px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+        .invoice-title p { color:var(--text-secondary); font-size: 14px; }
+
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap:30px; margin-bottom: 40px; }
+        .info-section h3 { font-family:'Outfit', sans-serif; font-size: 14px; text-transform: uppercase; color:var(--brand-green); margin-bottom: 12px; letter-spacing: 1px; }
+        .info-section p { font-size: 14px; color:var(--brand-dark); margin-bottom: 4px; }
+        .info-section .label { color:var(--text-secondary); width: 80px; display: inline-block; }
+
+        .items-table { width: 100%; border-collapse: collapse; margin-bottom: 40px; }
+        .items-table th { background: #fcfcfc; text-align: left; padding: 12px 15px; border-bottom: 1.5px solid var(--border); font-size: 12px; text-transform: uppercase; color:var(--text-secondary); letter-spacing: 0.5px; }
+        .items-table td { padding: 15px; border-bottom: 1px solid var(--border); font-size: 14px; }
+        .items-table .item-info { font-weight: 600; }
+        .items-table .item-qty { text-align: center; }
+        .items-table .item-price, .items-table .item-total { text-align: right; }
+
+        .summary-container { display: flex; justify-content: flex-end; }
+        .summary-table { width: 300px; }
+        .summary-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+        .summary-row.grand-total { border-bottom: none; padding-top: 15px; font-size: 18px; font-weight: 700; color:var(--brand-dark); }
+        .summary-row.grand-total span:last-child { color: var(--brand-green); }
+
+        .footer { margin-top: 60px; padding-top: 30px; border-top: 1px solid var(--border); text-align: center; color:var(--text-secondary); font-size: 12px; }
+        .footer p { margin-bottom: 6px; }
+
+        .no-print-area { text-align: center; margin-bottom: 20px; }
+        .print-btn { background: var(--brand-green); color:#fff; border:none; padding:10px 25px; border-radius:50px; font-weight:600; cursor:pointer; font-family:'Outfit', sans-serif; box-shadow: 0 4px 15px rgba(140,198,63,0.3); }
+
+        @media print {
+            body { background: #fff; padding: 0; }
+            .invoice-box { box-shadow: none; border:none; max-width: 100%; padding:0; }
+            .no-print-area { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="no-print-area">
+        <button class="print-btn" onclick="window.print()">Print / Save as PDF</button>
+    </div>
+
+    <div class="invoice-box" id="invoiceContent">
+        <div class="header">
+            <div class="logo">
+                <div class="logo-box">K</div>
+                KNS FURNITECH
+            </div>
+            <div class="invoice-title">
+                <h1>Invoice</h1>
+                <p id="inv-id">#ORD-000000</p>
+                <p id="inv-date">March 28, 2026</p>
+            </div>
+        </div>
+
+        <div class="info-grid">
+            <div class="info-section">
+                <h3>Our Details</h3>
+                <p><strong>KNS Furnitech Pvt Ltd</strong></p>
+                <p>Plot No. 603/1, 3rd Phase,</p>
+                <p>GIDC, Umargam, Gujarat 396171</p>
+                <p>Email: contact@knsfurnitech.com</p>
+                <p>Phone: +91 73034 03811</p>
+            </div>
+            <div class="info-section">
+                <h3>Bill To</h3>
+                <p><strong id="cust-name">Customer Name</strong></p>
+                <p id="cust-address">Customer Address</p>
+                <p id="cust-city">City, Pincode</p>
+                <p id="cust-phone">Phone: +91 00000 00000</p>
+                <p id="cust-email">Email: customer@example.com</p>
+            </div>
+        </div>
+
+        <table class="items-table">
+            <thead>
+                <tr>
+                    <th>Item Description</th>
+                    <th class="item-qty">Qty</th>
+                    <th class="item-price">Rate</th>
+                    <th class="item-total">Amount</th>
+                </tr>
+            </thead>
+            <tbody id="items-body">
+                <!-- Rows injected here -->
+            </tbody>
+        </table>
+
+        <div class="summary-container">
+            <div class="summary-table">
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span id="subtotal">₹0</span>
+                </div>
+                <div class="summary-row">
+                    <span>GST (18%)</span>
+                    <span id="gst">₹0</span>
+                </div>
+                <div class="summary-row">
+                    <span>Shipping Charges</span>
+                    <span id="shipping">₹999</span>
+                </div>
+                <div class="summary-row grand-total">
+                    <span>Total Amount</span>
+                    <span id="total">₹0</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Thank you for choosing KNS Furnitech for your sanctuary.</p>
+            <p><strong>Terms:</strong> Standard 3-Year Warranty against manufacturing defects applies. All goods once sold are subject to Mumbai Jurisdiction.</p>
+            <p>© 2026 KNS Furnitech Pvt Ltd. All rights reserved.</p>
+        </div>
+    </div>
+
+    <script>
+        function renderInvoice() {
+            const dataStr = localStorage.getItem('kns_last_order');
+            if (!dataStr) {
+                document.body.innerHTML = '<div style="text-align:center; padding:100px;"><h1>No Order Found</h1><p>Please go back and select an order to view the invoice.</p><br><a href="orders.html">Back to Orders</a></div>';
+                return;
+            }
+
+            const order = JSON.parse(dataStr);
+
+            // Populate Info
+            document.getElementById('inv-id').textContent = order.id.toUpperCase();
+            document.getElementById('inv-date').textContent = new Date(order.timestamp || order.date).toLocaleDateString('en-IN', {day:'numeric', month:'long', year:'numeric'});
+            
+            document.getElementById('cust-name').textContent = order.customerName || 'N/A';
+            document.getElementById('cust-address').textContent = order.address || 'N/A';
+            document.getElementById('cust-city').textContent = `${order.city || ''} ${order.pincode || ''}`;
+            document.getElementById('cust-phone').textContent = 'Phone: ' + (order.phone || 'N/A');
+            document.getElementById('cust-email').textContent = 'Email: ' + (order.customerEmail || 'N/A');
+
+            // Populate Items
+            const body = document.getElementById('items-body');
+            body.innerHTML = order.items.map(item => `
+                <tr>
+                    <td class="item-info">${item.name}</td>
+                    <td class="item-qty">${item.qty || item.quantity}</td>
+                    <td class="item-price">₹${(item.price || 0).toLocaleString('en-IN')}</td>
+                    <td class="item-total">₹${((item.price || 0) * (item.qty || item.quantity)).toLocaleString('en-IN')}</td>
+                </tr>
+            `).join('');
+
+            // Populate Summary
+            document.getElementById('subtotal').textContent = '₹' + (order.subtotal || 0).toLocaleString('en-IN');
+            document.getElementById('gst').textContent = '₹' + (order.gst || 0).toLocaleString('en-IN');
+            document.getElementById('shipping').textContent = '₹' + (order.delivery || 999).toLocaleString('en-IN');
+            document.getElementById('total').textContent = '₹' + (order.total || 0).toLocaleString('en-IN');
+
+            // Set Title
+            document.title = `Invoice_${order.id}_KNS_Furnitech`;
+
+            // Auto print after a short delay
+            setTimeout(() => {
+                // window.print();
+            }, 1000);
+        }
+
+        document.addEventListener('DOMContentLoaded', renderInvoice);
+    </script>
+</body>
+</html>

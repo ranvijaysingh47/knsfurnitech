@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Details | KNS Furnitech Admin</title>
+    <link rel="stylesheet" href="ecommerce.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --admin-green: #8CC63F;
+            --admin-dark: #1A1A1A;
+            --admin-bg: #f5f7fa;
+            --admin-border: #edf2f7;
+        }
+
+        body {
+            background-color: var(--admin-bg);
+            font-family: 'Inter', sans-serif;
+            color: #444;
+            margin: 0;
+            padding: 0;
+        }
+
+        .details-wrapper {
+            max-width: 1100px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: #666;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .back-btn:hover { color: var(--admin-green); }
+
+        .details-card {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            padding: 3rem;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 4rem;
+        }
+
+        .section-title {
+            color: var(--admin-green);
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1.5px;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 0.5rem;
+        }
+
+        .info-group { margin-bottom: 2rem; }
+        .info-label { font-size: 0.8rem; color: #999; margin-bottom: 0.3rem; }
+        .info-value { font-weight: 600; font-size: 1.1rem; color: var(--admin-dark); }
+
+        .item-row {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            padding: 1.2rem;
+            background: #fcfcfc;
+            border: 1px solid #f0f0f0;
+            border-radius: 16px;
+            margin-bottom: 1rem;
+        }
+
+        .item-img { width: 70px; height: 70px; border-radius: 12px; object-fit: cover; }
+
+        .summary-box {
+            background: #fafafa;
+            padding: 2rem;
+            border-radius: 20px;
+            margin-top: 2rem;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+            font-size: 1rem;
+        }
+
+        .summary-total {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px solid #eee;
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--admin-dark);
+        }
+
+        select.status-select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid #ddd;
+            font-family: inherit;
+            margin-bottom: 1.5rem;
+        }
+
+        .update-btn {
+            width: 100%;
+            background: var(--admin-green);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .update-btn:hover { opacity: 0.9; transform: translateY(-2px); }
+
+        @media (max-width: 900px) {
+            .details-wrapper { margin: 1.5rem auto; padding: 0 1rem; }
+            .details-card { padding: 1.5rem; border-radius: 16px; }
+            .details-grid { grid-template-columns: 1fr; gap: 2rem; }
+            .header-actions { flex-direction: column; align-items: flex-start; gap: 1rem; }
+            .item-row { padding: 1rem; gap: 1rem; }
+            .item-img { width: 60px; height: 60px; }
+            .info-value { font-size: 1rem; }
+            .summary-box { padding: 1.2rem; }
+        }
+
+        #loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: white;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: 0.5s;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--admin-green);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+        <p style="margin-top: 20px; font-weight: 600; color: #666;">Synchronizing Order Data...</p>
+    </div>
+    <div class="details-wrapper">
+        <div class="header-actions">
+            <a href="admin.html" class="back-btn">
+                <i data-lucide="arrow-left"></i> Back to Dashboard
+            </a>
+            <div id="order-id-display" style="font-weight: 800; font-size: 1.2rem; font-family: 'Outfit';">#ORD-XXXXXX</div>
+        </div>
+
+        <div class="details-card">
+            <div class="details-grid">
+                <!-- Left Column -->
+                <div class="info-column">
+                    <div class="section-title">Customer Details</div>
+                    <div class="info-group">
+                        <div class="info-label">Full Name</div>
+                        <div class="info-value" id="cust-name">---</div>
+                    </div>
+                    <div class="info-group">
+                        <div class="info-label">Contact Details</div>
+                        <div class="info-value" id="cust-contact">---</div>
+                    </div>
+                    
+                    <div class="section-title">Shipping Address</div>
+                    <div class="info-group">
+                        <div class="info-value" id="shipping-addr" style="line-height: 1.6;">---</div>
+                    </div>
+
+                    <div class="section-title">Purchased Items</div>
+                    <div id="items-container">
+                        <!-- Injected -->
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="control-column">
+                    <div class="section-title">Management</div>
+                    <div class="summary-box">
+                        <label class="info-label">Order Management</label>
+                        <select id="status-select" class="status-select">
+                            <option value="Confirmed">Confirmed</option>
+                            <option value="Processing">Processing</option>
+                            <option value="Shipped">Shipped</option>
+                            <option value="Out for Delivery">Out for Delivery</option>
+                            <option value="Delivered">Delivered</option>
+                            <option value="Cancelled">Cancelled</option>
+                        </select>
+
+                        <div id="tracking-fields" style="margin-top: 1rem; display: none;">
+                            <label class="info-label">Courier Partner</label>
+                            <input type="text" id="tracking-courier" class="status-select" placeholder="e.g. BlueDart, Delhivery" style="background:#fff;">
+                            
+                            <label class="info-label" style="margin-top: 0.8rem;">Tracking ID (AWB)</label>
+                            <input type="text" id="tracking-id" class="status-select" placeholder="Enter Reference Number" style="background:#fff;">
+                        </div>
+
+                        <button class="update-btn" onclick="updateStatus()" style="margin-top: 1rem;">Update Order Status</button>
+                    </div>
+
+                    <div class="summary-box" style="margin-top:2rem;">
+                        <div class="section-title" style="border:none; margin-bottom: 1rem;">Payment Information</div>
+                        <div class="summary-row"><span>Method</span><span id="pay-method" style="font-weight:700;">---</span></div>
+                        <div class="summary-row"><span>Status</span><span id="pay-status" class="status-badge" style="background:#eee; padding:2px 8px; border-radius:4px;">---</span></div>
+                    </div>
+
+                    <div class="summary-box" style="margin-top:2rem;">
+                        <div class="section-title" style="border:none; margin-bottom: 1rem;">Order Financials</div>
+                        <div class="summary-row"><span>Subtotal</span><span id="subtotal">₹ 0</span></div>
+                        <div class="summary-row"><span>Delivery</span><span id="delivery">FREE</span></div>
+                        <div class="summary-row"><span>GST (18%)</span><span id="gst">₹ 0</span></div>
+                        <div class="summary-row summary-total"><span>Grand Total</span><span id="total">₹ 0</span></div>
+                    </div>
+
+                    <div style="margin-top: 2rem; padding: 1.5rem; background: #fffbe6; border: 1px dashed #ffe58f; border-radius: 16px;">
+                        <div class="info-label" style="color:#856404; font-weight:700;">Customer Notes</div>
+                        <p id="order-notes" style="font-size: 0.95rem; color: #555; font-style: italic; margin-top: 0.5rem;">No instructions.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK (Compat v9/v11) -->
+    <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore-compat.js"></script>
+
+    <script src="firebase-config.js?v=4"></script>
+    <script src="auth.js?v=4"></script>
+    <script src="database.js?v=4"></script>
+    <script src="admin_data.js?v=4"></script>
+    <script>
+        let currentOrderId = null;
+        let stopSync = false; // Flag to prevent background sync from overwriting fresh updates
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log("Order details DOM loaded.");
+            
+            if (!KNSAuth.isAdmin()) {
+                window.location.href = 'signin.html';
+                return;
+            }
+
+            const params = new URLSearchParams(window.location.search);
+            currentOrderId = params.get('id');
+            
+            if (!currentOrderId) {
+                alert("Order ID missing!");
+                window.location.href = 'admin.html';
+                return;
+            }
+
+            // Fetch & Render
+            await loadOrder();
+            if(window.lucide) lucide.createIcons();
+        });
+
+        async function loadOrder() {
+            if (stopSync) return; // Don't run if we just updated locally
+
+            try {
+                // 1. Check localStorage first for instant load
+                const cachedRaw = localStorage.getItem('kns_view_order_temp');
+                if (cachedRaw) {
+                    const cached = JSON.parse(cachedRaw);
+                    if (cached.firestoreId === currentOrderId || cached.id === currentOrderId) {
+                        console.log("Initial render from cache.");
+                        render(cached);
+                        hideLoader();
+                    }
+                }
+
+                if (!window.KNSDb || !window.firebase) {
+                    console.log("Waiting for database...");
+                    setTimeout(loadOrder, 300);
+                    return;
+                }
+                
+                console.log("Fetching live cloud data...");
+                let o = null;
+                if (KNSDb.getDocument) o = await KNSDb.getDocument('orders', currentOrderId);
+
+                if (!o) {
+                    const orders = await KNSDb.getDocuments('orders');
+                    o = orders.find(x => x.firestoreId === currentOrderId || x.id === currentOrderId);
+                }
+                
+                if (!o) {
+                    const isVisible = document.getElementById('loading-overlay').style.display === 'none';
+                    if (!isVisible) {
+                        document.getElementById('loading-overlay').innerHTML = `<div style="text-align:center;"><h2 style="color:red;">Order Not Found</h2><a href="admin.html">Return to Dashboard</a></div>`;
+                    }
+                    return;
+                }
+
+                // Important: Only render cloud data if we haven't locked the UI with an update
+                if (!stopSync) {
+                    render(o);
+                    hideLoader();
+                }
+
+            } catch (err) {
+                console.error("loadOrder error:", err);
+            }
+        }
+
+        function hideLoader() {
+            const loader = document.getElementById('loading-overlay');
+            if (loader) {
+                loader.style.opacity = '0';
+                setTimeout(() => loader.style.display = 'none', 500);
+            }
+        }
+
+        function render(o) {
+            console.log("Rendering Order:", o);
+            const displayId = o.id && (o.id.startsWith('#') || o.id.length > 15) ? (o.id.startsWith('#') ? o.id : `#ORD-${o.id.slice(-6)}`) : (o.id || o.orderNumber || '#ORD-UNKNOWN');
+            
+            const elements = {
+                'order-id-display': displayId.toUpperCase(),
+                'cust-name': o.customerName || 'Guest Customer',
+                'cust-contact': `${o.customerEmail || ''} / ${o.phone || ''}`,
+                'shipping-addr': `${o.address || ''}, ${o.city || ''} ${o.pincode || ''}`,
+                'order-notes': o.notes || 'No specific instructions.',
+                'pay-method': o.paymentMethod || 'Cash on Delivery',
+                'pay-status': o.paymentStatus || 'Pending'
+            };
+
+            for (const [id, value] of Object.entries(elements)) {
+                const el = document.getElementById(id);
+                if (el) el.textContent = value;
+            }
+            
+            const pStatus = document.getElementById('pay-status');
+            if (pStatus) {
+                const isComp = (o.paymentStatus === 'Completed' || o.paymentStatus === 'Paid');
+                pStatus.style.background = isComp ? '#e8f5e9' : '#fff3e0';
+                pStatus.style.color = isComp ? '#2e7d32' : '#ef6c00';
+                pStatus.textContent = isComp ? 'Completed' : (o.paymentStatus || 'Pending');
+            }
+            
+            const sub = o.subtotal || o.total || 0;
+            const del = (o.delivery === 0 || !o.delivery) ? 'FREE' : `₹ ${o.delivery.toLocaleString('en-IN')}`;
+            
+            document.getElementById('subtotal').textContent = `₹ ${sub.toLocaleString('en-IN')}`;
+            document.getElementById('delivery').textContent = del;
+            document.getElementById('gst').textContent = `₹ ${(o.gst || 0).toLocaleString('en-IN')}`;
+            document.getElementById('total').textContent = `₹ ${(o.total || sub).toLocaleString('en-IN')}`;
+            
+            const statusSelect = document.getElementById('status-select');
+            if (statusSelect) {
+                statusSelect.value = o.status || 'Confirmed';
+                // Toggle visibility of tracking fields if Shipped/Delivered
+                toggleTrackingFields(statusSelect.value);
+            }
+
+            const courierInput = document.getElementById('tracking-courier');
+            const idInput = document.getElementById('tracking-id');
+            if (courierInput) courierInput.value = o.trackingCourier || '';
+            if (idInput) idInput.value = o.trackingId || '';
+
+            const itemsCont = document.getElementById('items-container');
+            itemsCont.innerHTML = (o.items || []).map(item => `
+                <div class="item-row">
+                    <img src="${item.image}" class="item-img" onerror="this.src='https://via.placeholder.com/70'">
+                    <div style="flex:1;">
+                        <div style="font-weight:700;">${item.name}</div>
+                        <div style="font-size:0.85rem; color:#888;">Qty: ${item.qty || item.quantity}</div>
+                    </div>
+                    <div style="font-weight:800; color:var(--admin-green);">₹ ${((item.price || 0) * (item.qty || item.quantity || 1)).toLocaleString('en-IN')}</div>
+                </div>
+            `).join('') || '<p style="color:#999; padding:1rem;">No items found.</p>';
+        }
+
+        async function updateStatus() {
+            if (!currentOrderId || !window.KNSDb) return;
+            
+            const newStatus = document.getElementById('status-select').value;
+            const courier = document.getElementById('tracking-courier').value;
+            const trackingId = document.getElementById('tracking-id').value;
+
+            const btn = document.querySelector('.update-btn');
+            const originalText = btn.textContent;
+            
+            btn.textContent = 'Updating...';
+            btn.disabled = true;
+
+            // 1. Lock UI from background overwrites
+            stopSync = true;
+
+            const updateData = { 
+                status: newStatus,
+                trackingCourier: courier,
+                trackingId: trackingId
+            };
+            
+            if (newStatus === 'Delivered') {
+                updateData.paymentStatus = 'Completed';
+            }
+
+            const res = await KNSDb.updateOrder(currentOrderId, updateData);
+            
+            if (res.ok) {
+                console.log("Cloud update successful.");
+                
+                // 2. Clear loader and update DOM manually for instant feel
+                hideLoader();
+                
+                const pStatus = document.getElementById('pay-status');
+                if (newStatus === 'Delivered' && pStatus) {
+                    pStatus.textContent = 'Completed';
+                    pStatus.style.background = '#e8f5e9';
+                    pStatus.style.color = '#2e7d32';
+                }
+
+                // 3. Sync Cache
+                const cachedRaw = localStorage.getItem('kns_view_order_temp');
+                if (cachedRaw) {
+                    let cached = JSON.parse(cachedRaw);
+                    cached.status = newStatus;
+                    cached.trackingCourier = courier;
+                    cached.trackingId = trackingId;
+                    if (updateData.paymentStatus) cached.paymentStatus = updateData.paymentStatus;
+                    localStorage.setItem('kns_view_order_temp', JSON.stringify(cached));
+                }
+
+                alert(`Order successfully updated to ${newStatus}`);
+            } else {
+                stopSync = false; // Release lock if failed
+                alert("Failed to update: " + (res.msg || 'Database Busy'));
+            }
+
+            btn.textContent = originalText;
+            btn.disabled = false;
+        }
+
+        function toggleTrackingFields(status) {
+            const fields = document.getElementById('tracking-fields');
+            if (status === 'Shipped' || status === 'Out for Delivery' || status === 'Delivered') {
+                fields.style.display = 'block';
+            } else {
+                fields.style.display = 'none';
+            }
+        }
+
+        // Add listener for status change to toggle fields
+        document.getElementById('status-select').addEventListener('change', (e) => {
+            toggleTrackingFields(e.target.value);
+        });
+
+        window.updateStatus = updateStatus;
+    </script>
+</body>
+</html>

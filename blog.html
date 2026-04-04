@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Blog - KNS Furnitech | Design Insights & News</title>
+    <meta name="description" content="Discover the latest in ergonomics, seating trends, and KNS Furnitech company news.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="ecommerce.css">
+    <style>
+        .blog-container {
+            max-width: 1300px;
+            margin: 4rem auto;
+            padding: 0 5%;
+        }
+        
+        #no-blogs {
+            text-align: center;
+            padding: 5rem 0;
+            grid-column: 1 / -1;
+        }
+
+        /* ── Premium Blog Detail Styling ── */
+        .blog-single-post {
+            background: #fff;
+            padding: 0;
+            border-radius: 30px;
+            overflow: hidden;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .blog-full-body-text {
+            color: #333;
+            font-size: 1.15rem;
+            line-height: 1.8;
+            letter-spacing: -0.01em;
+        }
+
+        .blog-full-body-text p {
+            margin-bottom: 2rem;
+        }
+
+        .blog-full-body-text h2 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin: 3.5rem 0 1.5rem;
+            color: #1A1A1A;
+            line-height: 1.2;
+        }
+
+        .blog-full-body-text h3 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin: 2.5rem 0 1rem;
+            color: #1A1A1A;
+        }
+
+        .blog-full-body-text ul {
+            margin-bottom: 2rem;
+            padding-left: 1.5rem;
+        }
+
+        .blog-full-body-text li {
+            margin-bottom: 0.8rem;
+            position: relative;
+        }
+
+        .blog-full-body-text blockquote {
+            border-left: 5px solid var(--brand-green);
+            padding: 1.5rem 2rem;
+            background: #f9f9f9;
+            font-style: italic;
+            font-size: 1.25rem;
+            margin: 3rem 0;
+            border-radius: 0 15px 15px 0;
+            color: #555;
+        }
+
+        .blog-meta-card {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: #fdfdfd;
+            border: 1px solid #eee;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            color: #666;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+
+        .share-button-group {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .share-icon-circle {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            color: #fff !important;
+            text-decoration: none;
+            padding: 0;
+            line-height: 0;
+        }
+
+        .share-icon-circle i, 
+        .share-icon-circle svg {
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+            stroke-width: 2.5px;
+        }
+
+        .share-icon-circle:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+        }
+
+        @media (max-width: 768px) {
+            .blog-full-body-text { font-size: 1.05rem; }
+            .blog-single-post h1 { font-size: 2.2rem !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top utility bar -->
+    <div class="top-bar">
+        Welcome to KNS Furnitech. Enjoy Hassle-free Exchange & Standard Delivery!
+    </div>
+
+    <!-- Main Navigation (Synced) -->
+    <header class="ecommerce-nav">
+        <div class="main-header">
+            <a href="index.html" class="logo">
+                <img src="images/logo.png" alt="KNS Furnitech" class="logo-img">
+                <span>KNS FURNITECH</span>
+            </a>
+
+            <!-- Animated Desktop Search (Centered - Hidden on Mobile) -->
+            <div class="desktop-search-container">
+                <form class="search-box-animated" action="search-results.html" method="GET">
+                    <input type="text" name="q" placeholder="Search website..." required>
+                    <button type="submit" aria-label="Search"><i data-lucide="search" size="20"></i></button>
+                </form>
+            </div>
+            <div class="user-actions kns-nav-icons">
+                <span class="kns-auth-slot"></span>
+                <a href="orders.html" class="kns-icon-btn" title="My Orders"><i data-lucide="package" size="22"></i></a>
+                <a href="track-order.html" class="kns-icon-btn" title="Track Order">
+                    <i data-lucide="truck" size="22"></i>
+                </a>
+                <a href="wishlist.html" class="kns-icon-btn" title="Wishlist">
+                    <i data-lucide="heart" size="22"></i>
+                    <span class="kns-wish-badge">0</span>
+                </a>
+                <button class="kns-icon-btn" data-open-cart title="Cart">
+                    <i data-lucide="shopping-cart" size="22"></i>
+                    <span class="kns-cart-badge">0</span>
+                </button>
+                <button class="hamburger-btn" title="Menu"><i data-lucide="menu" size="24"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Page Hero (Premium Editorial Style) -->
+        <section class="page-hero animate-on-scroll" style="margin-top: -4.5rem; padding-top: 10rem; position: relative; background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&q=80&w=1920&h=600') center/cover; color: white; padding: 10rem 5% 8rem; text-align: center; position: relative; overflow: hidden;">
+            <!-- Premium Breadcrumbs (Global Standard) -->
+            <ul class="kns-breadcrumb on-dark centered animate-slide-right">
+                <li><a href="index.html"><i data-lucide="home" size="14" style="margin-right:6px;"></i> Home</a><span class="sep"><i data-lucide="chevron-right" size="14"></i></span></li>
+                <li class="cur">Our Blog</li>
+            </ul>
+            <div style="position: relative; z-index: 2;" class="animate-scale-up">
+                <h1 style="font-size: 4rem; font-weight: 700; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 2px;">The KNS Journal</h1>
+                <p style="font-size: 1.2rem; color: #e0e0e0; max-width: 600px; margin: 0 auto;">Exploring the intersection of craftsmanship, comfort, and modern living.</p>
+            </div>
+        </section>
+
+        <div class="blog-container">
+            <!-- Blog Listing View -->
+            <div id="blog-listing-view">
+                <!-- Blog Filter Toolbar -->
+                <div class="blog-toolbar" style="margin-bottom: 3rem; display: flex; gap: 1.5rem; flex-wrap: wrap; align-items: center; justify-content: space-between; background: #fff; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid #f0f0f0;">
+                    <div class="search-box-wrap" style="flex: 1; min-width: 280px; position: relative;">
+                        <i data-lucide="search" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #888;" size="18"></i>
+                        <input type="text" id="blogSearch" placeholder="Search stories, tips, or insights..." oninput="applyBlogFilters()" style="width: 100%; padding: 0.8rem 1rem 0.8rem 2.8rem; border: 1.5px solid #eee; border-radius: 8px; font-family: 'Outfit', sans-serif; font-size: 1rem; transition: all 0.3s ease; outline: none; background: #fcfcfc;">
+                    </div>
+                    
+                    <div class="filter-controls" style="display: flex; gap: 1rem; align-items: center;">
+                        <span style="font-weight: 600; color: #1A1A1A; font-size: 0.95rem;">Filter by:</span>
+                        <select id="blogCategoryFilter" onchange="applyBlogFilters()" style="padding: 0.8rem 2rem 0.8rem 1rem; border: 1.5px solid #eee; border-radius: 8px; font-family: 'Outfit', sans-serif; font-size: 0.95rem; cursor: pointer; outline: none; background: #fff; min-width: 180px; appearance: none; -webkit-appearance: none; background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23888%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E'); background-repeat: no-repeat; background-position: right 10px center; background-size: 16px;">
+                            <option value="all">All Categories</option>
+                            <!-- Categories will be dynamically populated -->
+                        </select>
+                        <button onclick="resetBlogFilters()" class="btn-ghost" style="padding: 0.8rem; border: none; background: transparent; color: #666; cursor: pointer; font-weight: 500; font-size: 0.9rem; text-decoration: underline;">Clear</button>
+                    </div>
+                </div>
+
+                <div class="blog-grid-home" id="blog-posts-grid">
+                    <div id="no-blogs">
+                        <i data-lucide="loader-2" class="spin" size="40"></i>
+                        <p style="margin-top: 1rem;">Loading design stories...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Single Blog View (Full Page Redesign) -->
+            <div id="single-blog-view" style="display: none; max-width: 960px; margin: 0 auto;">
+                <nav style="margin-bottom: 3rem; display: flex; justify-content: space-between; align-items: center;">
+                    <button id="blog-back-btn" onclick="showBlogListing()" class="btn-outline" style="display: flex; align-items: center; gap: 10px; padding: 0.7rem 1.4rem; border-radius: 50px; cursor: pointer; border: 1.5px solid #eee; background: #fff; font-weight: 600;">
+                        <i data-lucide="arrow-left" size="18"></i> Back to Archive
+                    </button>
+                    <div class="blog-meta-card">
+                        <span id="reading-time"><i data-lucide="clock" size="16"></i> 5 min read</span>
+                    </div>
+                </nav>
+                <div id="blog-post-full-content"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer (Synced Copy) -->
+    <footer class="ecommerce-footer">
+        <div class="footer-grid">
+            <div class="footer-brand animate-on-scroll">
+                <a href="index.html" class="logo">
+                    <img src="images/logo.png" alt="KNS Furnitech" class="logo-img">
+                    <span>KNS FURNITECH</span>
+                </a>
+                <p>Elevating living spaces across India with premium, modular, and sustainable furniture. Discover the perfect blend of modern aesthetics and unparalleled comfort.</p>
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+                    </a>
+                    <a href="#" aria-label="Instagram">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg>
+                    </a>
+                    <a href="#" aria-label="Twitter">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path></svg>
+                    </a>
+                    <a href="https://linkedin.com/company/kns-furnitech" target="_blank" aria-label="LinkedIn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="footer-col animate-on-scroll">
+                <h4>Shop Categories</h4>
+                <ul class="footer-links">
+                    <li><a href="shop.html?cat=Executive+Chair">Executive Chair</a></li>
+                    <li><a href="shop.html?cat=Workstation+Chair">Workstation Chair</a></li>
+                    <li><a href="shop.html?cat=Plastic+Metal+-+Cafe+Chair">Plastic Metal - Cafe Chair</a></li>
+                    <li><a href="shop.html?cat=Bar+Stool+Chair">Bar Stool Chair</a></li>
+                    <li><a href="shop.html?cat=Puffy+Table+Chair">Puffy Table Chair</a></li>
+                    <li><a href="shop.html?cat=Sofa+Lounge+Seating">Sofa Lounge Seating</a></li>
+                    <li><a href="shop.html?cat=Educational+Furniture">Educational Furniture</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col animate-on-scroll">
+                <h4>Customer Service</h4>
+                <ul class="footer-links">
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="blog.html">Our Blog</a></li>
+                    <li><a href="clients.html">Our Clients</a></li>
+                    <li><a href="catalogs.html">Catalogs</a></li>
+                    <li><a href="track-order.html">Track Order</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col animate-on-scroll">
+                <h4>Newsletter</h4>
+                <p style="color: #aaa; margin-bottom: 1rem; font-size: 0.95rem;">Subscribe to get special offers, free giveaways, and design inspiration.</p>
+                <form class="newsletter-form" onsubmit="event.preventDefault();">
+                    <input type="email" placeholder="Enter your email">
+                    <button type="submit">Subscribe</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2026 KNS Furnitech. All Rights Reserved.</p>
+            <div class="footer-bottom-links">
+                <a href="privacy-policy.html">Privacy Policy</a>
+                <a href="terms-of-service.html">Terms of Service</a>
+                <a href="#">Sitemap</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Standard Interactive Overlays -->
+    <div id="kns-auth-overlay" onclick="closeAuthModal()"></div>
+    <div id="kns-auth-modal"></div>
+    <div id="kns-drawer-overlay"></div>
+    <aside id="kns-cart-drawer"></aside>
+    <div id="quote-modal" class="modal-overlay"></div>
+
+    <!-- Firebase SDK (Compat v9/v11) -->
+    <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore-compat.js"></script>
+    
+    <script src="firebase-config.js?v=4"></script>
+    <script src="database.js?v=4"></script>
+    <script src="auth.js?v=4"></script>
+    <script src="admin_data.js?v=4"></script>
+    <script src="ui.js?v=4"></script>
+    <script src="cart.js?v=4"></script>
+    <script src="wishlist.js?v=4"></script>
+
+    <script>
+        async function loadBlogs() {
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const blogId = urlParams.get('id');
+
+                if (blogId) {
+                    await renderSingleBlog(blogId);
+                } else {
+                    await renderBlogArchive();
+                }
+            } catch (error) {
+                console.error("Error in blog routing:", error);
+                document.getElementById('blog-posts-grid').innerHTML = `<p style="padding: 2rem; text-align: center; color: #666;">Unable to load stories. Please try again later.</p>`;
+            }
+        }
+
+        async function renderBlogArchive() {
+            const grid = document.getElementById('blog-posts-grid');
+            document.getElementById('blog-listing-view').style.display = 'block';
+            document.getElementById('single-blog-view').style.display = 'none';
+            document.querySelector('.page-hero').style.display = 'block';
+
+            if (window.KNSData && KNSData.syncWithCloud) {
+                grid.innerHTML = '<div style="text-align:center; width:100%; grid-column: 1/-1; padding: 4rem 0;"><i data-lucide="loader-2" class="spin" size="40"></i><p style="margin-top:1rem;">Syncing Journal...</p></div>';
+                lucide.createIcons();
+                await KNSData.syncWithCloud();
+            }
+
+            const blogs = KNSData.getBlogs();
+            populateCategories(blogs);
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            const urlCat = urlParams.get('cat');
+            if (urlCat) {
+                document.getElementById('blogCategoryFilter').value = urlCat;
+            }
+
+            applyBlogFilters();
+        }
+
+        function populateCategories(blogs) {
+            const select = document.getElementById('blogCategoryFilter');
+            const categories = [...new Set(blogs.map(b => b.category))].filter(Boolean).sort();
+            const currentVal = select.value;
+            select.innerHTML = '<option value="all">All Categories</option>';
+            categories.forEach(cat => {
+                const opt = document.createElement('option');
+                opt.value = cat;
+                opt.textContent = cat;
+                select.appendChild(opt);
+            });
+            select.value = currentVal;
+        }
+
+        function applyBlogFilters() {
+            const blogs = KNSData.getBlogs();
+            const searchText = document.getElementById('blogSearch').value.toLowerCase().trim();
+            const category = document.getElementById('blogCategoryFilter').value;
+            const grid = document.getElementById('blog-posts-grid');
+
+            const filtered = blogs.filter(b => {
+                const matchesSearch = !searchText || 
+                    b.title.toLowerCase().includes(searchText) || 
+                    b.excerpt.toLowerCase().includes(searchText) ||
+                    (b.content && b.content.toLowerCase().includes(searchText));
+                
+                const matchesCategory = category === 'all' || b.category === category;
+                return matchesSearch && matchesCategory;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div style="text-align:center; width:100%; grid-column: 1/-1; padding: 6rem 2rem; background: #fafafa; border-radius: 12px; border: 1px dashed #ddd;">
+                        <i data-lucide="search-x" size="48" style="color: #ccc; margin-bottom: 1.5rem;"></i>
+                        <h3 style="color: #333; margin-bottom: 0.5rem;">No stories found</h3>
+                        <p style="color: #666;">Try adjusting your search or category filter.</p>
+                        <button onclick="resetBlogFilters()" style="margin-top: 1.5rem; background: #1A1A1A; color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 6px; cursor: pointer; font-weight: 600;">Clear All Filters</button>
+                    </div>`;
+                lucide.createIcons();
+                return;
+            }
+
+            grid.innerHTML = filtered.map(renderBlogCard).join('');
+            lucide.createIcons();
+            if (window.animateObserver) {
+                document.querySelectorAll('.animate-on-scroll').forEach(el => window.animateObserver.observe(el));
+            }
+        }
+
+        function resetBlogFilters() {
+            document.getElementById('blogSearch').value = '';
+            document.getElementById('blogCategoryFilter').value = 'all';
+            const url = new URL(window.location);
+            url.searchParams.delete('cat');
+            window.history.pushState({}, '', url);
+            applyBlogFilters();
+        }
+
+        function renderBlogCard(blog) {
+            const id = blog.id || blog.firestoreId;
+            const dateText = blog.date ? (blog.date.seconds ? new Date(blog.date.seconds * 1000).toLocaleDateString('en-IN', {day:'numeric', month:'short'}) : new Date(blog.date).toLocaleDateString('en-IN', {day:'numeric', month:'short'})) : 'Recent';
+            return `
+                <div class="home-blog-card animate-on-scroll">
+                    <div class="home-blog-img" style="background-image: url('${blog.image || 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=800'}')"></div>
+                    <div class="home-blog-content">
+                        <div class="home-blog-meta">
+                            <span class="cat">${blog.category || 'Journal'}</span>
+                            <span class="date">${dateText}</span>
+                        </div>
+                        <h3>${blog.title}</h3>
+                        <p>${blog.excerpt || 'Discover the latest in ergonomic design and professional workspace trends...'}</p>
+                        <a href="blog.html?id=${id}" class="home-blog-link">
+                            Read Full Story <i data-lucide="arrow-right" size="16"></i>
+                        </a>
+                    </div>
+                </div>`;
+        }
+
+        async function renderSingleBlog(id) {
+            if (window.KNSData && KNSData.syncWithCloud) await KNSData.syncWithCloud();
+            const blog = KNSData.getBlogs().find(b => (b.id || b.firestoreId) === id);
+            
+            // Check for origin parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const fromHome = urlParams.get('from') === 'home';
+            const backBtn = document.getElementById('blog-back-btn');
+            
+            if (backBtn) {
+                if (fromHome) {
+                    backBtn.innerHTML = '<i data-lucide="home" size="18"></i> Back to Home';
+                    backBtn.onclick = () => window.location.href = 'index.html';
+                } else {
+                    backBtn.innerHTML = '<i data-lucide="arrow-left" size="18"></i> Back to Archive';
+                    backBtn.onclick = () => showBlogListing();
+                }
+            }
+            
+            document.getElementById('blog-listing-view').style.display = 'none';
+            document.getElementById('single-blog-view').style.display = 'block';
+            document.querySelector('.page-hero').style.display = 'none';
+            
+            const container = document.getElementById('blog-post-full-content');
+            
+            if (!blog) {
+                container.innerHTML = `<div style="text-align:center; padding: 5rem 0;"><i data-lucide="alert-triangle" size="64" color="#ff4d4d"></i><h2 style="margin-top:1.5rem;">Story Not Found</h2></div>`;
+                lucide.createIcons();
+                return;
+            }
+
+            const dateText = blog.date ? (blog.date.seconds ? new Date(blog.date.seconds * 1000).toLocaleDateString('en-IN', {day:'numeric', month:'short', year:'numeric'}) : new Date(blog.date).toLocaleDateString('en-IN', {day:'numeric', month:'short', year:'numeric'})) : 'Recent';
+            const shareUrl = encodeURIComponent(window.location.href);
+            const shareTitle = encodeURIComponent(blog.title);
+            const words = blog.content ? blog.content.replace(/<[^>]*>/g, '').split(/\s+/).length : 0;
+            const readTime = Math.max(1, Math.ceil(words / 200));
+            document.getElementById('reading-time').innerHTML = `<i data-lucide="clock" size="16"></i> ${readTime} min read`;
+
+            container.innerHTML = `
+                <article class="blog-single-post">
+                    <img src="${blog.image || 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1200'}" alt="${blog.title}" style="width:100%; border-radius:30px; margin-bottom: 3.5rem;">
+                    <header style="margin-bottom: 3rem;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                            <span style="background: rgba(140,198,63,0.12); color: var(--brand-green); padding: 0.6rem 1.4rem; border-radius: 50px; font-weight:700; font-size:0.85rem; text-transform:uppercase; border: 1px solid rgba(140,198,63,0.2);">
+                                ${blog.category || 'Journal'}
+                            </span>
+                            <div style="color:#888; font-size:0.9rem; display:flex; gap:25px; font-weight:500;">
+                                <span><i data-lucide="calendar" size="16" style="vertical-align:text-top; margin-right:6px; color:var(--brand-green);"></i> ${dateText}</span>
+                                <span><i data-lucide="user" size="16" style="vertical-align:text-top; margin-right:6px; color:var(--brand-green);"></i> ${blog.author || 'KNS Team'}</span>
+                            </div>
+                        </div>
+                        <h1 style="font-size: clamp(2.5rem, 5vw, 3.8rem); font-weight: 800; color: #1A1A1A; margin-bottom: 2rem; line-height: 1.1;">${blog.title}</h1>
+                    </header>
+                    <div class="blog-full-body-text">${blog.content || `<p>${blog.excerpt}</p>`}</div>
+                    <footer style="margin-top: 6rem; padding: 4rem 0; border-top: 1px solid #eee; display:flex; justify-content:space-between; align-items:center; flex-wrap: wrap; gap: 2rem;">
+                        <div class="share-button-group">
+                            <span style="font-weight:800; color:#1A1A1A; font-size: 1.1rem; margin-right: 1.5rem;">Expand the Conversation:</span>
+                            <a href="https://api.whatsapp.com/send?text=${shareTitle}%20${shareUrl}" target="_blank" title="Share on WhatsApp" class="share-icon-circle" style="background:#25D366;"><svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
+                            <a href="https://www.facebook.com/sharer/sharer.php?u=${shareUrl}" target="_blank" title="Share on Facebook" class="share-icon-circle" style="background:#1877F2;"><svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+                            <a href="https://twitter.com/intent/tweet?url=${shareUrl}&text=${shareTitle}" target="_blank" title="Share on X" class="share-icon-circle" style="background:#000000;"><svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+                            <a href="https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}" target="_blank" title="Share on LinkedIn" class="share-icon-circle" style="background:#0A66C2;"><svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+                            <button onclick="copyToClipboard()" class="share-icon-circle" style="background:#666; cursor:pointer; border:none;" title="Copy Link"><i data-lucide="copy" size="20" stroke-width="2.5"></i></button>
+                        </div>
+                    </footer>
+                </article>`;
+            window.scrollTo({top: 0, behavior: 'smooth'});
+            lucide.createIcons();
+        }
+
+        window.copyToClipboard = function() {
+            navigator.clipboard.writeText(window.location.href).then(() => alert('Link copied!'));
+        };
+
+        window.showBlogListing = function() {
+            const url = new URL(window.location);
+            url.searchParams.delete('id');
+            url.searchParams.delete('from');
+            window.history.pushState({}, '', url);
+            renderBlogArchive();
+        };
+
+        document.addEventListener('DOMContentLoaded', loadBlogs);
+    </script>
+</body>
+</html>

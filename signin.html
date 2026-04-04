@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - KNS Furnitech</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="auth.css">
+</head>
+<body class="auth-page">
+
+    <div class="auth-split-container">
+        <!-- Image Side -->
+        <div class="auth-image-side" style="background-image: url('https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=1200&q=80')">
+            <div class="auth-image-content">
+                <h2>Redefining<br>Your Workspace</h2>
+                <p>Premium ergonomics meeting timeless design.</p>
+            </div>
+        </div>
+
+        <!-- Form Side -->
+        <div class="auth-form-side">
+            <a href="index.html" class="auth-back-home">
+                <i data-lucide="arrow-left" size="16"></i> Back to Home
+            </a>
+
+            <div class="auth-box">
+                <div class="auth-header">
+                    <div class="auth-logo logo">
+                        <div class="logo">
+                            <img src="images/logo.png" alt="KNS Furnitech" class="logo-img">
+                            <span>KNS FURNITECH</span>
+                        </div>
+                    </div>
+                    <h1>Welcome Back</h1>
+                    <p>Enter your details to access your account</p>
+                </div>
+
+                <div id="loginError" class="auth-error-msg"></div>
+
+                <form id="kns-signin-page-form" onsubmit="handlePageLogin(event)">
+                    <div class="auth-group">
+                        <label class="auth-label">Email Address</label>
+                        <div class="auth-input-wrap">
+                            <i data-lucide="mail" size="18"></i>
+                            <input type="email" id="loginEmail" class="auth-input" placeholder="name@company.com" required>
+                        </div>
+                    </div>
+
+                    <div class="auth-group">
+                        <label class="auth-label">Password</label>
+                        <div class="auth-input-wrap">
+                            <i data-lucide="lock" size="18"></i>
+                            <input type="password" id="loginPassword" class="auth-input" placeholder="••••••••" required>
+                        </div>
+                    </div>
+
+                    <div class="auth-options">
+                        <label class="auth-checkbox">
+                            <input type="checkbox"> Remember me
+                        </label>
+                        <a href="forgot-password.html" class="auth-forgot">Forgot Password?</a>
+                    </div>
+
+                    <button type="submit" class="auth-btn">Sign In</button>
+
+                    <div class="auth-divider">or</div>
+
+                    <button type="button" class="auth-btn-google" onclick="handleGoogleLogin()">
+                        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width="18">
+                        Sign in with Google
+                    </button>
+                    
+                    <div class="auth-footer">
+                        Don't have an account? <a href="signup.html">Create an account</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="kns-loader-overlay">
+        <div class="kns-loader-box fade-in-up">
+            <div class="kns-orbital-loader">
+                <div class="kns-orbital-dot"></div>
+                <div class="kns-orbital-dot"></div>
+                <div class="kns-orbital-dot"></div>
+            </div>
+            <p class="kns-loader-text">Securing your session</p>
+        </div>
+    </div>
+
+    <!-- Firebase SDK (Compat v9/v11) -->
+    <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore-compat.js"></script>
+    
+    <script src="firebase-config.js?v=4"></script>
+    <script src="auth.js?v=4"></script>
+    <script src="cart.js?v=4"></script>
+    <script>
+        lucide.createIcons();
+
+        async function handlePageLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            
+            try {
+                const res = await KNSAuth.login(email, password);
+                if (res.ok) {
+                    // Show Loading Overlay
+                    document.getElementById('loadingOverlay').classList.add('active');
+                    
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 2000);
+                } else {
+                    const errorEl = document.getElementById('loginError');
+                    if (res.code === 'auth/user-not-found' || res.code === 'auth/invalid-credential') {
+                        errorEl.innerHTML = `No account found with this email. <a href="signup.html" style="color: #8CC63F; font-weight:700; text-decoration:underline;">Create an account?</a>`;
+                    } else {
+                        errorEl.textContent = res.msg || 'Invalid email or password';
+                    }
+                    errorEl.style.display = 'block';
+                }
+            } catch (err) {
+                const errorEl = document.getElementById('loginError');
+                errorEl.textContent = 'An unexpected error occurred. Please try again.';
+                errorEl.style.display = 'block';
+            }
+        }
+        async function handleGoogleLogin() {
+            try {
+                const res = await KNSAuth.loginWithGoogle();
+                if (res.ok) {
+                    document.getElementById('loadingOverlay').classList.add('active');
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 2000);
+                } else {
+                    const errorEl = document.getElementById('loginError');
+                    errorEl.textContent = res.msg || 'Google login failed';
+                    errorEl.style.display = 'block';
+                }
+            } catch (err) {
+                console.error("Google Login Error:", err);
+            }
+        }
+
+        window.handlePageLogin = handlePageLogin;
+        window.handleGoogleLogin = handleGoogleLogin;
+    </script>
+</body>
+</html>

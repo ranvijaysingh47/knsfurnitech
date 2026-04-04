@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sync Data — KNS Furnitech</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Outfit', sans-serif; padding: 3rem; background: #f9f9f9; text-align: center; }
+        .card { max-width: 600px; margin: 0 auto; background: #fff; padding: 2rem; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); }
+        h1 { color: #1a1a1a; margin-bottom: 1rem; }
+        p { color: #666; margin-bottom: 2rem; }
+        button { background: #8CC63F; color: #fff; border: none; padding: 1rem 2rem; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #7ab332; transform: translateY(-2px); }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+        #log { margin-top: 2rem; text-align: left; background: #f5f5f5; padding: 1rem; border-radius: 10px; font-family: monospace; font-size: 0.85rem; max-height: 300px; overflow-y: auto; }
+        .success { color: #8CC63F; }
+        .error { color: #e53e3e; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Cloud Data Sync</h1>
+        <p>This tool will migrate your <strong>Product Catalog</strong> and <strong>Catalogs</strong> from local files to your Firestore Database.</p>
+        
+        <button id="syncBtn">Start Migration 🚀</button>
+        
+        <div id="log">Waiting for connection...</div>
+        
+        <div style="margin-top: 2rem;">
+            <a href="index.html" style="color: #8CC63F; text-decoration: none; font-weight: 600;">← Back to Home</a>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <!-- App Scripts -->
+    <!-- Firebase SDK (Compat v9/v11) -->
+    <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore-compat.js"></script>
+
+    <script src="firebase-config.js?v=4"></script>
+    <script src="database.js?v=4"></script>
+
+    <script>
+        const btn = document.getElementById('syncBtn');
+        const log = document.getElementById('log');
+
+        function writeLog(msg, type = '') {
+            const time = new Date().toLocaleTimeString();
+            log.innerHTML += `<div class="${type}">[${time}] ${msg}</div>`;
+            log.scrollTop = log.scrollHeight;
+        }
+
+        async function startSync() {
+            btn.disabled = true;
+            log.innerHTML = '';
+            writeLog("Starting migration process...");
+
+            // 1. Wait for Firebase
+            if (!window.firebase || !window.firebase.db) {
+                writeLog("Error: Firebase not loaded yet. Retrying...", "error");
+                setTimeout(startSync, 1000);
+                return;
+            }
+
+            // 2. Clear Log
+            const products = KNSData.getProducts();
+            const catalogs = KNSData.getCatalogs();
+
+            writeLog(`Found ${products.length} products and ${catalogs.length} catalogs locally.`);
+
+            // 3. Sync Products
+            writeLog("Syncing products...");
+            for (const p of products) {
+                try {
+                    const res = await KNSDb.saveProduct(p.id, p);
+                    if (res.ok) {
+                        writeLog(`Migrated: ${p.name}`, "success");
+                    } else {
+                        writeLog(`Failed: ${p.name} - ${res.msg}`, "error");
+                    }
+                } catch (e) {
+                    writeLog(`Error: ${p.name}`, "error");
+                }
+            }
+
+            // 4. Sync Catalogs
+            writeLog("Syncing catalogs...");
+            for (const c of catalogs) {
+                try {
+                    const res = await KNSDb.saveDocument('catalogs', c);
+                    if (res.ok) {
+                        writeLog(`Migrated Catalog: ${c.name}`, "success");
+                    }
+                } catch (e) {
+                    writeLog(`Error Catalog: ${c.name}`, "error");
+                }
+            }
+
+            writeLog("Migration complete! You can now check your Firestore Database.", "success");
+            btn.innerHTML = "Migration Finished ✅";
+        }
+
+        btn.addEventListener('click', startSync);
+        
+        // Check connectivity
+        setTimeout(() => {
+            if(window.firebase) writeLog("Firebase connected. Ready to sync.");
+            else writeLog("Firebase not found. Ensure firebase-config.js is correct.", "error");
+        }, 1500);
+    </script>
+</body>
+</html>
