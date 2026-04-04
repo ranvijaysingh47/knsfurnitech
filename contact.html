@@ -348,14 +348,10 @@
                                 const form = e.target;
 
                                 try {
-                                    let token = null;
-                                    // reCAPTCHA v3 Execution (Resilient)
-                                    if (typeof grecaptcha !== 'undefined' && grecaptcha.ready) {
-                                        try {
-                                            await new Promise(resolve => grecaptcha.ready(resolve));
-                                            token = await grecaptcha.execute('6LfgZqYsAAAAAIARfVd_5xzKFB-IKP513QVxUgIh', {action: 'contact_form'});
-                                        } catch (cErr) { console.warn("Contact captcha skipped:", cErr.message); }
-                                    }
+                                    // reCAPTCHA v3 Execution (Strict)
+                                    await new Promise(resolve => grecaptcha.ready(resolve));
+                                    const token = await grecaptcha.execute('6LfgZqYsAAAAAIARfVd_5xzKFB-IKP513QVxUgIh', {action: 'contact_form'});
+                                    console.log("reCAPTCHA verified for contact:", token);
 
                                     const formData = new FormData(form);
                                     const data = {
@@ -379,14 +375,9 @@
                                 const form = e.target;
 
                                 try {
-                                    let token = null;
-                                    // reCAPTCHA v3 Execution (Resilient)
-                                    if (typeof grecaptcha !== 'undefined' && grecaptcha.ready) {
-                                        try {
-                                            await new Promise(resolve => grecaptcha.ready(resolve));
-                                            token = await grecaptcha.execute('6LfgZqYsAAAAAIARfVd_5xzKFB-IKP513QVxUgIh', {action: 'quote_request'});
-                                        } catch (cErr) { console.warn("Quote captcha skipped:", cErr.message); }
-                                    }
+                                    // reCAPTCHA v3 Execution (Strict)
+                                    await new Promise(resolve => grecaptcha.ready(resolve));
+                                    const token = await grecaptcha.execute('6LfgZqYsAAAAAIARfVd_5xzKFB-IKP513QVxUgIh', {action: 'quote_request'});
                                     
                                     const data = {
                                         name: form.querySelector('input[placeholder="Your Name"]').value,
