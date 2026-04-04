@@ -8,6 +8,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- reCAPTCHA v3 -->
+    <script src="https://www.google.com/recaptcha/api.js?render=6LfgZqYsAAAAAIARfVd_5xzKFB-IKP513QVxUglh"></script>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="auth.css">
 </head>
@@ -120,16 +122,19 @@
             const email = document.getElementById('regEmail').value.trim();
             const password = document.getElementById('regPassword').value;
             const confirm = document.getElementById('regConfirm').value;
+            const errorEl = document.getElementById('signupError');
 
             if (password !== confirm) {
-                const errorEl = document.getElementById('signupError');
                 errorEl.textContent = 'Passwords do not match.';
                 errorEl.style.display = 'block';
                 return;
             }
 
             try {
-                const res = await KNSAuth.register(name, email, password);
+                // reCAPTCHA v3 Execution
+                const token = await grecaptcha.execute('6LfgZqYsAAAAAIARfVd_5xzKFB-IKP513QVxUglh', {action: 'signup'});
+                
+                const res = await KNSAuth.register(name, email, password, token);
                 if (res.ok) {
                     // Show Loading Overlay
                     document.getElementById('loadingOverlay').classList.add('active');

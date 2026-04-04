@@ -111,10 +111,27 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         const email = document.getElementById('catalog-email').value;
         if (email) {
-            // In a real app, you would send this to your CRM.
-            closeCatalogModal();
-            KNSCart.showToast(`Thank you! The catalog is now downloading.`);
-            triggerCatalogDownload();
+            // reCAPTCHA v3 Execution
+            if (window.grecaptcha) {
+                grecaptcha.ready(async () => {
+                    try {
+                        const token = await grecaptcha.execute('6LfgZqYsAAAAAIARfVd_5xzKFB-IKP513QVxUglh', {action: 'catalog_request'});
+                        console.log("reCAPTCHA verified for catalog:", token);
+                        
+                        // Proceed with submission
+                        closeCatalogModal();
+                        KNSCart.showToast(`Thank you! The catalog is now downloading.`);
+                        triggerCatalogDownload();
+                    } catch (err) {
+                        console.error("reCAPTCHA Error:", err);
+                        KNSCart.showToast("Problem verifying. Please try again.");
+                    }
+                });
+            } else {
+                // Fallback if reCAPTCHA not loaded
+                closeCatalogModal();
+                triggerCatalogDownload();
+            }
         }
     };
 

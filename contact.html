@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="ecommerce.css">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- reCAPTCHA v3 -->
+    <script src="https://www.google.com/recaptcha/api.js?render=6LfgZqYsAAAAAIARfVd_5xzKFB-IKP513QVxUglh"></script>
     <style>
         .contact-wrapper {
             max-width: 1200px;
@@ -341,31 +343,51 @@
                             })();
 
                             // Main Contact Form Handler
-                            document.getElementById('mainContactForm').addEventListener('submit', function(e) {
+                            document.getElementById('mainContactForm').addEventListener('submit', async function(e) {
                                 e.preventDefault();
                                 const form = e.target;
-                                const formData = new FormData(form);
-                                const data = {
-                                    firstName: formData.get('First Name'),
-                                    lastName: formData.get('Last Name'),
-                                    email: formData.get('Email'),
-                                    phone: formData.get('Phone Number'),
-                                    message: formData.get('Message')
-                                };
-                                KNSContact.sendInquiry(data, form, form.querySelector('button[type="submit"]'), 'Send Message');
+
+                                try {
+                                    // reCAPTCHA v3 Execution
+                                    const token = await grecaptcha.execute('6LfgZqYsAAAAAIARfVd_5xzKFB-IKP513QVxUglh', {action: 'contact_form'});
+                                    console.log("reCAPTCHA verified for contact:", token);
+
+                                    const formData = new FormData(form);
+                                    const data = {
+                                        firstName: formData.get('First Name'),
+                                        lastName: formData.get('Last Name'),
+                                        email: formData.get('Email'),
+                                        phone: formData.get('Phone Number'),
+                                        message: formData.get('Message'),
+                                        recaptchaToken: token // Useful for backend verification
+                                    };
+                                    KNSContact.sendInquiry(data, form, form.querySelector('button[type="submit"]'), 'Send Message');
+                                } catch (err) {
+                                    console.error("reCAPTCHA Error:", err);
+                                    alert("Verification failed. Please refresh and try again.");
+                                }
                             });
 
                             // Quote Modal Handler
-                            document.getElementById('quote-form-actual').addEventListener('submit', function(e) {
+                            document.getElementById('quote-form-actual').addEventListener('submit', async function(e) {
                                 e.preventDefault();
                                 const form = e.target;
-                                const data = {
-                                    name: form.querySelector('input[placeholder="Your Name"]').value,
-                                    email: form.querySelector('input[placeholder="Email Address"]').value,
-                                    phone: form.querySelector('input[placeholder="Phone Number"]').value,
-                                    message: form.querySelector('textarea').value
-                                };
-                                KNSContact.sendInquiry(data, form, form.querySelector('button[type="submit"]'), 'Submit Inquiry');
+
+                                try {
+                                    // reCAPTCHA v3 Execution
+                                    const token = await grecaptcha.execute('6LfgZqYsAAAAAIARfVd_5xzKFB-IKP513QVxUglh', {action: 'quote_request'});
+                                    
+                                    const data = {
+                                        name: form.querySelector('input[placeholder="Your Name"]').value,
+                                        email: form.querySelector('input[placeholder="Email Address"]').value,
+                                        phone: form.querySelector('input[placeholder="Phone Number"]').value,
+                                        message: form.querySelector('textarea').value,
+                                        recaptchaToken: token
+                                    };
+                                    KNSContact.sendInquiry(data, form, form.querySelector('button[type="submit"]'), 'Submit Inquiry');
+                                } catch (err) {
+                                    console.error("reCAPTCHA Error:", err);
+                                }
                             });
                         </script>
                 </div>

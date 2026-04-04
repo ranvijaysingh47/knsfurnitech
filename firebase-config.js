@@ -12,7 +12,8 @@
         storageBucket: "kns-furnitech.firebasestorage.app",
         messagingSenderId: "271800263963",
         appId: "1:271800263963:web:fd81f172c1ace2c55e1fbe",
-        measurementId: "G-GW3NWH1L9G"
+        measurementId: "G-GW3NWH1L9G",
+        recaptchaSiteKey: "6LfgZqYsAAAAAIARfVd_5xzKFB-IKP513QVxUglh"
     };
 
     // Initialize Firebase if not already done (by CDN scripts)
