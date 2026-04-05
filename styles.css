@@ -3028,7 +3028,11 @@ button.quote-btn:hover {
     outline: none;
 }
 
-/* Bestsellers Section Refined (V2) */
+/* Bestsellers Section Refined (V2.2) 
+   - Restored circular arrows
+   - Fixed mobile centering for long names
+   - Cleaned up syntax errors
+*/
 .bestsellers-section {
     padding: 8rem 5%;
     background: #fdfdfd;
@@ -3043,16 +3047,13 @@ button.quote-btn:hover {
     display: flex;
     align-items: center;
     justify-content: center;
-    /* Force centering of content */
     gap: 1.5rem;
     padding: 0 1rem;
 }
 
 .bs-tabs-wrapper {
-    width: 350px;
-    /* Increased slightly for longer category names */
+    width: 350px; /* Base width for Desktop */
     overflow: hidden;
-    /* Use transform instead of scroll for perfect precision */
     position: relative;
 }
 
@@ -3076,7 +3077,7 @@ button.quote-btn:hover {
     align-items: center;
     justify-content: center;
     text-transform: uppercase;
-    letter-spacing: 1.5px;
+    letter-spacing: 1px;
     padding: 1rem 0;
 }
 
@@ -3088,6 +3089,8 @@ button.quote-btn:hover {
     background: white;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
     white-space: nowrap;
+    text-align: center;
+    min-width: 220px;
 }
 
 .bs-tab.active span {
@@ -3102,12 +3105,12 @@ button.quote-btn:hover {
     color: #333;
 }
 
-/* Arrow Buttons */
+/* Arrow Buttons - Restored Circular Design */
 .bs-nav-btn {
-    width: 42px;
-    height: 42px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
-    background: white;
+    background: white !important;
     border: 1px solid var(--border-light);
     color: var(--brand-dark);
     display: flex;
@@ -3121,7 +3124,7 @@ button.quote-btn:hover {
 }
 
 .bs-nav-btn:hover {
-    background: var(--brand-green);
+    background: var(--brand-green) !important;
     color: white;
     border-color: var(--brand-green);
     transform: scale(1.1);
@@ -3131,9 +3134,38 @@ button.quote-btn:hover {
     transform: scale(0.95);
 }
 
-.bs-tab:hover:not(.active) {
-    border-color: #333;
-    color: #333;
+/* Responsive Overrides (V2.2) */
+@media (max-width: 768px) {
+    .bs-tabs-container {
+        gap: 1rem;
+    }
+    .bs-tabs-wrapper {
+        width: 300px;
+    }
+    .bs-tab span {
+        min-width: 200px;
+        padding: 0.7rem 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .bs-tabs-container {
+        gap: 0.5rem;
+        padding: 0 0.5rem;
+    }
+    .bs-tabs-wrapper {
+        width: 220px;
+    }
+    .bs-tab span {
+        min-width: 180px;
+        font-size: 0.7rem;
+        padding: 0.6rem 0.8rem;
+        letter-spacing: 0.5px;
+    }
+    .bs-nav-btn {
+        width: 36px !important;
+        height: 36px !important;
+    }
 }
 
 .bs-container {
