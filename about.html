@@ -252,6 +252,88 @@
             border-color: rgba(255, 255, 255, 0.5);
             transform: translateY(-3px);
         }
+
+        /* Mobile Responsiveness Overrides for About Us */
+        @media (max-width: 768px) {
+            .section-wrapper {
+                padding: 4rem 5% !important;
+            }
+
+            .about-intro-grid {
+                gap: 3rem !important;
+            }
+
+            .about-intro-grid h2 {
+                font-size: 2.2rem !important;
+                line-height: 1.2 !important;
+            }
+
+            .about-image-collage {
+                min-height: 400px !important;
+            }
+
+            .why-choose-section {
+                padding: 4rem 5% !important;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr !important;
+                gap: 1.5rem !important;
+            }
+
+            .clean-cta-title {
+                font-size: 2.2rem !important;
+            }
+
+            .lifestyle-grid {
+                grid-template-columns: 1fr !important;
+            }
+
+            .lifestyle-grid div {
+                height: 300px !important;
+            }
+
+            .vm-grid {
+                gap: 1.5rem !important;
+            }
+
+            .vm-grid > div {
+                padding: 2rem !important;
+            }
+            
+            /* Team Section Mobile Fix (United by Craftsmanship) */
+            .team-group-img-wrap {
+                height: 420px !important;
+            }
+            
+            .team-group-content {
+                padding: 3rem 1.5rem 2rem !important;
+                background: linear-gradient(to top, rgba(26, 26, 26, 1) 0%, rgba(26, 26, 26, 0.8) 80%, transparent 100%) !important;
+            }
+            
+            .team-group-content h2 {
+                font-size: 1.7rem !important; /* Smaller size for mobile/tablet */
+                line-height: 1.1 !important;
+                margin-bottom: 0.8rem !important;
+            }
+            
+            .team-group-content p {
+                font-size: 0.95rem !important;
+                line-height: 1.5 !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-hero h1 {
+                font-size: 2.2rem !important;
+            }
+            .team-group-img-wrap {
+                height: 480px !important;
+            }
+            .team-group-content h2 {
+                font-size: 1.5rem !important;
+            }
+        }
     </style>
 </head>
 
@@ -603,7 +685,7 @@
         <section style="padding: 5rem 5%; background: white;">
             <div style="max-width: 1200px; margin: 0 auto; text-align: center;">
                 <h2 class="section-title animate-scale-up">Experience the Craftsmanship</h2>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 2rem;">
+                <div class="lifestyle-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
                     <div class="animate-scale-up delay-1"
                         style="border-radius: 16px; overflow: hidden; height: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
                         <img src="images/hero_banner.png" alt="Interior Craftsmanship"
@@ -716,7 +798,7 @@
                     style="position: relative; border-radius: 20px; overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.15);">
 
                     <!-- Group Image -->
-                    <div style="width: 100%; height: 650px; overflow: hidden;">
+                    <div class="team-group-img-wrap" style="width: 100%; height: 650px; overflow: hidden;">
                         <!-- The source points to the custom image. -->
                         <img src="images/team_group_v2.jpg" alt="KNS Furnitech Team"
                             style="width: 100%; height: 100%; object-fit: cover; object-position: center 15%; display: block; transition: transform 15s ease;"
@@ -725,7 +807,7 @@
                     </div>
 
                     <!-- Overlay Text Content -->
-                    <div
+                    <div class="team-group-content"
                         style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(26, 26, 26, 0.98) 0%, rgba(26, 26, 26, 0.6) 70%, transparent 100%); padding: 5rem 4rem 3rem; color: white; display: flex; flex-direction: column; justify-content: flex-end; z-index: 2;">
 
                         <div class="animate-on-scroll delay-2"
