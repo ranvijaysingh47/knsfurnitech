@@ -1044,12 +1044,21 @@
         @media (max-width: 1000px) {
             .pdp-main {
                 grid-template-columns: 1fr;
-                gap: 4rem;
+                gap: 3.5rem;
+                padding: 3rem 5% 5rem;
             }
 
             .pdp-gallery {
                 position: relative;
                 top: 0;
+            }
+
+            /* Product Title Fix */
+            .pdp-title {
+                font-size: 2.5rem !important;
+                line-height: 1.2 !important;
+                margin-bottom: 0.8rem !important;
+                overflow: visible !important;
             }
 
             .review-layout {
@@ -1062,54 +1071,51 @@
 
             /* Typography Scaling */
             #pdp-hero-title {
-                font-size: 2.4rem !important;
+                font-size: 2.2rem !important;
                 letter-spacing: 2px !important;
             }
 
             .pdp-hero {
-                height: 320px;
+                height: 300px;
                 padding-top: 5rem;
                 margin-top: -3.5rem;
             }
 
             /* Action Row Sync & Balance */
             .mobile-action-row {
-                gap: 1rem !important;
+                gap: 0.8rem !important;
                 align-items: center !important;
-                flex-wrap: wrap;
             }
 
             .mobile-qty-wrap,
             .mobile-add-btn,
             .mobile-wish-btn {
-                height: 54px !important;
+                height: 52px !important;
                 box-sizing: border-box;
-                border-radius: 14px !important;
+                border-radius: 12px !important;
             }
 
             .mobile-qty-wrap {
                 border: 2px solid #eee !important;
-                width: 125px !important;
-                /* Strict compact width */
-                margin: 0 auto 0.75rem !important;
+                width: 115px !important;
+                /* Standard compact width */
+                margin: 0 !important;
                 display: flex !important;
-                height: 52px !important;
                 flex: none !important;
                 justify-content: space-evenly !important;
-                /* Eliminate internal whitespace */
                 background: #fff !important;
             }
 
             .mobile-qty-btn {
-                width: 40px !important;
+                width: 35px !important;
                 border: none !important;
                 background: none !important;
                 cursor: pointer;
             }
 
             .mobile-qty-input {
-                width: 35px !important;
-                font-size: 1.1rem !important;
+                width: 30px !important;
+                font-size: 1rem !important;
                 margin: 0 !important;
                 padding: 0 !important;
                 background: transparent !important;
@@ -1117,15 +1123,78 @@
 
             .mobile-add-btn {
                 flex: 1 !important;
-                height: 52px !important;
-                font-size: 1rem !important;
+                font-size: 0.95rem !important;
                 min-width: 0 !important;
+                gap: 8px !important;
             }
 
             .mobile-wish-btn {
                 width: 52px !important;
-                height: 52px !important;
                 flex: none !important;
+            }
+
+            /* Trust Badges 2-Column Grid */
+            .pdp-trust-badges {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 1.2rem !important;
+                padding: 1.2rem !important;
+                margin-top: 2rem !important;
+            }
+
+            .pdp-trust-badges div {
+                flex: none !important;
+                text-align: left !important;
+                display: flex !important;
+                align-items: center !important;
+                gap: 10px !important;
+            }
+
+            .pdp-trust-badges i {
+                margin-bottom: 0 !important;
+                transform: scale(0.9);
+            }
+
+            .pdp-trust-badges span {
+                font-size: 0.7rem !important;
+                line-height: 1.1 !important;
+                white-space: normal !important;
+            }
+
+            /* Tab Navigation Scroll Indicators */
+            .pdp-tabs-nav {
+                border-bottom: 1px solid #eee;
+                padding-bottom: 0px;
+                position: relative;
+            }
+            .pdp-tabs-nav::after {
+                content: '';
+                position: absolute;
+                right: 0;
+                top: 0;
+                bottom: 0;
+                width: 30px;
+                background: linear-gradient(to left, rgba(255,255,255,1), rgba(255,255,255,0));
+                pointer-events: none;
+            }
+
+            .pdp-inquiry-row {
+                flex-wrap: wrap !important;
+                gap: 0.8rem !important;
+            }
+            .pdp-inquiry-row a, .pdp-inquiry-row button {
+                height: 50px !important;
+                font-size: 0.9rem !important;
+            }
+
+            @media (max-width: 400px) {
+                .pdp-inquiry-row {
+                    flex-direction: column !important;
+                }
+                .pdp-inquiry-row a, .pdp-inquiry-row button {
+                    width: 100% !important;
+                    flex: none !important;
+                }
             }
 
             /* Recommendations Vertical Stack */
@@ -1140,12 +1209,6 @@
                 grid-template-columns: 1fr !important;
                 gap: 1.5rem !important;
                 width: 100% !important;
-            }
-
-            .pdp-recommendation-card {
-                width: 100% !important;
-                max-width: none !important;
-                min-width: 0 !important;
             }
         }
 
@@ -1317,7 +1380,7 @@
                             data-lucide="pin" size="18"></i></a>
                 </div>
             </div>
-            <div id="pdp-badges-node" style="display: flex; gap: 8px; margin-bottom: 0.8rem;"></div>
+            <div id="pdp-badges-node" class="pdp-badges-wrap" style="display: flex; gap: 8px; margin-bottom: 0.8rem;"></div>
             <h1 class="pdp-title" id="pdp-name-node">Product Name</h1>
             <div class="pdp-stars" id="pdp-stars-node"></div>
 
@@ -1350,12 +1413,12 @@
             </div>
 
             <!-- Inquiries Row -->
-            <div style="display: flex; gap: 1rem; margin-top: 1rem;">
-                <a href="#" id="wa-inquiry" class="btn-outline"
+            <div class="pdp-inquiry-row" style="display: flex; gap: 1rem; margin-top: 1rem;">
+                <a href="#" id="wa-inquiry" class="btn-outline wa-btn"
                     style="flex: 1; margin-top: 0; display: flex; align-items: center; justify-content: center; gap: 10px; border-color: #25D366; color: #25D366;">
                     <i data-lucide="phone" size="18"></i> WhatsApp Inquiry
                 </a>
-                <button onclick="document.getElementById('bulk-modal').classList.add('active')" class="btn-outline"
+                <button onclick="document.getElementById('bulk-modal').classList.add('active')" class="btn-outline bulk-btn"
                     style="flex: 1; margin-top: 0; display: flex; align-items: center; justify-content: center; gap: 10px;">
                     <i data-lucide="building-2" size="18"></i> Bulk/Corporate
                 </button>
