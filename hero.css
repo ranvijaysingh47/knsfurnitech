@@ -39,6 +39,8 @@
     inset: 0;
     background-size: cover;
     background-position: center;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
     transform: scale(1.08);
     transition: transform 8s ease-out;
     will-change: transform;
