@@ -502,6 +502,38 @@ function openProductModal(id = null) {
     modal.classList.add('active');
 }
 
+window.handleImageFile = function(event, targetId) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+        alert('Please select an image file.');
+        return;
+    }
+
+    const reader = new FileReader();
+    const btn = event.target.nextElementSibling;
+    const originalContent = btn.innerHTML;
+    
+    btn.innerHTML = '<i data-lucide="loader-2" class="spin" size="18"></i>';
+    if (window.lucide) lucide.createIcons();
+
+    reader.onload = function(e) {
+        document.getElementById(targetId).value = e.target.result;
+        btn.innerHTML = originalContent;
+        if (window.lucide) lucide.createIcons();
+        if (window.KNSCart) KNSCart.showToast("Image uploaded and linked successfully!");
+    };
+
+    reader.onerror = function() {
+        alert('Failed to read file.');
+        btn.innerHTML = originalContent;
+        if (window.lucide) lucide.createIcons();
+    };
+
+    reader.readAsDataURL(file);
+};
+
 function handleProductSubmit(e) {
     e.preventDefault();
     const id = document.getElementById('edit-prod-id').value;
