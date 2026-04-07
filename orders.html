@@ -617,8 +617,8 @@
                 container.innerHTML = orders.map(order => {
                     const status = order.status || 'Confirmed';
                     const sClass = getStatusClass(status);
-                    const orderId = order.firestoreId || order.id || 'Pending';
-                    const displayId = orderId.startsWith('#') ? orderId.toUpperCase() : `#KNS-${orderId.substring(0, 6).toUpperCase()}`;
+                    const orderId = order.id || order.firestoreId || 'Pending';
+                    const displayId = orderId.startsWith('#') ? orderId.toUpperCase() : `#KNS-${orderId.slice(-6).toUpperCase()}`;
                     
                     const currentStep = getStepIndex(status);
                     const steps = ['Confirmed', 'Processing', 'Shipped', 'Out for Delivery', 'Delivered'];

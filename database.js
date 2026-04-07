@@ -146,13 +146,16 @@ const KNSDb = (() => {
     async function saveUserData(uid, key, data) {
         try {
             const db = getDb();
-            if (!db || !uid) return;
+            if (!db || !uid) {
+                console.warn("⚠️ [KNSDb] saveUserData failed: Database or UID missing.");
+                return { ok: false, msg: "Database not ready" };
+            }
             const docRef = db.doc(db.instance, "users", uid, "private", key);
             await db.setDoc(docRef, { data, updatedAt: new Date().toISOString() });
             return { ok: true };
         } catch (e) {
             console.error(`Error saving user ${key}:`, e);
-            return { ok: false };
+            return { ok: false, msg: e.message };
         }
     }
 

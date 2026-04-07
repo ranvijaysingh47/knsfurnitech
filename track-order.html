@@ -554,8 +554,9 @@
             const status = order.status || 'Confirmed';
             const currentStep = getStepIndex(status);
             const steps = ['Confirmed', 'Processing', 'Shipped', 'Out For Delivery', 'Delivered'];
-            const displayId = order.id ? (order.id.startsWith('#') ? order.id : `#KNS-${order.id.slice(-6).toUpperCase()}`) : '#KNS-PENDING';
-
+            
+            const rawId = (order.id || order.firestoreId || 'PENDING').replace('#KNS-', '').replace('#ORD-', '');
+            const displayId = `#KNS-${rawId.length > 8 ? rawId.slice(-6).toUpperCase() : rawId.toUpperCase()}`;
             resultsDiv.innerHTML = `
                 <div class="result-card">
                     <div style="padding: 2.5rem 3rem; background: #fff; border-bottom: 1px solid #f5f5f5; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1.5rem;">

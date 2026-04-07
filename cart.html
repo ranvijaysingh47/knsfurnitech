@@ -147,6 +147,20 @@
                     <!-- Step 2: Delivery Details -->
                     <div id="checkout-step-2" class="checkout-step" style="display:none;">
                         <div class="checkout-divider" style="margin-top:0;">Delivery Details</div>
+                        
+                        <!-- Saved Addresses Selector -->
+                        <div id="saved-addresses-selection" style="margin-bottom: 2rem; display:none;">
+                            <p style="font-size:0.9rem; font-weight:700; color:#1A1A1A; margin-bottom:1rem; display:flex; align-items:center; gap:0.5rem;">
+                                <i data-lucide="map-pin" size="16"></i> Select a saved address:
+                            </p>
+                            <div id="saved-addresses-list" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:1rem;">
+                                <!-- Injected by JS -->
+                            </div>
+                            <div style="margin-top:1rem; text-align:right;">
+                                <button type="button" onclick="clearAddressForm()" style="background:none; border:none; color:var(--brand-green); font-size:0.85rem; font-weight:600; cursor:pointer;">+ Use a different address</button>
+                            </div>
+                        </div>
+
                         <form class="checkout-form" id="deliveryForm" onsubmit="event.preventDefault(); goToStep(3)">
                             <div class="checkout-row">
                                 <input type="text" id="deliv-name" placeholder="Full Name" required>
@@ -159,6 +173,19 @@
                                 <input type="text" id="deliv-pin" placeholder="Pincode" required pattern="[0-9]{6}">
                             </div>
                             <textarea id="deliv-notes" placeholder="Delivery instructions (optional)" rows="3"></textarea>
+
+                            <!-- New Address Options (Visible when not using a saved address) -->
+                            <div id="new-address-options" style="margin-top:1.5rem; display:block; padding: 1.2rem; background: #f9f9f9; border-radius: 12px; border: 1.5px solid #eee;">
+                                <div style="display:flex; align-items:center; gap:0.8rem; margin-bottom:0.8rem;">
+                                    <input type="checkbox" id="save-to-profile" style="width:18px; height:18px; cursor:pointer;" checked>
+                                    <label for="save-to-profile" style="font-size:0.9rem; color:#444; cursor:pointer; font-weight:600;">Save this address to my profile</label>
+                                </div>
+                                <div style="display:flex; align-items:center; gap:0.8rem;">
+                                    <input type="checkbox" id="save-as-default" style="width:18px; height:18px; cursor:pointer;">
+                                    <label for="save-as-default" style="font-size:0.9rem; color:#444; cursor:pointer; font-weight:600;">Set as default address</label>
+                                </div>
+                            </div>
+
                             <button type="submit" class="kns-ec-btn kns-ec-btn-primary" style="width:100%; margin-top:0.8rem; font-size:1.1rem; padding:1.1rem;">
                                 Next: Payment Details →
                             </button>
@@ -737,6 +764,87 @@
 
             updateStepper(step);
             window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Load saved addresses when entering Step 2
+            if (step === 2) {
+                renderSavedAddresses();
+            }
+        }
+
+        async function renderSavedAddresses() {
+            const container = document.getElementById('saved-addresses-list');
+            const wrapper = document.getElementById('saved-addresses-selection');
+            if (!container || !window.KNSAuth) return;
+
+            const addresses = await KNSAuth.getAddresses();
+            if (addresses.length === 0) {
+                wrapper.style.display = 'none';
+                return;
+            }
+
+            wrapper.style.display = 'block';
+            container.innerHTML = addresses.map(addr => `
+                <div class="saved-addr-card" onclick="selectSavedAddress('${addr.id}')" id="addr-card-${addr.id}" style="border:1.5px solid #eee; padding:1.2rem; border-radius:12px; cursor:pointer; transition:0.2s; background:white; position:relative; display:flex; gap:1rem; align-items:flex-start;">
+                    <div class="addr-radio" style="width:20px; height:20px; border:2px solid #ddd; border-radius:50%; flex-shrink:0; margin-top:2px; position:relative; transition:0.3s;"></div>
+                    <div style="flex-grow:1;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+                            <div style="font-weight:700; font-size:0.95rem; color:#1A1A1A;">${addr.city} Address</div>
+                            ${addr.isDefault ? `<span style="background:#8CC63F; color:white; font-size:0.65rem; padding:2px 8px; border-radius:10px; font-weight:700;">DEFAULT</span>` : ''}
+                        </div>
+                        <div style="font-size:0.85rem; color:#666; line-height:1.5;">${addr.street}, ${addr.city}, ${addr.pincode}</div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Add some CSS for the radio look
+            const style = document.createElement('style');
+            style.textContent = `
+                .saved-addr-card.active { border-color: #8CC63F !important; background: #fafff0 !important; }
+                .saved-addr-card.active .addr-radio { border-color: #8CC63F !important; }
+                .saved-addr-card.active .addr-radio::after { content:''; position:absolute; top:3px; left:3px; width:10px; height:10px; background:#8CC63F; border-radius:50%; }
+            `;
+            document.head.appendChild(style);
+
+            // Select default automatically
+            const defaultAddr = addresses.find(a => a.isDefault);
+            if (defaultAddr && !document.getElementById('deliv-address').value) {
+                selectSavedAddress(defaultAddr.id);
+            }
+        }
+
+        function selectSavedAddress(id) {
+            KNSAuth.getAddresses().then(addresses => {
+                const addr = addresses.find(a => a.id === id);
+                if (!addr) return;
+
+                document.getElementById('deliv-address').value = addr.street;
+                document.getElementById('deliv-city').value = addr.city;
+                document.getElementById('deliv-pin').value = addr.pincode;
+
+                // Visual feedback
+                document.querySelectorAll('.saved-addr-card').forEach(c => c.classList.remove('active'));
+                const card = document.getElementById(`addr-card-${id}`);
+                if (card) card.classList.add('active');
+
+                // Hide new address options when using a saved one
+                document.getElementById('new-address-options').style.display = 'none';
+
+                // Pre-fill user name/phone/email if empty
+                const user = KNSAuth.getUser();
+                if (user) {
+                    if (!document.getElementById('deliv-name').value) document.getElementById('deliv-name').value = user.name || '';
+                    if (!document.getElementById('deliv-email').value) document.getElementById('deliv-email').value = user.email || '';
+                    if (!document.getElementById('deliv-phone').value) document.getElementById('deliv-phone').value = user.phone || '';
+                }
+            });
+        }
+
+        function clearAddressForm() {
+            document.getElementById('deliv-address').value = '';
+            document.getElementById('deliv-city').value = '';
+            document.getElementById('deliv-pin').value = '';
+            document.querySelectorAll('.saved-addr-card').forEach(c => c.classList.remove('active'));
+            document.getElementById('new-address-options').style.display = 'block';
         }
 
         function updateStepper(activeStep) {
@@ -809,6 +917,25 @@
             // Save to Firestore Database
             try {
                 await KNSDb.saveOrder(orderData);
+                
+                // Auto-save address to profile if new or explicitly requested
+                if (window.KNSAuth && KNSAuth.isLoggedIn()) {
+                    const shouldSave = document.getElementById('save-to-profile')?.checked;
+                    const shouldDefault = document.getElementById('save-as-default')?.checked;
+                    const isNewAddressOptionsVisible = document.getElementById('new-address-options')?.style.display !== 'none';
+
+                    if (isNewAddressOptionsVisible && shouldSave) {
+                        const addr = {
+                            street: orderData.address,
+                            city: orderData.city,
+                            pincode: orderData.pincode,
+                            state: 'India',
+                            isDefault: shouldDefault
+                        };
+                        console.log("💾 Saving address from checkout...");
+                        await KNSAuth.addAddress(addr);
+                    }
+                }
             } catch (err) {
                 console.error("Firestore Order Save failed:", err);
             }

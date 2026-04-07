@@ -675,8 +675,9 @@ function renderOrdersTable() {
     if (!tbody) return;
 
     tbody.innerHTML = orders.map(o => {
-        const rawId = (o.id || o.orderNumber || o.firestoreId || '').replace('#ORD-', '').replace('#KNS-', '');
-        const ordId = rawId.length > 8 ? rawId.slice(-8) : rawId;
+        // Unify Display ID: Favor o.id (generated at checkout) then fallback to firestoreId
+        const displayId = (o.id || o.orderNumber || o.firestoreId || 'Pending').replace('#KNS-', '').replace('#ORD-', '');
+        const shortId = displayId.length > 8 ? displayId.slice(-6).toUpperCase() : displayId.toUpperCase();
         const fId = o.firestoreId || o.id; 
         const oDate = o.timestamp || o.date || Date.now();
         const oUser = o.userName || o.customerName || 'Customer';
@@ -685,7 +686,7 @@ function renderOrdersTable() {
 
         return `
             <tr>
-                <td data-label="Order Number" style="font-weight:600;">#ORD-${ordId}</td>
+                <td data-label="Order Number" style="font-weight:600;">#KNS-${shortId}</td>
                 <td data-label="Date">${new Date(oDate).toLocaleDateString()}</td>
                 <td data-label="Total Amount" style="font-weight:700;">₹ ${oTotal.toLocaleString('en-IN')}</td>
                 <td data-label="Items">${o.items ? o.items.length : 0} Product(s)</td>

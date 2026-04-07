@@ -211,7 +211,118 @@ const KNSAuth = (() => {
         return Promise.race([ready, timeout]);
     }
 
-    const authExport = { getUser, isLoggedIn, isAdmin, register, login, loginWithGoogle, logout, forgotPassword, waitUntilReady };
+    /* ── Address Management ── */
+    async function getAddresses() {
+        await waitUntilReady();
+        const user = getUser();
+        if (!user || !user.uid) return [];
+        
+        // 1. Check if we already have them in localStorage (cached)
+        if (user.addresses) return user.addresses;
+
+        // 2. Fetch from Cloud
+        if (window.KNSDb) {
+            const cloudAddresses = await KNSDb.getUserData(user.uid, 'addresses');
+            if (cloudAddresses) {
+                user.addresses = cloudAddresses;
+                localStorage.setItem(KEY, JSON.stringify(user));
+                return cloudAddresses;
+            }
+        }
+        return [];
+    }
+
+    async function addAddress(address) {
+        await waitUntilReady();
+        const user = getUser();
+        if (!user || !user.uid) return { ok: false, msg: "User not logged in" };
+
+        const addresses = await getAddresses();
+        
+        // Generate a simple ID if not present
+        if (!address.id) address.id = 'addr-' + Date.now();
+
+        // If this is the first address or set as default, handle default status
+        if (addresses.length === 0 || address.isDefault) {
+            addresses.forEach(a => a.isDefault = false);
+            address.isDefault = true;
+        }
+
+        // Add or Update
+        const idx = addresses.findIndex(a => {
+            if (address.id && a.id === address.id) return true;
+            // Check for content match to prevent duplicates
+            return a.street.toLowerCase() === address.street.toLowerCase() && 
+                   a.city.toLowerCase() === address.city.toLowerCase() && 
+                   a.pincode === address.pincode;
+        });
+
+        if (idx > -1) {
+            // Update existing (merge fields)
+            addresses[idx] = { ...addresses[idx], ...address };
+            // If the incoming address has no ID but matches an existing one, keep the old ID
+            if (!address.id) address.id = addresses[idx].id;
+        } else {
+            // New Address
+            addresses.push(address);
+        }
+
+        // Save to Firestore
+        if (window.KNSDb) {
+            const res = await KNSDb.saveUserData(user.uid, 'addresses', addresses);
+            if (!res.ok) return res;
+        }
+
+        // Update Local State
+        user.addresses = addresses;
+        localStorage.setItem(KEY, JSON.stringify(user));
+        return { ok: true, addresses };
+    }
+
+    async function removeAddress(addressId) {
+        await waitUntilReady();
+        const user = getUser();
+        if (!user || !user.uid) return { ok: false, msg: "User not logged in" };
+
+        let addresses = await getAddresses();
+        addresses = addresses.filter(a => a.id !== addressId);
+
+        // Ensure at least one default if we still have addresses
+        if (addresses.length > 0 && !addresses.find(a => a.isDefault)) {
+            addresses[0].isDefault = true;
+        }
+
+        if (window.KNSDb) {
+            const res = await KNSDb.saveUserData(user.uid, 'addresses', addresses);
+            if (!res.ok) return res;
+        }
+
+        user.addresses = addresses;
+        localStorage.setItem(KEY, JSON.stringify(user));
+        return { ok: true, addresses };
+    }
+
+    async function setDefaultAddress(addressId) {
+        await waitUntilReady();
+        const user = getUser();
+        if (!user || !user.uid) return { ok: false, msg: "User not logged in" };
+
+        const addresses = await getAddresses();
+        addresses.forEach(a => {
+            a.isDefault = (a.id === addressId);
+        });
+
+        if (window.KNSDb) {
+            const res = await KNSDb.saveUserData(user.uid, 'addresses', addresses);
+            if (!res.ok) return res;
+        }
+
+        user.addresses = addresses;
+        localStorage.setItem(KEY, JSON.stringify(user));
+        return { ok: true, addresses };
+    }
+
+    const authExport = { getUser, isLoggedIn, isAdmin, register, login, loginWithGoogle, logout, forgotPassword, waitUntilReady, getAddresses, addAddress, removeAddress, setDefaultAddress };
     window.KNSAuth = authExport;
     return authExport;
 })();

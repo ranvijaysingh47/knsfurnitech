@@ -504,10 +504,10 @@
                         <h2>Matching Products (${res.products.length})</h2>
                         <div class="shop-grid">
                             ${res.products.map(p => `
-                                <div class="product-card">
+                                <div class="product-card" style="position:relative;">
+                                    <a href="product.html?id=${p.id}" class="kns-card-link" style="position:absolute; inset:0; z-index:2;"></a>
                                     <div class="product-img-wrapper">
                                         <div class="product-img" style="background-image:url('${p.image}')"></div>
-                                        <a href="product.html?id=${p.id}" class="kns-card-link"></a>
                                     </div>
                                     <div class="product-info">
                                         <div class="product-category">${p.category}</div>
