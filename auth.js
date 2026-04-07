@@ -399,13 +399,100 @@ document.addEventListener('click', () => {
     document.querySelectorAll('.kns-profile-dropdown.is-open').forEach(d => d.classList.remove('is-open'));
 });
 
-// Legacy support for modal triggers (now redirects)
-function openAuthModal(tab = 'login') {
-    window.location.href = tab === 'register' ? 'signup.html' : 'signin.html';
+// Global UI helpers for the modal
+window.closeAuthModal = () => {
+    document.getElementById('kns-auth-modal')?.classList.remove('active');
+    document.getElementById('kns-auth-overlay')?.classList.remove('active');
+};
+
+window.switchAuthTab = (tab) => {
+    document.querySelectorAll('.kns-auth-tab').forEach(t => {
+        t.classList.toggle('active', t.getAttribute('data-tab') === tab);
+    });
+    document.querySelectorAll('.kns-auth-form').forEach(f => {
+        f.classList.toggle('active', f.id === `kns-${tab}-form`);
+    });
+};
+
+window.openAuthModal = (tab = 'login') => {
+    _ensureAuthModalHTML();
+    switchAuthTab(tab);
+    document.getElementById('kns-auth-modal')?.classList.add('active');
+    document.getElementById('kns-auth-overlay')?.classList.add('active');
+};
+
+window.handleLogin = async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('loginEmail').value;
+    const pass = document.getElementById('loginPassword').value;
+    const err = document.getElementById('loginError');
+    if (err) err.textContent = '';
+
+    const res = await KNSAuth.login(email, pass);
+    if (res.ok) {
+        window.location.reload();
+    } else {
+        if (err) err.textContent = res.msg;
+    }
+};
+
+window.handleRegister = async (e) => {
+    e.preventDefault();
+    const name = document.getElementById('regName').value;
+    const email = document.getElementById('regEmail').value;
+    const pass = document.getElementById('regPassword').value;
+    const conf = document.getElementById('regConfirm').value;
+    const err = document.getElementById('regError');
+    if (err) err.textContent = '';
+
+    if (pass !== conf) {
+        if (err) err.textContent = "Passwords do not match";
+        return;
+    }
+
+    const res = await KNSAuth.register(name, email, pass);
+    if (res.ok) {
+        window.location.reload();
+    } else {
+        if (err) err.textContent = res.msg;
+    }
+};
+/* ── Dynamic Modal Injection ── */
+function _ensureAuthModalHTML() {
+    if (document.getElementById('kns-auth-modal')) return;
+    console.log("🔐 Auth: Injecting Universal Modal");
+    const html = `
+        <div id="kns-auth-overlay" onclick="closeAuthModal()"></div>
+        <div id="kns-auth-modal">
+            <div class="kns-auth-header">
+                <span class="logo-sm">KNS FURNITECH</span>
+                <button class="kns-auth-close" onclick="closeAuthModal()" aria-label="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <div class="kns-auth-tabs">
+                <button class="kns-auth-tab active" data-tab="login" onclick="switchAuthTab('login')">Sign In</button>
+                <button class="kns-auth-tab" data-tab="register" onclick="switchAuthTab('register')">Create Account</button>
+            </div>
+            <div class="kns-auth-body">
+                <form id="kns-login-form" class="kns-auth-form active" onsubmit="handleLogin(event)">
+                    <div class="kns-auth-error" id="loginError"></div>
+                    <input type="email" id="loginEmail" placeholder="Email Address" required autocomplete="email">
+                    <input type="password" id="loginPassword" placeholder="Password" required autocomplete="current-password">
+                    <button type="submit" class="kns-auth-submit">Sign In &rarr;</button>
+                    <div class="kns-auth-divider">New to KNS?</div>
+                    <button type="button" class="kns-auth-submit" style="background:#f5f5f5; color:#1A1A1A;" onclick="switchAuthTab('register')">Create an Account</button>
+                </form>
+                <form id="kns-register-form" class="kns-auth-form" onsubmit="handleRegister(event)">
+                    <div class="kns-auth-error" id="regError"></div>
+                    <input type="text" id="regName" placeholder="Full Name" required autocomplete="name">
+                    <input type="email" id="regEmail" placeholder="Email Address" required autocomplete="email">
+                    <input type="password" id="regPassword" placeholder="Password (min 6 chars)" required autocomplete="new-password">
+                    <input type="password" id="regConfirm" placeholder="Confirm Password" required autocomplete="new-password">
+                    <button type="submit" class="kns-auth-submit">Create Account &rarr;</button>
+                </form>
+            </div>
+        </div>`;
+    document.body.insertAdjacentHTML('beforeend', html);
 }
 
-function handleLogin(e) {
-    // This is now handled by the inline scripts in signin.html
-    // Keeping for backwards compatibility if any page still has the old form
-    e.preventDefault();
-}

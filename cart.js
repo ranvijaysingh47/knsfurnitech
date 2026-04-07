@@ -154,6 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     /* Cart drawer toggle */
+    _ensureDrawerHTML();
     document.querySelectorAll('[data-open-cart]').forEach(btn => {
         btn.addEventListener('click', toggleCartDrawer);
     });
@@ -162,6 +163,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
     renderCartDrawer();
 });
+
+/* ── Dynamic Injection ── */
+function _ensureDrawerHTML() {
+    if (document.getElementById('kns-cart-drawer')) return;
+    console.log("🛒 Cart: Injecting Universal Drawer");
+    const html = `
+        <div id="kns-drawer-overlay"></div>
+        <aside id="kns-cart-drawer">
+            <div class="kns-drawer-head">
+                <h3>🛒 Your Cart</h3>
+                <button id="kns-drawer-close" aria-label="Close cart">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <div id="kns-drawer-items"></div>
+            <div class="kns-drawer-foot">
+                <div class="kns-drawer-subtotal-row">
+                    <span>Subtotal</span>
+                    <span id="kns-drawer-subtotal">₹0</span>
+                </div>
+                <div class="kns-drawer-actions">
+                    <a href="cart.html" class="kns-ec-btn kns-ec-btn-outline">View Cart</a>
+                    <a href="cart.html" class="kns-ec-btn kns-ec-btn-primary">Checkout →</a>
+                </div>
+            </div>
+        </aside>`;
+    document.body.insertAdjacentHTML('beforeend', html);
+}
 
 /* ── Cart Drawer ── */
 function toggleCartDrawer() {
