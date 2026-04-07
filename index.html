@@ -661,9 +661,12 @@
                                 <circle cx="9" cy="21" r="1" />
                                 <circle cx="20" cy="21" r="1" />
                                 <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-                                <a href="product.html?id=p7" class="btn-outline"
-                                    style="width: 100%; margin-top: 0.5rem; padding: 0.5rem; text-decoration: none; text-align: center; font-size: 0.9rem;">View
-                                    Details</a>
+                            </svg>
+                            Add to Cart
+                        </button>
+                        <a href="product.html?id=p7" class="btn-outline"
+                            style="width: 100%; margin-top: 0.5rem; padding: 0.5rem; text-decoration: none; text-align: center; font-size: 0.9rem; display: block;">View
+                            Details</a>
                     </div>
                 </div>
             </div>
@@ -1019,8 +1022,20 @@
                 // 2. Render Just Arrived
                 renderSection('just-arrived-node',
                     () => {
-                        let ja = KNSData.getProducts().filter(p => p.isNew).slice(0, 6);
-                        if (ja.length === 0) ja = KNSData.getProducts().slice(0, 6);
+                        // Smart Sorting: Newest first based on timestamp or ID
+                        const products = KNSData.getProducts();
+                        const sorted = [...products].sort((a, b) => {
+                            const timeA = new Date(a.timestamp || a.createdAt || parseInt(a.id?.replace('p-', '')) || 0).getTime();
+                            const timeB = new Date(b.timestamp || b.createdAt || parseInt(b.id?.replace('p-', '')) || 0).getTime();
+                            return timeB - timeA;
+                        });
+                        
+                        // Prioritize isNew flag but still keep newest first within that group
+                        let ja = sorted.filter(p => p.isNew).slice(0, 6);
+                        if (ja.length < 6) {
+                            const remaining = sorted.filter(p => !ja.find(j => j.id === p.id)).slice(0, 6 - ja.length);
+                            ja = [...ja, ...remaining];
+                        }
                         return ja;
                     },
                     (p, i) => `

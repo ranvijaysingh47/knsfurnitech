@@ -276,71 +276,8 @@
                         </form>
                         
                         <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+                        <script src="contact-logic.js"></script>
                         <script>
-                            (function() {
-                                // EmailJS Credentials Integration
-                                const EMAILJS_PUBLIC_KEY = "2v821_ac_z9iaLaP5"; 
-                                const EMAILJS_SERVICE_ID = "service_hp4dkel"; 
-                                const EMAILJS_TEMPLATE_ID = "template_g1ac95b"; 
-                                
-                                emailjs.init(EMAILJS_PUBLIC_KEY);
-
-                                window.KNSContact = {
-                                    sendInquiry: async (data, form, submitBtn, originalBtnText) => {
-                                        submitBtn.innerText = 'Sending...';
-                                        submitBtn.disabled = true;
-
-                                        // 1. Save to Firestore (Database Backup)
-                                        try {
-                                            console.log("Saving to Firestore...");
-                                            await KNSDb.saveInquiry(data);
-                                        } catch (err) { console.error("Firestore Error:", err); }
-
-                                        // 2. Send via EmailJS (Option 3 - Frontend Notification)
-                                        let emailSent = false;
-                                        try {
-                                            await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-                                                from_name: data.name || `${data.firstName} ${data.lastName}`,
-                                                from_email: data.email,
-                                                phone: data.phone,
-                                                message: data.message,
-                                                to_name: "KNS Furnitech Support"
-                                            });
-                                            emailSent = true;
-                                            console.log("EmailJS Success!");
-                                        } catch (err) { console.warn("EmailJS failed, trying fallback...", err); }
-
-                                        // 3. Send via Hostinger PHP Mailer (Option 4 - Backend Notification)
-                                        if (!emailSent && window.location.protocol !== 'file:') {
-                                            try {
-                                                const phpRes = await fetch('mail.php', {
-                                                    method: 'POST',
-                                                    headers: { 'Content-Type': 'application/json' },
-                                                    body: JSON.stringify(data)
-                                                });
-                                                const phpResult = await phpRes.json();
-                                                if (phpResult.ok) emailSent = true;
-                                            } catch (err) { console.error("PHP Mailer Error:", err); }
-                                        }
-
-                                        if (emailSent || window.location.protocol === 'file:') {
-                                            alert('Thank you! Your inquiry has been received. Our team will contact you shortly.');
-                                            if (form) form.reset();
-                                            // Close modal if open
-                                            const modal = document.getElementById('quote-modal');
-                                            if (modal) modal.classList.remove('active');
-                                        } else {
-                                            // Ultimate Fallback: Mailto
-                                            const subject = encodeURIComponent("New Inquiry: " + (data.name || data.firstName));
-                                            const body = encodeURIComponent(`Message from ${data.name || data.firstName} (${data.email}):\n\n${data.message}`);
-                                            window.location.href = `mailto:Knsfurnitech@gmail.com?subject=${subject}&body=${body}`;
-                                        }
-
-                                        submitBtn.innerText = originalBtnText;
-                                        submitBtn.disabled = false;
-                                    }
-                                };
-                            })();
 
                             // Main Contact Form Handler
                             document.getElementById('mainContactForm').addEventListener('submit', async function(e) {

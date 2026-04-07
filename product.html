@@ -1760,21 +1760,23 @@
             <h2 style="margin-bottom: 0.5rem; color: var(--pdp-dark);">Corporate & Bulk Inquiry</h2>
             <p style="color: #666; margin-bottom: 2rem;">Planning a large office setup or commercial project? Request a
                 special quote.</p>
-            <form
-                onsubmit="event.preventDefault(); alert('Your bulk inquiry has been submitted! Our corporate team will contact you shortly.'); document.getElementById('bulk-modal').classList.remove('active');">
+            <form id="bulk-inquiry-form">
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-                    <input type="text" placeholder="Company Name"
+                    <input type="text" id="bulk-company" placeholder="Company Name"
                         style="width:100%; padding:12px; border:1px solid #eee; border-radius:10px;" required>
-                    <input type="number" placeholder="Estimated Quantity"
+                    <input type="number" id="bulk-qty" placeholder="Estimated Quantity"
                         style="width:100%; padding:12px; border:1px solid #eee; border-radius:10px;" required>
                 </div>
-                <input type="text" placeholder="Your Name"
+                <input type="text" id="bulk-name" placeholder="Your Name"
                     style="width:100%; padding:12px; border:1px solid #eee; border-radius:10px; margin-bottom:1rem;"
                     required>
-                <input type="email" placeholder="Business Email"
-                    style="width:100%; padding:12px; border:1px solid #eee; border-radius:10px; margin-bottom:1rem;"
-                    required>
-                <textarea placeholder="Tell us about your project requirements..." rows="4"
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                    <input type="email" id="bulk-email" placeholder="Business Email"
+                        style="width:100%; padding:12px; border:1px solid #eee; border-radius:10px;" required>
+                    <input type="tel" id="bulk-phone" placeholder="Phone Number"
+                        style="width:100%; padding:12px; border:1px solid #eee; border-radius:10px;" required>
+                </div>
+                <textarea id="bulk-message" placeholder="Tell us about your project requirements..." rows="4"
                     style="width:100%; padding:12px; border:1px solid #eee; border-radius:10px; margin-bottom:1rem;"
                     required></textarea>
                 <button type="submit" class="pdp-add-btn" style="width: 100%;">Submit Corporate Inquiry</button>
@@ -1821,6 +1823,8 @@
     <script src="wishlist.js?v=4"></script>
     <script src="auth.js?v=4"></script>
     <script src="database.js?v=4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script src="contact-logic.js?v=5"></script>
     <script>
         let PRODUCTS = KNSData.getProducts();
         let q = 1; let p = null; let chosenRating = 5; let reviewCount = 2;
@@ -2225,7 +2229,7 @@
             // WhatsApp Inquiry
             const waInq = document.getElementById('wa-inquiry');
             const msg = encodeURIComponent(`Hi KNS, I'm interested in the ${p.name} (₹ ${p.price}). Can you provide more details?`);
-            waInq.href = `https://wa.me/919999999999?text=${msg}`; // Replace with actual number
+            waInq.href = `https://wa.me/917303403811?text=${msg}`;
         }
 
         function initRecentlyViewed() {
@@ -2287,6 +2291,31 @@
             init();
             // Also trigger a background sync just in case
             KNSData.syncWithCloud();
+        });
+        // Bulk Inquiry Form Handler
+        document.getElementById('bulk-inquiry-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const form = e.target;
+            const submitBtn = form.querySelector('button[type="submit"]');
+
+            const data = {
+                companyName: document.getElementById('bulk-company').value,
+                quantity: document.getElementById('bulk-qty').value,
+                name: document.getElementById('bulk-name').value,
+                email: document.getElementById('bulk-email').value,
+                phone: document.getElementById('bulk-phone').value,
+                message: document.getElementById('bulk-message').value,
+                type: 'Bulk Inquiry',
+                productId: p.id,
+                productName: p.name
+            };
+
+            if (window.KNSContact) {
+                await KNSContact.sendInquiry(data, form, submitBtn, 'Submit Corporate Inquiry');
+            } else {
+                console.error("KNSContact not loaded");
+                alert("Something went wrong. Please try again later.");
+            }
         });
     </script>
     <!-- Lightbox (Moved to end for stacking) -->

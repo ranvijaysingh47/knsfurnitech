@@ -799,16 +799,31 @@ function renderInquiriesTable() {
         const ln = iq.lastName || iq.lastname || '';
         const fullName = (fn + ' ' + ln).trim() || iq.name || 'Anonymous';
 
+        const isBulk = iq.type === 'Bulk Inquiry' || iq.companyName || iq.quantity;
+        const msg = iq.message || 'No Message';
+        const contextInfo = isBulk ? `
+            <div style="margin-top:8px; padding-top:8px; border-top:1px dashed #ddd; font-size:0.8rem; color:var(--admin-green);">
+                <strong>🏢 ${iq.companyName || 'Corporate'}</strong> (Qty: ${iq.quantity || 'N/A'})<br>
+                <strong>🛍️ ${iq.productName || 'Product Unavailable'}</strong>
+            </div>
+        ` : '';
+
         return `
             <tr>
                 <td data-label="Date">${displayDate}</td>
-                <td data-label="Customer" style="font-weight:600;">${fullName}</td>
+                <td data-label="Customer" style="font-weight:600;">
+                    ${fullName}
+                    ${isBulk ? '<span style="display:inline-block; font-size:10px; padding:2px 6px; background:var(--admin-green); color:white; border-radius:4px; margin-left:8px; vertical-align:middle;">BULK</span>' : ''}
+                </td>
                 <td data-label="Contact">
                     <div style="font-size:0.85rem; color:#1A1A1A;">${iq.email || 'No Email'}</div>
                     <div style="font-size:0.8rem; color:#888;">${iq.phone || 'No Phone'}</div>
                 </td>
                 <td data-label="Message">
-                    <div style="max-width:300px; font-size:0.9rem; line-height:1.4; color:#444;">${iq.message || 'No Message'}</div>
+                    <div style="max-width:300px; font-size:0.9rem; line-height:1.4; color:#444;">
+                        ${msg}
+                        ${contextInfo}
+                    </div>
                 </td>
                 <td data-label="Actions">
                     <div class="action-btns">
