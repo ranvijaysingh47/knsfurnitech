@@ -1167,6 +1167,7 @@
                 padding-bottom: 0px;
                 position: relative;
             }
+
             .pdp-tabs-nav::after {
                 content: '';
                 position: absolute;
@@ -1174,7 +1175,7 @@
                 top: 0;
                 bottom: 0;
                 width: 30px;
-                background: linear-gradient(to left, rgba(255,255,255,1), rgba(255,255,255,0));
+                background: linear-gradient(to left, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
                 pointer-events: none;
             }
 
@@ -1182,7 +1183,9 @@
                 flex-wrap: wrap !important;
                 gap: 0.8rem !important;
             }
-            .pdp-inquiry-row a, .pdp-inquiry-row button {
+
+            .pdp-inquiry-row a,
+            .pdp-inquiry-row button {
                 height: 50px !important;
                 font-size: 0.9rem !important;
             }
@@ -1191,7 +1194,9 @@
                 .pdp-inquiry-row {
                     flex-direction: column !important;
                 }
-                .pdp-inquiry-row a, .pdp-inquiry-row button {
+
+                .pdp-inquiry-row a,
+                .pdp-inquiry-row button {
                     width: 100% !important;
                     flex: none !important;
                 }
@@ -1380,7 +1385,8 @@
                             data-lucide="pin" size="18"></i></a>
                 </div>
             </div>
-            <div id="pdp-badges-node" class="pdp-badges-wrap" style="display: flex; gap: 8px; margin-bottom: 0.8rem;"></div>
+            <div id="pdp-badges-node" class="pdp-badges-wrap" style="display: flex; gap: 8px; margin-bottom: 0.8rem;">
+            </div>
             <h1 class="pdp-title" id="pdp-name-node">Product Name</h1>
             <div class="pdp-stars" id="pdp-stars-node"></div>
 
@@ -1418,7 +1424,8 @@
                     style="flex: 1; margin-top: 0; display: flex; align-items: center; justify-content: center; gap: 10px; border-color: #25D366; color: #25D366;">
                     <i data-lucide="phone" size="18"></i> WhatsApp Inquiry
                 </a>
-                <button onclick="document.getElementById('bulk-modal').classList.add('active')" class="btn-outline bulk-btn"
+                <button onclick="document.getElementById('bulk-modal').classList.add('active')"
+                    class="btn-outline bulk-btn"
                     style="flex: 1; margin-top: 0; display: flex; align-items: center; justify-content: center; gap: 10px;">
                     <i data-lucide="building-2" size="18"></i> Bulk/Corporate
                 </button>
@@ -2221,7 +2228,7 @@
             // WhatsApp Inquiry
             const waInq = document.getElementById('wa-inquiry');
             const msg = encodeURIComponent(`Hi KNS, I'm interested in the ${p.name} (₹ ${p.price}). Can you provide more details?`);
-            waInq.href = `https://wa.me/917303403811?text=${msg}`;
+            waInq.href = `https://wa.me/919824376763?text=${msg}`;
         }
 
         function initRecentlyViewed() {
@@ -2285,7 +2292,7 @@
             KNSData.syncWithCloud();
         });
         // Bulk Inquiry Form Handler
-        document.getElementById('bulk-inquiry-form').addEventListener('submit', async function(e) {
+        document.getElementById('bulk-inquiry-form').addEventListener('submit', async function (e) {
             e.preventDefault();
             const form = e.target;
             const submitBtn = form.querySelector('button[type="submit"]');
