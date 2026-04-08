@@ -134,21 +134,33 @@ const KNSData = (() => {
     
     async function addProduct(prod) {
         prod.id = 'p-' + Date.now();
-        if (window.KNSDb) await KNSDb.saveProduct(prod.id, prod);
+        let res = { ok: true };
+        if (window.KNSDb) {
+            res = await KNSDb.saveProduct(prod.id, prod);
+        }
         
-        const p = getProducts();
-        p.unshift(prod);
-        saveProducts(p);
-    }
-    async function updateProduct(id, updatedProd) {
-        if (window.KNSDb) await KNSDb.saveProduct(id, updatedProd);
-        
-        let p = getProducts();
-        const idx = p.findIndex(x => x.id === id);
-        if (idx !== -1) {
-            p[idx] = { ...p[idx], ...updatedProd };
+        if (res.ok) {
+            const p = getProducts();
+            p.unshift(prod);
             saveProducts(p);
         }
+        return res;
+    }
+    async function updateProduct(id, updatedProd) {
+        let res = { ok: true };
+        if (window.KNSDb) {
+            res = await KNSDb.saveProduct(id, updatedProd);
+        }
+        
+        if (res.ok) {
+            let p = getProducts();
+            const idx = p.findIndex(x => x.id === id);
+            if (idx !== -1) {
+                p[idx] = { ...p[idx], ...updatedProd };
+                saveProducts(p);
+            }
+        }
+        return res;
     }
     async function deleteProduct(id) {
         if (window.KNSDb) await KNSDb.deleteProduct(id);

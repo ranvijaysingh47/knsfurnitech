@@ -545,20 +545,28 @@ window.handleImageFile = function(event, targetId) {
     reader.readAsDataURL(file);
 };
 
-function handleProductSubmit(e) {
+async function handleProductSubmit(e) {
     e.preventDefault();
     const id = document.getElementById('edit-prod-id').value;
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    const originalBtnText = submitBtn ? submitBtn.innerHTML : 'Save Product';
 
     let specs = {}, dimens = {};
     try {
         const specsVal = document.getElementById('prod-specs').value.trim();
         if (specsVal) specs = JSON.parse(specsVal);
-    } catch (e) { console.warn("Invalid specs JSON", e); }
+    } catch (e) { 
+        alert("🚨 Invalid JSON in Specifications field. Please check your formatting.");
+        return; 
+    }
 
     try {
         const dimensVal = document.getElementById('prod-dimens').value.trim();
         if (dimensVal) dimens = JSON.parse(dimensVal);
-    } catch (e) { console.warn("Invalid dimensions JSON", e); }
+    } catch (e) { 
+        alert("🚨 Invalid JSON in Dimensions field. Please check your formatting.");
+        return; 
+    }
 
     let colors = null;
     try {
@@ -597,13 +605,35 @@ function handleProductSubmit(e) {
         return;
     }
 
-    if (id) {
-        KNSData.updateProduct(id, data);
-    } else {
-        KNSData.addProduct(data);
+    // UI Feedback: Show loading state
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i data-lucide="loader-2" class="spin"></i> Saving to Cloud...';
+        if (window.lucide) lucide.createIcons();
     }
 
-    closeModal('product-modal');
+    let res;
+    if (id) {
+        res = await KNSData.updateProduct(id, data);
+    } else {
+        res = await KNSData.addProduct(data);
+    }
+
+    // Reset Button UI
+    if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnText;
+        if (window.lucide) lucide.createIcons();
+    }
+
+    if (res && res.ok) {
+        closeModal('product-modal');
+        if (window.KNSCart) KNSCart.showToast(id ? "Product updated successfully!" : "New product added to catalog!");
+    } else {
+        const errorMsg = res ? res.msg : "Connection error";
+        console.error("❌ Product Save Failure:", errorMsg);
+        alert(`🚨 Error Saving Product\n\nIssue: ${errorMsg}\n\nCommon Fixes:\n- Ensure images are under 700KB\n- Check your internet connection\n- Verify JSON formatting in specs/dimensions`);
+    }
 }
 
 function deleteProduct(id) {
