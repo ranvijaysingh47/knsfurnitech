@@ -88,19 +88,23 @@
         .footer { margin-top: 60px; padding-top: 30px; border-top: 1px solid var(--border); text-align: center; color:var(--text-secondary); font-size: 12px; }
         .footer p { margin-bottom: 6px; }
 
-        .no-print-area { text-align: center; margin-bottom: 20px; }
-        .print-btn { background: var(--brand-green); color:#fff; border:none; padding:10px 25px; border-radius:50px; font-weight:600; cursor:pointer; font-family:'Outfit', sans-serif; box-shadow: 0 4px 15px rgba(140,198,63,0.3); }
+        .no-print-area { text-align: center; margin-bottom: 20px; display: flex; justify-content: center; gap: 15px; }
+        .print-btn { background: var(--brand-green); color:#fff; border:none; padding:10px 25px; border-radius:50px; font-weight:600; cursor:pointer; font-family:'Outfit', sans-serif; box-shadow: 0 4px 15px rgba(140,198,63,0.3); transition: all 0.3s ease; }
+        .print-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(140,198,63,0.4); }
+        .back-btn { background: #fff; color: var(--brand-dark); border: 1.5px solid var(--border); padding:10px 25px; border-radius:50px; font-weight:600; cursor:pointer; font-family:'Outfit', sans-serif; transition: all 0.3s ease; }
+        .back-btn:hover { background: #f5f5f5; border-color: var(--brand-dark); }
 
         @media print {
             body { background: #fff; padding: 0; }
             .invoice-box { box-shadow: none; border:none; max-width: 100%; padding:0; }
-            .no-print-area { display: none; }
+            .no-print-area { display: none !important; }
         }
     </style>
 </head>
 <body>
 
     <div class="no-print-area">
+        <button class="back-btn" onclick="goBack()">← Back</button>
         <button class="print-btn" onclick="window.print()">Print / Save as PDF</button>
     </div>
 
@@ -193,6 +197,14 @@
     </div>
 
     <script>
+        function goBack() {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = 'orders.html';
+            }
+        }
+
         function renderInvoice() {
             const dataStr = localStorage.getItem('kns_last_order');
             if (!dataStr) {
