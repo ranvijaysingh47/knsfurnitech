@@ -129,6 +129,8 @@ window.handleManualSync = handleManualSync;
 /* --- Tab Management --- */
 let revenueChartInstance = null;
 let categoryChartInstance = null;
+let productChartInstance = null;
+let growthChartInstance = null;
 
 function initTabs() {
     const navItems = document.querySelectorAll('.admin-nav-item');
@@ -325,6 +327,7 @@ function initCharts(orders) {
     // 5. Product Performance Chart (NEW - Advanced Analytics)
     const prodCtx = document.getElementById('productChart')?.getContext('2d');
     if (prodCtx) {
+        if (productChartInstance) productChartInstance.destroy();
         const productStats = {};
         orders.forEach(o => {
             if (o.items) o.items.forEach(item => {
@@ -333,7 +336,7 @@ function initCharts(orders) {
         });
         const sortedProducts = Object.entries(productStats).sort((a,b) => b[1]-a[1]).slice(0, 5);
 
-        new Chart(prodCtx, {
+        productChartInstance = new Chart(prodCtx, {
             type: 'bar',
             data: {
                 labels: sortedProducts.map(p => p[0]),
@@ -356,6 +359,7 @@ function initCharts(orders) {
     // 6. Monthly Growth Chart (NEW - Advanced Analytics)
     const growthCtx = document.getElementById('growthChart')?.getContext('2d');
     if (growthCtx) {
+        if (growthChartInstance) growthChartInstance.destroy();
         const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         const currentYear = new Date().getFullYear();
         const monthlyData = new Array(12).fill(0);
@@ -367,7 +371,7 @@ function initCharts(orders) {
             }
         });
 
-        new Chart(growthCtx, {
+        growthChartInstance = new Chart(growthCtx, {
             type: 'line',
             data: {
                 labels: months,
@@ -511,6 +515,13 @@ window.handleImageFile = function(event, targetId) {
         return;
     }
 
+    // 🔥 Added: Prevent Firebase size limit error (1MB limit)
+    const MAX_SIZE = 700 * 1024; // 700KB (Base64 will grow this to ~930KB)
+    if (file.size > MAX_SIZE) {
+        alert(`❌ Image too large! (${(file.size / 1024).toFixed(0)}KB)\nFirebase limit is 1MB per product.\nPlease compress the image or use an external URL.`);
+        return;
+    }
+
     const reader = new FileReader();
     const btn = event.target.nextElementSibling;
     const originalContent = btn.innerHTML;
@@ -578,6 +589,13 @@ function handleProductSubmit(e) {
         badge: document.getElementById('prod-trending').checked ? 'Trending' : '',
         rating: 4.5
     };
+
+    // 🔥 Final Size Check for Firestore (1,048,576 bytes limit)
+    const stringData = JSON.stringify(data);
+    if (stringData.length > 1000000) {
+        alert(`❌ Product data too large! (${(stringData.length / 1024).toFixed(0)}KB)\nThis usually happens when using very high-resolution images.\n\nPlease use a lower resolution image or an external URL.`);
+        return;
+    }
 
     if (id) {
         KNSData.updateProduct(id, data);
