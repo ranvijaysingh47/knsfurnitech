@@ -478,8 +478,31 @@
             }
         }
 
+        // Auto-fill and track from URL if params exist
+        async function checkUrlParams() {
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+            const email = params.get('email');
+            
+            if (id) {
+                document.getElementById('orderId').value = id;
+                if (email) {
+                    const emailInput = document.getElementById('userEmail');
+                    if (emailInput) {
+                        emailInput.value = email;
+                    }
+                }
+                // Trigger tracking
+                handleTrack();
+            }
+        }
+
         // Initialize UI
-        document.addEventListener('DOMContentLoaded', updateTrackingUI);
+        document.addEventListener('DOMContentLoaded', () => {
+            updateTrackingUI();
+            checkUrlParams();
+        });
+        
         document.addEventListener('auth:changed', updateTrackingUI);
         
         // Also listen for Firebase native auth state as backup
