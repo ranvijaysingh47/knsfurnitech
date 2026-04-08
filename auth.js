@@ -11,29 +11,29 @@ const KNSAuth = (() => {
     const getDb = () => window.knsDb;
 
     function getUser() {
-        // 1. Check Memory/Live State
+        // 1. Check LocalStorage for cached session (includes custom fields like phone)
+        const stored = localStorage.getItem(KEY);
+        let cached = null;
+        if (stored) {
+            try {
+                cached = JSON.parse(stored);
+            } catch (e) { console.error("Error parsing stored user:", e); }
+        }
+
+        // 2. Check Memory/Live State for Auth verification
         const liveUser = window.firebase?.auth?.instance?.currentUser;
         if (liveUser) {
-            console.log("👤 [Auth] liveUser found:", liveUser.email);
+            // merge live auth data with cached custom data
             return {
-                name: liveUser.displayName || 'User',
+                name: liveUser.displayName || cached?.name || 'User',
                 email: liveUser.email,
-                uid: liveUser.uid
+                uid: liveUser.uid,
+                phone: cached?.phone || '',
+                isAdmin: cached?.isAdmin || (liveUser.email === 'admin@kns.com')
             };
         }
 
-        // 2. Fallback to LocalStorage for persistence
-        const stored = localStorage.getItem(KEY);
-        if (stored) {
-            try {
-                const u = JSON.parse(stored);
-                console.log("📂 [Auth] Cached session found in localStorage:", u.email);
-                return u;
-            } catch (e) { console.error("Error parsing stored user:", e); }
-        } else {
-            console.warn("📁 [Auth] No session found in localStorage [KEY: " + KEY + "]");
-        }
-        return null;
+        return cached;
     }
 
     function isLoggedIn() { return !!getUser(); }
@@ -77,14 +77,9 @@ const KNSAuth = (() => {
             console.log("✅ Login successful for:", email);
             
             const user = res.user;
-            const userData = { 
-                name: user.displayName || (email.toLowerCase() === 'admin@kns.com' ? 'Administrator' : 'User'), 
-                email: user.email, 
-                uid: user.uid 
-            };
-            localStorage.setItem(KEY, JSON.stringify(userData));
+            await fetchAndCacheProfile(user);
             document.dispatchEvent(new CustomEvent('auth:changed'));
-            return { ok: true, user: userData };
+            return { ok: true, user: getUser() };
         } catch (e) {
             console.error("❌ Login failed:", e.code || 'Error', e.message);
             return { ok: false, msg: e.message, code: e.code };
@@ -123,22 +118,45 @@ const KNSAuth = (() => {
             const result = await auth.signInWithPopup(auth.instance, auth.googleProvider);
             const user = result.user;
 
+            await fetchAndCacheProfile(user);
             await syncUserProfile(user);
 
-            const userData = {
-                name: user.displayName,
-                email: user.email,
-                uid: user.uid,
-                photo: user.photoURL
-            };
-
-            localStorage.setItem(KEY, JSON.stringify(userData));
             document.dispatchEvent(new CustomEvent('auth:changed'));
-
             return { ok: true };
         } catch (error) {
             console.error("Auth Google Error:", error);
             return { ok: false, msg: error.message };
+        }
+    }
+
+    async function fetchAndCacheProfile(firebaseUser) {
+        if (!firebaseUser) return null;
+        try {
+            const db = window.firebase?.db;
+            if (!db) return null;
+
+            const userRef = db.doc(db.instance, "users", firebaseUser.uid);
+            const docSnap = await db.getDoc(userRef);
+            
+            let profileData = {};
+            if (docSnap.exists) {
+                profileData = docSnap.data();
+            }
+
+            const userData = {
+                name: firebaseUser.displayName || profileData.name || (firebaseUser.email.toLowerCase() === 'admin@kns.com' ? 'Administrator' : firebaseUser.email.split('@')[0]),
+                email: firebaseUser.email,
+                uid: firebaseUser.uid,
+                phone: profileData.phone || '',
+                photo: firebaseUser.photoURL || profileData.photo || '',
+                isAdmin: profileData.isAdmin || (firebaseUser.email === 'admin@kns.com')
+            };
+
+            localStorage.setItem(KEY, JSON.stringify(userData));
+            return userData;
+        } catch (e) {
+            console.error("Error fetching user profile:", e);
+            return null;
         }
     }
 
@@ -149,17 +167,60 @@ const KNSAuth = (() => {
             const db = window.firebase?.db;
             if (!db) return;
             
+            // Get data from localStorage to find custom fields like phone
+            const cached = getUser();
+            
             const userRef = db.doc(db.instance, "users", user.uid);
             // Non-blocking setDoc
             db.setDoc(userRef, {
-                name: user.displayName || (user.email.toLowerCase() === 'admin@kns.com' ? 'Administrator' : 'User'),
+                name: user.displayName || cached?.name || (user.email.toLowerCase() === 'admin@kns.com' ? 'Administrator' : 'User'),
                 email: user.email,
                 uid: user.uid,
+                phone: cached?.phone || '',
                 lastLogin: new Date().toISOString()
             }, { merge: true }).catch(err => console.warn("Profile sync background error:", err));
             
         } catch (e) {
             console.error("Profile sync exception:", e);
+        }
+    }
+
+    async function updateUser(data) {
+        await waitUntilReady();
+        const user = getUser();
+        if (!user || !user.uid) return { ok: false, msg: "User not logged in" };
+
+        try {
+            const { auth, db } = window.firebase;
+            const currentUser = auth.instance.currentUser;
+
+            if (!currentUser) throw new Error("Firebase Auth user not found");
+
+            // 1. Update Firebase Auth Profile (Name)
+            if (data.name) {
+                await auth.updateProfile(currentUser, { displayName: data.name });
+            }
+
+            // 2. Update Firestore User Doc
+            const userRef = db.doc(db.instance, "users", user.uid);
+            await db.setDoc(userRef, {
+                name: data.name || user.name,
+                phone: data.phone || user.phone || '',
+                updatedAt: new Date().toISOString()
+            }, { merge: true });
+
+            // 3. Update Local Storage
+            const updatedUser = { ...user, ...data };
+            localStorage.setItem(KEY, JSON.stringify(updatedUser));
+
+            // 4. Dispatch events
+            document.dispatchEvent(new CustomEvent('auth:changed'));
+            console.log("✅ Profile updated successfully:", updatedUser);
+
+            return { ok: true };
+        } catch (e) {
+            console.error("❌ Error updating profile:", e);
+            return { ok: false, msg: e.message };
         }
     }
 
@@ -180,13 +241,7 @@ const KNSAuth = (() => {
             console.log("👤 Auth State Change:", user ? user.email : "None");
             _initialized = true;
             if (user) {
-                const userData = {
-                    name: user.displayName || (user.email.toLowerCase() === 'admin@kns.com' ? 'Administrator' : user.email.split('@')[0]),
-                    email: user.email,
-                    uid: user.uid,
-                    photo: user.photoURL
-                };
-                localStorage.setItem(KEY, JSON.stringify(userData));
+                await fetchAndCacheProfile(user);
                 await syncUserProfile(user);
             } 
             document.dispatchEvent(new CustomEvent('auth:changed'));
@@ -322,7 +377,7 @@ const KNSAuth = (() => {
         return { ok: true, addresses };
     }
 
-    const authExport = { getUser, isLoggedIn, isAdmin, register, login, loginWithGoogle, logout, forgotPassword, waitUntilReady, getAddresses, addAddress, removeAddress, setDefaultAddress };
+    const authExport = { getUser, isLoggedIn, isAdmin, register, login, loginWithGoogle, logout, forgotPassword, waitUntilReady, getAddresses, addAddress, removeAddress, setDefaultAddress, updateUser };
     window.KNSAuth = authExport;
     return authExport;
 })();

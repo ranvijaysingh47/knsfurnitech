@@ -489,12 +489,12 @@
             document.getElementById('tab-address').style.display = tab === 'address' ? 'block' : 'none';
         }
 
-        function handleProfileUpdate(e) {
+        async function handleProfileUpdate(e) {
             e.preventDefault();
             const name = document.getElementById('profName').value;
             const phone = document.getElementById('profPhone').value;
 
-            const res = KNSAuth.updateUser({ name, phone });
+            const res = await KNSAuth.updateUser({ name, phone });
             if (res.ok) {
                 if (window.KNSCart && window.KNSCart.showToast) {
                     KNSCart.showToast('Profile updated successfully!');
