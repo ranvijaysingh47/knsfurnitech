@@ -530,7 +530,7 @@
             resultsDiv.style.display = 'none';
 
             try {
-                const searchId = orderIdRaw.replace('KNS-', '').replace('ORD-', '').toLowerCase();
+                const searchId = orderIdRaw.replace(/#/g, '').replace('KNS-', '').replace('ORD-', '').trim().toLowerCase();
                 const orders = await KNSDb.getDocuments('orders');
                 const order = orders.find(o => {
                     const idMatch = (o.id || o.firestoreId || '').toLowerCase().includes(searchId);

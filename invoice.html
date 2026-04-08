@@ -570,7 +570,7 @@
             }
 
             // Tracking QR Code
-            const trackingUrl = `${window.location.origin}${window.location.pathname.replace('invoice.html', 'track-order.html')}?id=${order.id}&email=${encodeURIComponent(order.customerEmail)}`;
+            const trackingUrl = `${window.location.origin}${window.location.pathname.replace('invoice.html', 'track-order.html')}?id=${encodeURIComponent(order.id)}&email=${encodeURIComponent(order.customerEmail)}`;
             const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(trackingUrl)}`;
             document.getElementById('tracking-qr').src = qrUrl;
 
