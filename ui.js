@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentSlide = 0;
     let slideInterval;
 
-    if(slides.length > 0) {
+    if (slides.length > 0) {
         const nextSlide = () => {
             slides[currentSlide].classList.remove('active');
             dots[currentSlide].classList.remove('active');
@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Modal Logic for Quote Buttons
     const quoteBtns = document.querySelectorAll('.quote-btn');
     const modal = document.getElementById('quote-modal');
-    
+
     if (modal) {
         quoteBtns.forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -114,17 +114,17 @@ document.addEventListener('DOMContentLoaded', () => {
             // reCAPTCHA v3 Execution
             if (window.grecaptcha) {
                 grecaptcha.ready(async () => {
-                        try {
-                            const token = await grecaptcha.execute('6LfgZqYsAAAAAIARfVd_5xzKFB-IKP513QVxUgIh', {action: 'catalog_request'});
-                            console.log("reCAPTCHA verified for catalog:", token);
-                        } catch (err) {
-                            console.warn("reCAPTCHA Error (Proceeding anyway):", err);
-                        }
-                        
-                        // Proceed with submission regardless of reCAPTCHA success
-                        closeCatalogModal();
-                        KNSCart.showToast(`Thank you! The catalog is now downloading.`);
-                        triggerCatalogDownload();
+                    try {
+                        const token = await grecaptcha.execute('6LfgZqYsAAAAAIARfVd_5xzKFB-IKP513QVxUgIh', { action: 'catalog_request' });
+                        console.log("reCAPTCHA verified for catalog:", token);
+                    } catch (err) {
+                        console.warn("reCAPTCHA Error (Proceeding anyway):", err);
+                    }
+
+                    // Proceed with submission regardless of reCAPTCHA success
+                    closeCatalogModal();
+                    KNSCart.showToast(`Thank you! The catalog is now downloading.`);
+                    triggerCatalogDownload();
                 });
             } else {
                 // Fallback if reCAPTCHA not loaded
@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-        
+
         if (typeof KNSCart !== 'undefined' && KNSCart.showToast) {
             KNSCart.showToast('Starting your download...');
         }
@@ -232,17 +232,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 const currentActive = document.querySelector('.bs-tab.active');
                 const tabsArray = Array.from(bsTabs);
                 const currentIndex = tabsArray.indexOf(currentActive);
-                
+
                 prevBtn.style.opacity = currentIndex === 0 ? '0.3' : '1';
                 prevBtn.style.pointerEvents = currentIndex === 0 ? 'none' : 'auto';
-                
+
                 nextBtn.style.opacity = currentIndex === tabsArray.length - 1 ? '0.3' : '1';
                 nextBtn.style.pointerEvents = currentIndex === tabsArray.length - 1 ? 'none' : 'auto';
             };
 
             // Call it initially and on every click
             toggleArrows();
-            
+
             // Map UI tab strings to actual database category strings
             const catMap = {
                 'Executive Chair': 'Executive Chairs',
@@ -258,9 +258,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 tab.addEventListener('click', () => {
                     const uiCategory = tab.textContent.trim();
                     const dbCategory = catMap[uiCategory] || uiCategory;
-                    
+
                     let products = bestsellersData[uiCategory];
-                    
+
                     // Pull from KNSData DB if available
                     if (window.KNSData && typeof KNSData.getProducts === 'function') {
                         const allProds = KNSData.getProducts();
@@ -282,12 +282,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     bsTabs.forEach(t => t.classList.remove('active'));
                     tab.classList.add('active');
-                    
+
                     const tabsUl = document.querySelector('.bs-tabs');
                     if (tabsUl) {
                         tabsUl.style.transform = `translateX(-${index * 100}%)`;
                     }
-                    
+
                     toggleArrows();
 
                     // Update Container Completely ensuring dynamic card sizing based on DB length
@@ -299,11 +299,11 @@ document.addEventListener('DOMContentLoaded', () => {
                             const safeCat = (prod.category || dbCategory).replace(/'/g, "\\'");
                             const url = prod.id ? `product.html?id=${prod.id}` : 'product.html';
                             const safeImg = (prod.img || '').split('?')[0];
-                            
+
                             const addToCartFn = `window.KNSCart && window.KNSCart.addToCart ? ` +
-                                                `KNSCart.addToCart({id: '${prod.id}', name: '${safeName}', category: '${safeCat}', price: ${prod.price}, image: '${safeImg}?w=100'})` +
-                                                ` : addToCart('${safeName}', ${prod.price}, '${safeImg}?w=100')`;
-                            
+                                `KNSCart.addToCart({id: '${prod.id}', name: '${safeName}', category: '${safeCat}', price: ${prod.price}, image: '${safeImg}?w=100'})` +
+                                ` : addToCart('${safeName}', ${prod.price}, '${safeImg}?w=100')`;
+
                             const bsCard = document.createElement('div');
                             bsCard.className = "bs-card animate-on-scroll is-visible";
                             bsCard.style.transitionDelay = `${delay}s`;
@@ -333,7 +333,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Initialize the first active tab specifically for DB load on load
             const initialTab = document.querySelector('.bs-tab.active');
-            if(initialTab) setTimeout(() => initialTab.click(), 100);
+            if (initialTab) setTimeout(() => initialTab.click(), 100);
 
             // Re-render the active tab silently whenever the cloud DB finishes fetching
             document.addEventListener('products:updated', () => {
@@ -347,18 +347,18 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', (e) => {
             const anchor = e.target.closest('a');
-            if(!anchor) return;
-            
+            if (!anchor) return;
+
             const target = anchor.getAttribute('href');
             // Only intercept valid internal links (ignore anchors, external, active quotes)
             if (target && !target.startsWith('#') && !target.startsWith('http') && !anchor.classList.contains('quote-btn')) {
                 e.preventDefault();
                 document.body.classList.add('page-exit');
-                
+
                 // Wait for CSS animation to finish before navigating
                 setTimeout(() => {
                     window.location.href = target;
-                }, 500); 
+                }, 500);
             }
         });
     });
@@ -388,7 +388,7 @@ const KNSCategories = (() => {
         nav.querySelectorAll('a').forEach(a => {
             const text = a.textContent.trim();
             const iconName = iconMap[text];
-            
+
             // Inject Icon
             if (iconName) {
                 const iconHtml = `<i data-lucide="${iconName}"></i>`;
@@ -553,4 +553,4 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* Legacy Mega Menu Disabled */
-const KNSMegaMenu = { init: () => {} };
+const KNSMegaMenu = { init: () => { } };
