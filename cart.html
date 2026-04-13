@@ -12,6 +12,8 @@
     <script src="https://www.google.com/recaptcha/api.js?render=6LfgZqYsAAAAAIARfVd_5xzKFB-IKP513QVxUgIh"></script>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="ecommerce.css">
+    <!-- Razorpay Checkout SDK -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
 <body>
     <div class="top-bar">
@@ -204,11 +206,11 @@
                                     <span style="font-size:0.85rem; color:#666;">Pay via Cash, Card or UPI at the time of delivery</span>
                                 </div>
                             </label>
-                            <label style="display:flex; align-items:center; gap:1rem; padding:1.4rem; border:1.5px solid #eee; border-radius:14px; cursor:not-allowed; opacity:0.6; background:#fafafa;">
-                                <input type="radio" id="pay-online" name="pay" disabled value="Online Payment" style="width:20px; height:20px;">
+                            <label style="display:flex; align-items:center; gap:1rem; padding:1.4rem; border:1.5px solid #eee; border-radius:14px; cursor:pointer; background:white;">
+                                <input type="radio" id="pay-online" name="pay" value="Online Payment" style="width:20px; height:20px;">
                                 <div style="display:flex; flex-direction:column;">
-                                    <span style="font-weight:700; color:#999; font-size:1.1rem;">Online Payment (UPI / Card)</span>
-                                    <span style="font-size:0.85rem; color:#aaa;">Temporarily unavailable for maintenance</span>
+                                    <span style="font-weight:700; color:#1A1A1A; font-size:1.1rem;">Online Payment (UPI / Card / NetBanking)</span>
+                                    <span style="font-size:0.85rem; color:#666;">Secure payment via Razorpay</span>
                                 </div>
                             </label>
                         </div>
@@ -923,6 +925,67 @@
                 pincode: document.getElementById('deliv-pin').value,
                 notes: document.getElementById('deliv-notes').value
             };
+
+            // ─── RAZORPAY INTEGRATION ───
+            if (orderData.paymentMethod === 'Online Payment') {
+                initiateRazorpayPayment(orderData);
+                return; // Stop here, proceed in razorpay handler
+            }
+
+            // Continue normally for COD
+            finalizeOrder(orderData);
+        }
+
+        /**
+         * Triggers Razorpay Checkout Modal (Client-side Standard Integration)
+         */
+        function initiateRazorpayPayment(orderData) {
+            const options = {
+                "key": "rzp_test_Sd2kgBSgYNKqyv", // Your Test Key ID
+                "amount": orderData.total * 100, // Razorpay works in paise (amount * 100)
+                "currency": "INR",
+                "name": "KNS Furnitech",
+                "description": "Purchase for Order " + orderData.id,
+                "image": "images/logo.png",
+                "handler": function (response) {
+                    // Payment successful!
+                    console.log("✅ Razorpay Payment Successful:", response.razorpay_payment_id);
+                    
+                    orderData.paymentStatus = 'Paid';
+                    orderData.razorpayPaymentId = response.razorpay_payment_id;
+                    orderData.status = 'Confirmed';
+                    
+                    finalizeOrder(orderData);
+                },
+                "prefill": {
+                    "name": orderData.customerName,
+                    "email": orderData.customerEmail,
+                    "contact": orderData.phone
+                },
+                "notes": {
+                    "address": orderData.address,
+                    "order_id": orderData.id
+                },
+                "theme": {
+                    "color": "#8CC63F" // KNS Green
+                },
+                "modal": {
+                    "ondismiss": function() {
+                        KNSCart.showToast("Payment cancelled. You can try again or choose COD.");
+                    }
+                }
+            };
+            
+            const rzp1 = new Razorpay(options);
+            rzp1.on('payment.failed', function (response){
+                console.error("❌ Payment Failed:", response.error);
+                KNSCart.showToast("Payment Failed: " + response.error.description);
+            });
+            rzp1.open();
+        }
+
+        async function finalizeOrder(orderData) {
+            const orderId = orderData.id;
 
             // Save to Local History
             KNSCart.saveOrder(orderData);
