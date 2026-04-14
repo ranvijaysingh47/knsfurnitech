@@ -125,7 +125,8 @@
                 <div class="kns-slide-content">
                     <div class="kns-tag"><span class="tag-dot"></span>Cafe & Bistro</div>
                     <h1 class="kns-heading">Artisan Cafe <br> <span class="accent">& Premium Bistro.</span></h1>
-                <p class="kns-sub">Elevate your space with upholstered lounge chairs and handcrafted wooden tables, designed for ultimate comfort and sophisticated urban aesthetics.</p>
+                    <p class="kns-sub">Elevate your space with upholstered lounge chairs and handcrafted wooden tables,
+                        designed for ultimate comfort and sophisticated urban aesthetics.</p>
                     <div class="kns-ctas">
                         <a href="shop.html?cat=Plastic+Metal+-+Cafe+Chair" class="kns-btn-primary">
                             Shop Cafe Chairs
@@ -239,7 +240,7 @@
                 <!-- Card 2: Story Text (5 cols, 2 rows) -->
                 <div class="bento-card bento-card--story animate-on-scroll delay-2">
                     <div class="bento-story-badge">
-                        <i data-lucide="calendar" size="14"></i> Since 2019
+                        <i data-lucide="calendar" size="14"></i> Since 2020
                     </div>
                     <h3 class="bento-story-title">Engineered for Health. Built for Business.</h3>
                     <p class="bento-story-text">
@@ -284,7 +285,8 @@
             <div class="room-grid">
                 <!-- Executive Chair -->
                 <a href="shop.html?cat=Executive+Chair" class="room-card animate-on-scroll">
-                    <div class="room-card-bg" style="background-image: url('images/categories/executive_chair_final.jpg'); background-position: 25% center;">
+                    <div class="room-card-bg"
+                        style="background-image: url('images/categories/executive_chair_final.jpg'); background-position: 25% center;">
                     </div>
                     <div class="room-card-overlay">
                         <h3>Executive Chair</h3>
@@ -293,7 +295,8 @@
                 </a>
                 <!-- Workstation Chair -->
                 <a href="shop.html?cat=Workstation+Chair" class="room-card animate-on-scroll">
-                    <div class="room-card-bg" style="background-image: url('images/categories/workstation_chair_new.jpg'); background-position: 25% center;">
+                    <div class="room-card-bg"
+                        style="background-image: url('images/categories/workstation_chair_new.jpg'); background-position: 25% center;">
                     </div>
                     <div class="room-card-overlay">
                         <h3>Workstation Chair</h3>
@@ -1021,7 +1024,7 @@
                             const timeB = new Date(b.timestamp || b.createdAt || parseInt(b.id?.replace('p-', '')) || 0).getTime();
                             return timeB - timeA;
                         });
-                        
+
                         // Prioritize isNew flag but still keep newest first within that group
                         let ja = sorted.filter(p => p.isNew).slice(0, 6);
                         if (ja.length < 6) {
