@@ -639,7 +639,6 @@
             if(layout) layout.style.display = (isSuccess) ? 'block' : 'grid';
 
             if(!list) return;
-
             list.innerHTML = items.map(item => `
               <div class="cart-item">
                 <a href="product.html?id=${item.id}" class="cart-item-img-link">
@@ -648,6 +647,10 @@
                 <div class="cart-item-info">
                     <div class="cart-item-cat">${item.category}</div>
                     <a href="product.html?id=${item.id}" style="text-decoration:none; color:inherit;"><div class="cart-item-name">${item.name}</div></a>
+                    
+                    ${(item.stock <= 0 && item.stock !== null && item.stock !== undefined) ? 
+                        `<div style="color:#e53e3e; font-size:0.8rem; font-weight:700; margin-top:4px;">⚠️ ITEM OUT OF STOCK</div>` : ''
+                    }
 
                     <div class="cart-item-price">₹${item.price.toLocaleString('en-IN')}</div>
                     <div class="kns-qty-ctrl" style="margin-top:0.5rem;">
@@ -897,8 +900,18 @@
             e.preventDefault();
             
             // Capture data for history
+            // Capture data for history
             const orderId = '#KNS-' + Math.floor(100000 + Math.random() * 900000);
             const items = KNSCart.getCart();
+
+            // Stock Check Enforcement
+            const oosItem = items.find(i => i.stock <= 0 && i.stock !== null && i.stock !== undefined);
+            if (oosItem) {
+                KNSCart.showToast(`Sorry, "${oosItem.name}" is out of stock. Please remove it from your cart to proceed.`);
+                goToStep(1);
+                return;
+            }
+
             const subtotal = items.reduce((s,i) => s + i.price * i.qty, 0);
             const delivery = SHIPPING_FEE;
 

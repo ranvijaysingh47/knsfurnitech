@@ -71,13 +71,34 @@ const KNSCart = (() => {
         }
         const items = load();
         const existing = items.find(i => i.id === product.id);
+        
+        // Stock Validation (Always check latest data if available)
+        let currentStock = product.stock;
+        if (window.KNSData && KNSData.getProducts) {
+            const latest = KNSData.getProducts().find(p => p.id === product.id);
+            if (latest && latest.stock !== undefined) {
+                currentStock = latest.stock;
+            }
+        }
+
+        if (currentStock !== undefined && currentStock !== null && currentStock <= 0) {
+            showToast(`Sorry, "${product.name}" is currently out of stock.`);
+            return;
+        }
+
         if (existing) {
-            existing.qty += (product.qty || 1);
+            const newQty = existing.qty + (product.qty || 1);
+            if (currentStock !== undefined && currentStock !== null && newQty > currentStock) {
+                showToast(`Sorry, only ${currentStock} units of "${product.name}" are available.`);
+                existing.qty = currentStock;
+            } else {
+                existing.qty = newQty;
+            }
         } else {
-            items.push({ ...product, qty: product.qty || 1 });
+            items.push({ ...product, qty: product.qty || 1, stock: currentStock });
         }
         save(items);
-        showToast(`"${product.name}" added to cart!`);
+        showToast(`"${product.name}" added to cart!`, true);
     }
 
     function removeFromCart(id) { 
@@ -96,17 +117,23 @@ const KNSCart = (() => {
     function clearCart() { save([]); }
 
     /* ── Toast notification ── */
-    function showToast(msg) {
+    function showToast(msg, showCartLink = false) {
         let toast = document.getElementById('kns-toast');
         if (!toast) {
             toast = document.createElement('div');
             toast.id = 'kns-toast';
             document.body.appendChild(toast);
         }
-        toast.textContent = msg;
+        
+        let html = `<span>${msg}</span>`;
+        if (showCartLink) {
+            html += ` <a href="cart.html" style="color: #8CC63F; text-decoration: underline; margin-left: 10px; font-weight: 700;">View Cart</a>`;
+        }
+        
+        toast.innerHTML = html;
         toast.classList.add('kns-toast-show');
         clearTimeout(toast._timer);
-        toast._timer = setTimeout(() => toast.classList.remove('kns-toast-show'), 2800);
+        toast._timer = setTimeout(() => toast.classList.remove('kns-toast-show'), 4000);
     }
 
     return { getCart, getCount, getTotal, addToCart, removeFromCart, updateQty, clearCart, showToast, saveOrder, getOrders, syncFromCloud };
@@ -237,7 +264,10 @@ function renderCartDrawer() {
             <span class="kns-di-name">${item.name}</span>
           </a>
 
-          <span class="kns-di-price">₹${item.price.toLocaleString('en-IN')}</span>
+          ${(item.stock <= 0 && item.stock !== null && item.stock !== undefined) ? 
+            `<span style="color:#e53e3e; font-size:0.7rem; font-weight:700;">⚠️ OUT OF STOCK</span>` : 
+            `<span class="kns-di-price">₹${item.price.toLocaleString('en-IN')}</span>`
+          }
           <div class="kns-qty-ctrl">
             <button class="kns-qty-btn" onclick="KNSCart.updateQty('${item.id}', ${item.qty - 1})">−</button>
             <span>${item.qty}</span>

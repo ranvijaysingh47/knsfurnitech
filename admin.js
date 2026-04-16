@@ -489,6 +489,8 @@ function openProductModal(id = null) {
             document.getElementById('prod-specs').value = p.specs ? JSON.stringify(p.specs, null, 2) : '';
             document.getElementById('prod-dimens').value = p.dimensions ? JSON.stringify(p.dimensions, null, 2) : '';
             document.getElementById('prod-colors').value = p.colors ? JSON.stringify(p.colors, null, 2) : '';
+            document.getElementById('prod-stock').value = p.stock || '';
+            document.getElementById('prod-delivery').value = p.delivery || '';
 
             document.getElementById('prod-isnew').checked = !!p.isNew;
             document.getElementById('prod-trending').checked = p.badge === 'Trending';
@@ -582,6 +584,8 @@ async function handleProductSubmit(e) {
         mrp: parseInt(document.getElementById('prod-mrp').value) || 0,
         description: document.getElementById('prod-desc').value,
         longDescription: document.getElementById('prod-long-desc').value,
+        stock: parseInt(document.getElementById('prod-stock').value) || null,
+        delivery: document.getElementById('prod-delivery').value || null,
         specs: specs,
         dimensions: dimens,
         colors: colors,

@@ -313,7 +313,9 @@
         }
 
         .pdp-add-btn {
-            flex: 1;
+            /* flex: 1; Removed to fix desktop layout */
+            white-space: nowrap;
+            padding: 0 1.5rem;
             height: 56px;
             border-radius: 14px;
             background: var(--pdp-dark);
@@ -1126,6 +1128,7 @@
                 font-size: 0.95rem !important;
                 min-width: 0 !important;
                 gap: 8px !important;
+                padding: 0 8px !important; /* Smaller padding on mobile */
             }
 
             .mobile-wish-btn {
@@ -1259,6 +1262,12 @@
                 height: 90px;
             }
         }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
     </style>
 </head>
 
@@ -1281,9 +1290,12 @@
                         style="width: 40px; font-size: 1rem;">
                     <button class="pdp-qty-btn" style="width: 40px;" onclick="qty(1)">+</button>
                 </div>
-                <button class="pdp-add-btn" style="height: 48px; padding: 0 2.5rem; flex: none;" onclick="addToCart()">
+                <button class="pdp-add-btn" style="height: 48px; padding: 0 1.5rem; flex: none; background: #fff; color: #1a1a1a; border: 1.5px solid #eee;" onclick="addToCart()">
                     <i data-lucide="shopping-cart" size="18"></i>
-                    Add to Cart
+                </button>
+                <button class="pdp-add-btn" style="height: 48px; padding: 0 2rem; flex: none; background: var(--pdp-green);" onclick="buyNow()">
+                    <i data-lucide="zap" size="18"></i>
+                    Buy Now
                 </button>
             </div>
         </div>
@@ -1388,6 +1400,10 @@
             <div id="pdp-badges-node" class="pdp-badges-wrap" style="display: flex; gap: 8px; margin-bottom: 0.8rem;">
             </div>
             <h1 class="pdp-title" id="pdp-name-node">Product Name</h1>
+            <div id="pdp-delivery-msg" style="display: none; align-items: center; gap: 8px; font-size: 0.9rem; color: #4A5568; margin: 0.5rem 0 1rem; background: #EDF2F7; padding: 8px 15px; border-radius: 8px; width: fit-content;">
+                <i data-lucide="truck" size="16"></i>
+                <span style="font-weight: 500;">Est. Delivery: Calculating...</span>
+            </div>
             <div class="pdp-stars" id="pdp-stars-node"></div>
 
             <div class="pdp-pricing">
@@ -1403,17 +1419,21 @@
 
             <div id="pdp-colors-node" class="pdp-colors" style="display:none;"></div>
 
-            <div class="pdp-actions mobile-action-row">
-                <div class="pdp-qty-wrap mobile-qty-wrap">
+            <div class="pdp-actions mobile-action-row" style="display: flex; align-items: center; gap: 1rem; margin-top: 1.5rem; flex-wrap: wrap;">
+                <div class="pdp-qty-wrap mobile-qty-wrap" style="flex: none;">
                     <button class="pdp-qty-btn" onclick="qty(-1)">-</button>
                     <input type="number" id="pdp-qty-val" value="1" min="1" class="pdp-qty-input">
                     <button class="pdp-qty-btn" onclick="qty(1)">+</button>
                 </div>
-                <button class="pdp-add-btn mobile-add-btn" onclick="addToCart()">
+                <button class="pdp-add-btn mobile-add-btn" onclick="addToCart()" style="background: var(--pdp-dark); border: 2px solid var(--pdp-dark); height: 56px;">
                     <i data-lucide="shopping-cart"></i>
-                    Add to Cart
+                    <span>Add to Cart</span>
                 </button>
-                <button class="pdp-wish-btn mobile-wish-btn" id="wish-btn" onclick="toggleWish()">
+                <button class="pdp-add-btn mobile-add-btn" onclick="buyNow()" style="background: var(--pdp-green); border: 2px solid var(--pdp-green); color: #fff; height: 56px;">
+                    <i data-lucide="zap"></i>
+                    <span>Buy Now</span>
+                </button>
+                <button class="pdp-wish-btn mobile-wish-btn" id="wish-btn" onclick="toggleWish()" style="width: 56px; height: 56px; flex: none;">
                     <i data-lucide="heart"></i>
                 </button>
             </div>
@@ -1889,7 +1909,39 @@
                 let badgeHtml = '';
                 if (p.isNew) badgeHtml += '<span class="kns-status-badge kns-badge-new">New Arrival</span>';
                 if (p.badge === 'Trending') badgeHtml += '<span class="kns-status-badge kns-badge-hot">Trending</span>';
+                
+                // Real-time Stock Alert
+                if (p.stock && p.stock <= 5 && p.stock > 0) {
+                    badgeHtml += `<span class="kns-status-badge" style="background: #FFF5F5; color: #E53E3E; border: 1.1px solid #FEB2B2; animation: pulse 2s infinite;">🔥 Only ${p.stock} left in stock!</span>`;
+                } else if (p.stock <= 0 && p.stock !== null && p.stock !== undefined) {
+                    badgeHtml += `<span class="kns-status-badge" style="background: #F7FAFC; color: #4A5568; border: 1.1px solid #E2E8F0;">Out of Stock</span>`;
+                }
                 badgeNode.innerHTML = badgeHtml;
+            }
+
+            // Out of Stock Handling for Buttons
+            const addBtn = document.querySelector('.pdp-add-btn:not([style*="green"])');
+            const buyBtn = document.querySelector('.pdp-add-btn[style*="green"]');
+            if (p.stock <= 0 && p.stock !== null && p.stock !== undefined) {
+                [addBtn, buyBtn].forEach(btn => {
+                    if (btn) {
+                        btn.disabled = true;
+                        btn.style.opacity = '0.5';
+                        btn.style.cursor = 'not-allowed';
+                        btn.innerHTML = 'Out of Stock';
+                    }
+                });
+            }
+
+            // Estimated Delivery
+            const deliveryNode = document.getElementById('pdp-delivery-msg');
+            if (deliveryNode) {
+                if (p.delivery) {
+                    deliveryNode.innerHTML = `<i data-lucide="truck" size="16"></i> Est. Delivery: <strong>${p.delivery}</strong>`;
+                    deliveryNode.style.display = 'flex';
+                } else {
+                    deliveryNode.style.display = 'none';
+                }
             }
 
             // Render Dynamic Specs if available
@@ -2134,6 +2186,16 @@
                 ...p,
                 qty: q
             });
+        }
+        function buyNow() {
+            KNSCart.addToCart({
+                ...p,
+                qty: q
+            });
+            // Brief timeout to let the cart update and show feedback before redirecting
+            setTimeout(() => {
+                window.location.href = 'cart.html';
+            }, 500);
         }
         function toggleWish() { KNSWishlist.toggle(p); syncWish(); }
         function syncWish() { document.getElementById('wish-btn').classList.toggle('active', KNSWishlist.isWishlisted(p.id)); }

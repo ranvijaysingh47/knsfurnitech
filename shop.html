@@ -430,9 +430,12 @@
                     <h3 class="product-title">${p.name}</h3>
                     <div class="product-price">₹ ${p.price.toLocaleString('en-IN')}${p.mrp ? ` <span class="original">₹ ${p.mrp.toLocaleString('en-IN')}</span>` : ''}</div>
                     <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
-                        <button class="kns-add-cart-btn" onclick="handleAddToCart('${p.id}')" style="margin-top:0; flex: 1.2;">
-                            <i data-lucide="shopping-cart" size="16"></i> Add
-                        </button>
+                        ${(p.stock <= 0 && p.stock !== null && p.stock !== undefined) ? 
+                            `<button class="kns-add-cart-btn" disabled style="margin-top:0; flex: 1.2; opacity: 0.6; cursor: not-allowed;">Out of Stock</button>` :
+                            `<button class="kns-add-cart-btn" onclick="handleAddToCart('${p.id}')" style="margin-top:0; flex: 1.2;">
+                                <i data-lucide="shopping-cart" size="16"></i> Add
+                            </button>`
+                        }
                         <a href="product.html?id=${p.id}" class="kns-secondary-btn">
                             Details
                         </a>
@@ -457,7 +460,10 @@
                         <div class="product-price" style="font-size: 1.5rem; margin: 1rem 0;">₹ ${p.price.toLocaleString('en-IN')}${p.mrp ? ` <span class="original" style="font-size: 1.1rem;">₹ ${p.mrp.toLocaleString('en-IN')}</span>` : ''}</div>
                         <p style="color: #666; line-height: 1.6; margin-bottom: 2rem;">Experience ultimate comfort and modern design with the ${p.name}. Crafted with premium materials to elevate your workspace or home.</p>
                         <div style="display: flex; gap: 1rem;">
-                            <button class="kns-ec-btn kns-ec-btn-primary" onclick="handleAddToCart('${p.id}'); document.getElementById('quick-view-modal').classList.remove('active');" style="flex:1;">Add to Cart</button>
+                            ${(p.stock <= 0 && p.stock !== null && p.stock !== undefined) ? 
+                                `<button class="kns-ec-btn kns-ec-btn-primary" disabled style="flex:1; opacity: 0.6; cursor: not-allowed;">Out of Stock</button>` :
+                                `<button class="kns-ec-btn kns-ec-btn-primary" onclick="handleAddToCart('${p.id}'); document.getElementById('quick-view-modal').classList.remove('active');" style="flex:1;">Add to Cart</button>`
+                            }
                             <a href="product.html?id=${p.id}" class="kns-ec-btn kns-ec-btn-outline" style="flex:1;">View Full Details</a>
                         </div>
                     </div>
@@ -470,7 +476,7 @@
         function handleAddToCart(id) {
             const p = PRODUCTS.find(x => x.id === id);
             if (!p) return;
-            KNSCart.addToCart({ id: p.id, name: p.name, category: p.category, price: p.price, image: p.image });
+            KNSCart.addToCart({ id: p.id, name: p.name, category: p.category, price: p.price, image: p.image, stock: p.stock });
         }
         function handleWish(e, id) {
             e.preventDefault();

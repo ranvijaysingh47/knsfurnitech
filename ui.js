@@ -1,3 +1,43 @@
+// --- Support Widgets Integration ---
+(function() {
+    // 1. Force GetButton to the left using CSS (The safest way)
+    const style = document.createElement('style');
+    style.innerHTML = `
+        #wh-widget-send-button, .wh-widget-right { 
+            left: 20px !important; 
+            right: auto !important; 
+            direction: ltr !important;
+        }
+        #wh-popup-container {
+            left: 20px !important;
+            right: auto !important;
+        }
+    `;
+    document.head.appendChild(style);
+
+    // 2. GetButton.io Script
+    const s = document.createElement('script');
+    s.type = 'text/javascript'; s.async = true;
+    s.src = 'https://static.getbutton.io/widget/bundle.js?id=TQfSh';
+    const x = document.getElementsByTagName('script')[0];
+    x.parentNode.insertBefore(s, x);
+
+    // 3. Tawk.to Script (Ensuring it stays right)
+    window.Tawk_API = window.Tawk_API || {};
+    window.Tawk_API.onLoad = function(){
+        window.Tawk_API.setAttributes({
+            'position' : 'right'
+        }, function(error){});
+    };
+    window.Tawk_LoadStart = new Date();
+    const s1 = document.createElement("script");
+    s1.async = true;
+    s1.src = 'https://embed.tawk.to/69e0ee5b4b03f31c3c2e7d01/1jmba65ul';
+    s1.charset = 'UTF-8';
+    s1.setAttribute('crossorigin', '*');
+    x.parentNode.insertBefore(s1, x);
+})();
+
 document.addEventListener('DOMContentLoaded', () => {
     // Scroll Animation Observer Setup
     const observerOptions = {
@@ -301,7 +341,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             const safeImg = (prod.img || '').split('?')[0];
 
                             const addToCartFn = `window.KNSCart && window.KNSCart.addToCart ? ` +
-                                `KNSCart.addToCart({id: '${prod.id}', name: '${safeName}', category: '${safeCat}', price: ${prod.price}, image: '${safeImg}?w=100'})` +
+                                `KNSCart.addToCart({id: '${prod.id}', name: '${safeName}', category: '${safeCat}', price: ${prod.price}, image: '${safeImg}?w=100', stock: ${prod.stock}})` +
                                 ` : addToCart('${safeName}', ${prod.price}, '${safeImg}?w=100')`;
 
                             const bsCard = document.createElement('div');
@@ -318,9 +358,14 @@ document.addEventListener('DOMContentLoaded', () => {
                                         <a href="${url}" class="bs-action-btn bs-btn-details">
                                             <i data-lucide="eye" size="16"></i> View
                                         </a>
-                                        <button class="bs-action-btn bs-btn-cart" onclick="${addToCartFn}">
-                                            <i data-lucide="plus" size="16"></i> Add
-                                        </button>
+                                        ${(prod.stock <= 0 && prod.stock !== null && prod.stock !== undefined) ? 
+                                            `<button class="bs-action-btn bs-btn-cart" disabled style="opacity: 0.6; cursor: not-allowed;">
+                                                Out of Stock
+                                            </button>` :
+                                            `<button class="bs-action-btn bs-btn-cart" onclick="${addToCartFn}">
+                                                <i data-lucide="plus" size="16"></i> Add
+                                            </button>`
+                                        }
                                     </div>
                                 </div>
                             `;
