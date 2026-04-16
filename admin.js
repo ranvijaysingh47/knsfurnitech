@@ -508,6 +508,40 @@ function openProductModal(id = null) {
     modal.classList.add('active');
 }
 
+/**
+ * 📸 Automatic Image Compression logic
+ * Shrinks images to fit within Firestore's 1MB document limit.
+ */
+async function compressImage(base64, maxWidth = 1200, maxHeight = 1200) {
+    return new Promise((resolve) => {
+        const img = new Image();
+        img.src = base64;
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            let width = img.width;
+            let height = img.height;
+
+            if (width > height) {
+                if (width > maxWidth) {
+                    height *= maxWidth / width;
+                    width = maxWidth;
+                }
+            } else {
+                if (height > maxHeight) {
+                    width *= maxHeight / height;
+                    height = maxHeight;
+                }
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            resolve(canvas.toDataURL('image/jpeg', 0.7)); // 70% quality JPEG
+        };
+    });
+}
+
 window.handleImageFile = function(event, targetId) {
     const file = event.target.files[0];
     if (!file) return;
@@ -517,10 +551,10 @@ window.handleImageFile = function(event, targetId) {
         return;
     }
 
-    // 🔥 Added: Prevent Firebase size limit error (1MB limit)
-    const MAX_SIZE = 700 * 1024; // 700KB (Base64 will grow this to ~930KB)
-    if (file.size > MAX_SIZE) {
-        alert(`❌ Image too large! (${(file.size / 1024).toFixed(0)}KB)\nFirebase limit is 1MB per product.\nPlease compress the image or use an external URL.`);
+    // 🚀 Increased Limit: Now supporting up to 5MB because we compress it!
+    const MAX_INPUT_SIZE = 5 * 1024 * 1024; 
+    if (file.size > MAX_INPUT_SIZE) {
+        alert(`❌ Image too large! (${(file.size / (1024 * 1024)).toFixed(1)}MB)\nPlease use a file under 5MB.`);
         return;
     }
 
@@ -531,11 +565,16 @@ window.handleImageFile = function(event, targetId) {
     btn.innerHTML = '<i data-lucide="loader-2" class="spin" size="18"></i>';
     if (window.lucide) lucide.createIcons();
 
-    reader.onload = function(e) {
-        document.getElementById(targetId).value = e.target.result;
+    reader.onload = async function(e) {
+        const originalBase64 = e.target.result;
+        
+        // Apply compression automatically
+        const compressedBase64 = await compressImage(originalBase64);
+        
+        document.getElementById(targetId).value = compressedBase64;
         btn.innerHTML = originalContent;
         if (window.lucide) lucide.createIcons();
-        if (window.KNSCart) KNSCart.showToast("Image uploaded and linked successfully!");
+        if (window.KNSCart) KNSCart.showToast("Image compressed & linked successfully!");
     };
 
     reader.onerror = function() {
