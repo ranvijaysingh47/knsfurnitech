@@ -1118,10 +1118,11 @@
 
             /* Product Title Fix */
             .pdp-title {
-                font-size: 2.5rem !important;
-                line-height: 1.2 !important;
+                font-size: 2.2rem !important;
+                line-height: 1.15 !important;
                 margin-bottom: 0.8rem !important;
                 overflow: visible !important;
+                font-weight: 800;
             }
 
             .review-layout {
@@ -1129,7 +1130,21 @@
             }
 
             .sticky-prod-info {
-                display: none;
+                gap: 0.8rem;
+            }
+            .sticky-prod-img {
+                width: 40px;
+                height: 40px;
+            }
+            .sticky-prod-name {
+                font-size: 0.95rem;
+                max-width: 150px;
+            }
+            .sticky-prod-price {
+                font-size: 1rem;
+            }
+            .sticky-actions {
+                gap: 1rem !important;
             }
 
             /* Typography Scaling */
@@ -1282,45 +1297,102 @@
         }
 
         @media (max-width: 600px) {
+            .pdp-title {
+                font-size: 1.75rem !important;
+            }
+            .pdp-price {
+                font-size: 1.6rem !important;
+            }
+            .mobile-action-row {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 12px !important;
+                margin-top: 2rem !important;
+            }
+            .mobile-qty-wrap {
+                grid-column: span 1;
+                width: 100% !important;
+                height: 52px !important;
+                order: 1;
+            }
+            .mobile-wish-btn {
+                grid-column: span 1;
+                width: 100% !important;
+                height: 52px !important;
+                order: 2;
+            }
+            .mobile-add-btn {
+                grid-column: span 2;
+                width: 100% !important;
+                height: 54px !important;
+                margin: 0 !important;
+                order: 3;
+            }
+            /* Target the secondary button (Buy Now) if it exists as another add-btn */
+            .mobile-add-btn:nth-child(3) {
+                margin-top: 4px !important;
+                order: 4;
+            }
+
+            .sticky-buy-bar {
+                height: 72px;
+                padding: 0 4%;
+            }
+            .sticky-bar-content {
+                flex-direction: row;
+                justify-content: space-between;
+                gap: 10px;
+                align-items: center;
+            }
+            .sticky-prod-info {
+                flex: 1;
+                min-width: 0;
+                gap: 6px;
+            }
+            .sticky-prod-name {
+                font-size: 0.8rem;
+                max-width: 90px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                margin-bottom: 1px;
+            }
+            .sticky-prod-price { font-size: 0.95rem; }
+            .sticky-actions { gap: 6px !important; }
+            .sticky-qty { display: none !important; }
+            .sticky-add-btn {
+                width: 44px !important;
+                height: 44px !important;
+                padding: 0 !important;
+                border-radius: 12px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+            .sticky-add-btn i {
+                color: #1a1a1a !important;
+                stroke-width: 2.5px;
+            }
+            .sticky-buy-btn { height: 44px !important; padding: 0 1rem !important; font-size: 0.8rem !important; border-radius: 12px !important; flex: 1 !important; }
+
             #pdp-hero-title {
                 font-size: 1.8rem !important;
                 letter-spacing: 1px !important;
             }
 
-            .pdp-hero {
-                height: 280px;
-            }
+            .pdp-hero { height: 260px; }
+            .pdp-recommendation-card { min-width: 280px; padding: 1rem; gap: 1rem; }
+            .pdp-rec-img { width: 80px; height: 80px; }
 
-            .pdp-title {
-                font-size: 2.5rem;
+            /* Out of Stock UX Refinement */
+            .sticky-actions.is-out-of-stock .sticky-add-btn {
+                display: none !important;
             }
-
-            .pdp-price {
-                font-size: 2rem;
-            }
-
-            .mobile-action-row {
-                flex-wrap: wrap;
-            }
-
-            .mobile-qty-wrap {
+            .sticky-actions.is-out-of-stock .sticky-buy-btn {
                 width: 100% !important;
-                flex: none !important;
-            }
-
-            .mobile-add-btn {
+                background: #f0f0f0 !important;
+                color: #888 !important;
+                border: 1px solid #ddd !important;
                 flex: 1 !important;
-            }
-
-            .pdp-recommendation-card {
-                min-width: 280px;
-                padding: 1rem;
-                gap: 1rem;
-            }
-
-            .pdp-rec-img {
-                width: 90px;
-                height: 90px;
             }
         }
 
@@ -1344,19 +1416,19 @@
                     <span id="sticky-price" class="sticky-prod-price">₹ 0</span>
                 </div>
             </div>
-            <div style="display: flex; align-items: center; gap: 1.5rem;">
-                <div class="pdp-qty-wrap" style="height: 48px; border-width: 1px;">
+            <div class="sticky-actions" style="display: flex; align-items: center; gap: 1.5rem;">
+                <div class="pdp-qty-wrap sticky-qty" style="height: 48px; border-width: 1px;">
                     <button class="pdp-qty-btn" style="width: 40px;" onclick="qty(-1)">-</button>
                     <input type="number" id="pdp-qty-val-sticky" value="1" min="1" class="pdp-qty-input"
                         style="width: 40px; font-size: 1rem;">
                     <button class="pdp-qty-btn" style="width: 40px;" onclick="qty(1)">+</button>
                 </div>
-                <button class="pdp-add-btn" style="height: 48px; padding: 0 1.5rem; flex: none; background: #fff; color: #1a1a1a; border: 1.5px solid #eee;" onclick="addToCart()">
+                <button class="pdp-add-btn sticky-add-btn" style="height: 48px; padding: 0 1.5rem; flex: none; background: #fff; color: #1a1a1a; border: 1.5px solid #eee;" onclick="addToCart()">
                     <i data-lucide="shopping-cart" size="18"></i>
                 </button>
-                <button class="pdp-add-btn" style="height: 48px; padding: 0 2rem; flex: none; background: var(--pdp-green);" onclick="buyNow()">
+                <button class="pdp-add-btn sticky-buy-btn" style="height: 48px; padding: 0 2rem; flex: none; background: var(--pdp-green);" onclick="buyNow()">
                     <i data-lucide="zap" size="18"></i>
-                    Buy Now
+                    <span>Buy Now</span>
                 </button>
             </div>
         </div>
@@ -2019,16 +2091,15 @@
             }
 
             // Out of Stock Handling for Buttons
-            const addBtn = document.querySelector('.pdp-add-btn:not([style*="green"])');
-            const buyBtn = document.querySelector('.pdp-add-btn[style*="green"]');
             if (p.stock <= 0 && p.stock !== null && p.stock !== undefined) {
-                [addBtn, buyBtn].forEach(btn => {
-                    if (btn) {
-                        btn.disabled = true;
-                        btn.style.opacity = '0.5';
-                        btn.style.cursor = 'not-allowed';
-                        btn.innerHTML = 'Out of Stock';
-                    }
+                document.querySelectorAll('.pdp-add-btn').forEach(btn => {
+                    btn.disabled = true;
+                    btn.style.opacity = '0.6';
+                    btn.style.cursor = 'not-allowed';
+                    btn.innerHTML = 'Out of Stock';
+                    // Add class to parent for layout shifts
+                    const row = btn.closest('.pdp-actions') || btn.closest('.sticky-actions');
+                    if (row) row.classList.add('is-out-of-stock');
                 });
             }
 
