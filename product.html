@@ -17,6 +17,8 @@
     <!-- Core Styles -->
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="ecommerce.css">
+    <!-- 3D Configurator Support -->
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 
     <style>
         /* 
@@ -360,6 +362,65 @@
             background: #ef4444;
             border-color: #ef4444;
             color: #fff;
+        }
+
+        /* 3D Configurator Prototype Styles */
+        .pdp-3d-btn {
+            background: #fff;
+            color: var(--pdp-dark);
+            border: 2px solid #eee;
+            padding: 0 1.5rem;
+            height: 56px;
+            border-radius: 14px;
+            font-weight: 700;
+            display: none; /* Hidden unless it's the target product */
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+            flex: 1; /* Allow to grow and fill space on mobile */
+            min-width: 200px;
+        }
+@media (max-width: 768px) {
+    .pdp-3d-btn {
+        width: 100%;
+        margin-top: 0.5rem;
+    }
+    .config-header h3 { font-size: 1.1rem; }
+    .configurator-overlay .pdp-add-btn { width: 90% !important; }
+}
+        .pdp-3d-btn:hover {
+            border-color: var(--pdp-green);
+            color: var(--pdp-green);
+            transform: translateY(-2px);
+        }
+        .configurator-overlay {
+            position: fixed;
+            inset: 0;
+            background: #fff;
+            z-index: 9999;
+            display: none;
+            flex-direction: column;
+        }
+        .configurator-overlay.active { display: flex; }
+        .config-header {
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+        }
+        .config-close {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--pdp-dark);
+        }
+        model-viewer {
+            width: 100%;
+            height: 70vh; /* Direct height to avoid flex-growth issues */
+            background-color: #f9f9f9;
         }
 
         .pdp-features {
@@ -1642,6 +1703,42 @@
             </div>
         </div>
     </section>
+    
+    <!-- Embedded 3D Virtual Configurator Section -->
+    <section id="pdp-3d-section" class="pdp-related section-wrapper" style="display: none; background: #fff; padding-top: 5rem; padding-bottom: 5rem;">
+        <div class="animate-on-scroll">
+            <h2 class="section-title" style="font-size: 2.2rem; margin-bottom: 0.5rem;">Interactive 3D Experience</h2>
+            <p style="text-align: center; color: #888; margin-bottom: 3rem;">Inspect from every angle and customize colors in real-time.</p>
+        </div>
+        
+        <div style="position: relative; width: 100%; max-width: 1200px; margin: 0 auto; background: #f9f9f9; border-radius: 24px; overflow: hidden; border: 1px solid #eee;">
+            <model-viewer 
+                id="pdp-3d-viewer"
+                src="models/chair-monarch.glb" 
+                ar 
+                ar-modes="webxr scene-viewer quick-look" 
+                camera-controls 
+                shadow-intensity="1" 
+                exposure="1"
+                environment-image="neutral"
+                auto-rotate
+                style="width: 100%; height: 600px;"
+            >
+            </model-viewer>
+            
+            <!-- In-place UI Controls -->
+            <div id="config-controls" style="position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem; background: rgba(255,255,255,0.95); padding: 15px 30px; border-radius: 50px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); backdrop-filter: blur(10px); z-index: 10; border: 1px solid rgba(0,0,0,0.05); min-width: 220px;">
+                <div onclick="change3DColor('#D2B48C', 'Tan Leather')" style="width:36px; height:36px; border-radius:50%; background:#D2B48C; cursor:pointer; border:3px solid #fff; box-shadow: 0 0 0 1px #eee;" title="Tan Leather"></div>
+                <div onclick="change3DColor('#1a1a1a', 'Luxury Black')" style="width:36px; height:36px; border-radius:50%; background:#1a1a1a; cursor:pointer; border:3px solid #fff; box-shadow: 0 0 0 1px #eee;" title="Black"></div>
+                <div onclick="change3DColor('#7f8c8d', 'Executive Grey')" style="width:36px; height:36px; border-radius:50%; background:#7f8c8d; cursor:pointer; border:3px solid #fff; box-shadow: 0 0 0 1px #eee;" title="Grey"></div>
+            </div>
+            
+            <!-- Mobile Prompt -->
+            <div class="mobile-only" style="position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.6); color: #fff; padding: 8px 15px; border-radius: 20px; font-size: 0.75rem; pointer-events: none;">
+                <i data-lucide="move" size="14"></i> Swipe to rotate
+            </div>
+        </div>
+    </section>
 
     <!-- Complete the Look -->
     <section id="complete-the-look-section" class="pdp-related section-wrapper"
@@ -1830,6 +1927,7 @@
         </div>
     </aside>
 
+
     <!-- Firebase SDK (Compat v9/v11) -->
     <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-auth-compat.js"></script>
@@ -1844,6 +1942,7 @@
     <script src="database.js?v=4"></script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script src="contact-logic.js?v=5"></script>
+    <script src="configurator.js?v=1"></script>
     <script>
         let PRODUCTS = KNSData.getProducts();
         let q = 1; let p = null; let chosenRating = 5; let reviewCount = 2;
