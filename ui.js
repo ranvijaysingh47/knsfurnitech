@@ -217,6 +217,68 @@ document.addEventListener('DOMContentLoaded', () => {
         ]
     };
 
+    /**
+     * Smart Bestsellers Engine
+     * Dynamically ranks products based on Sales Frequency from All Orders.
+     */
+    function getSmartBestsellers(uiCategory, limit = 5) {
+        // 1. Sync UI Tab Names to potential DB Category Variations
+        const catMap = {
+            'Executive Chair': ['Executive Chair', 'Executive Chairs'],
+            'Workstation Chair': ['Workstation Chair', 'Workstations'],
+            'Plastic Metal - Cafe Chair': ['Plastic Metal - Cafe Chair', 'Cafeteria Chairs'],
+            'Bar Stool Chair': ['Bar Stool Chair', 'Bar Stools'],
+            'Puffy Table Chair': ['Puffy Table Chair', 'Puffy & Tables'],
+            'Sofa Lounge Seating': ['Sofa Lounge Seating', 'Sofa & Lounge'],
+            'Educational Furniture': ['Educational Furniture', 'Educational']
+        };
+        const dbCatVariations = catMap[uiCategory] || [uiCategory];
+
+        // 2. Data Sources
+        const allOrders = (window.KNSData && KNSData.getAllOrders) ? KNSData.getAllOrders() : [];
+        const allProducts = (window.KNSData && KNSData.getProducts) ? KNSData.getProducts() : [];
+
+        // 3. Aggregate Sales Data
+        const salesCounts = {};
+        allOrders.forEach(order => {
+            if (order.items && Array.isArray(order.items)) {
+                order.items.forEach(item => {
+                    const pid = item.id || item.productId;
+                    if (pid) {
+                        salesCounts[pid] = (salesCounts[pid] || 0) + (item.qty || 1);
+                    }
+                });
+            }
+        });
+
+        // 4. Filter Catalog by Category
+        let categoryProducts = allProducts.filter(p => dbCatVariations.includes(p.category));
+
+        // 5. Case: Product exists but hasn't sold yet? Sort by sales count THEN newest first
+        categoryProducts = categoryProducts.map(p => ({
+            ...p,
+            salesCount: salesCounts[p.id || p.firestoreId] || 0
+        }));
+
+        categoryProducts.sort((a, b) => b.salesCount - a.salesCount);
+
+        // 6. Build Final Display List
+        if (categoryProducts.length > 0) {
+            // Uniqueness is guaranteed by Firestore IDs
+            return categoryProducts.slice(0, limit).map(p => ({
+                id: p.id || p.firestoreId || '',
+                name: p.name,
+                price: p.price,
+                category: p.category,
+                img: p.image || 'https://via.placeholder.com/600x480?text=No+Image',
+                stock: p.stock
+            }));
+        }
+
+        // 7. Last Resort Fallback (Hardcoded Demo Data)
+        return bestsellersData[uiCategory] || [];
+    }
+
     const bsTabs = document.querySelectorAll('.bs-tab');
     const bsContainer = document.querySelector('.bs-container');
 
@@ -271,26 +333,7 @@ document.addEventListener('DOMContentLoaded', () => {
             bsTabs.forEach((tab, index) => {
                 tab.addEventListener('click', () => {
                     const uiCategory = tab.textContent.trim();
-                    const dbCategory = catMap[uiCategory] || uiCategory;
-
-                    let products = bestsellersData[uiCategory];
-
-                    // Pull from KNSData DB if available
-                    if (window.KNSData && typeof KNSData.getProducts === 'function') {
-                        const allProds = KNSData.getProducts();
-                        if (allProds && allProds.length > 0) {
-                            const dbProducts = allProds.filter(p => p.category === dbCategory || p.category === uiCategory);
-                            if (dbProducts.length > 0) {
-                                products = dbProducts.slice(0, 5).map(p => ({
-                                    id: p.id || '',
-                                    name: p.name,
-                                    price: p.price,
-                                    category: p.category,
-                                    img: p.image || 'https://via.placeholder.com/600x480?text=No+Image'
-                                }));
-                            }
-                        }
-                    }
+                    let products = getSmartBestsellers(uiCategory, 5);
 
                     if (!products) return;
 
