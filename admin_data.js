@@ -129,7 +129,14 @@ const KNSData = (() => {
 
     /* --- Products CRUD --- */
     function getProducts() { return _products; }
-    function getProductById(id) { return _products.find(p => p.id === id); }
+    function getProductById(id) { 
+        if (!id) return null;
+        return _products.find(p => 
+            p.id === id || 
+            p.firestoreId === id || 
+            (p.name && p.name.toLowerCase().replace(/\s+/g, '-') === id)
+        ); 
+    }
     function saveProducts(p) { _products = p; localStorage.setItem(P_KEY, JSON.stringify(p)); document.dispatchEvent(new CustomEvent('products:updated')); }
     
     async function addProduct(prod) {
