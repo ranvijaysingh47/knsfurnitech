@@ -167,53 +167,53 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Bestsellers Category Switching ---
     const bestsellersData = {
         'Executive Chair': [
-            { id: 'ex-1', name: 'The Bureaucrat', price: 12499, img: 'https://images.unsplash.com/photo-1592078615290-033ee584e267?w=600&q=80' },
-            { id: 'ex-2', name: 'The Classic', price: 14999, img: 'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=600&q=80' },
-            { id: 'ex-3', name: 'The Intelligent', price: 15898, img: 'https://images.unsplash.com/photo-1581539250439-c96689b516dd?w=600&q=80' },
-            { id: 'ex-4', name: 'The Diplomatic', price: 16499, img: 'https://images.unsplash.com/photo-1580480055273-228ff5388ef8?w=600&q=80' },
-            { id: 'ex-5', name: 'The Executive', price: 11999, img: 'https://images.unsplash.com/photo-1519947486511-46149fa0a254?w=600&q=80' }
+            { id: 'ex-1', name: 'The Bureaucrat', price: 12499, img: 'https://images.unsplash.com/photo-1592078615290-033ee584e267?fm=webp&w=600&q=80' },
+            { id: 'ex-2', name: 'The Classic', price: 14999, img: 'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?fm=webp&w=600&q=80' },
+            { id: 'ex-3', name: 'The Intelligent', price: 15898, img: 'https://images.unsplash.com/photo-1581539250439-c96689b516dd?fm=webp&w=600&q=80' },
+            { id: 'ex-4', name: 'The Diplomatic', price: 16499, img: 'https://images.unsplash.com/photo-1580480055273-228ff5388ef8?fm=webp&w=600&q=80' },
+            { id: 'ex-5', name: 'The Executive', price: 11999, img: 'https://images.unsplash.com/photo-1519947486511-46149fa0a254?fm=webp&w=600&q=80' }
         ],
         'Workstation Chair': [
-            { id: 'ws-1', name: 'Task Master', price: 8500, img: 'https://images.unsplash.com/photo-1518455027359-f3f8164ba62d?w=600&q=80' },
-            { id: 'ws-2', name: 'Pro Streamer', price: 15500, img: 'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=600&q=80' },
-            { id: 'ws-3', name: 'Efficient Mesh', price: 7999, img: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600&q=80' },
-            { id: 'ws-4', name: 'Agile Swivel', price: 9200, img: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&q=80' },
-            { id: 'ws-5', name: 'Solid Base', price: 6800, img: 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=600&q=80' }
+            { id: 'ws-1', name: 'Task Master', price: 8500, img: 'https://images.unsplash.com/photo-1518455027359-f3f8164ba62d?fm=webp&w=600&q=80' },
+            { id: 'ws-2', name: 'Pro Streamer', price: 15500, img: 'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?fm=webp&w=600&q=80' },
+            { id: 'ws-3', name: 'Efficient Mesh', price: 7999, img: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?fm=webp&w=600&q=80' },
+            { id: 'ws-4', name: 'Agile Swivel', price: 9200, img: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?fm=webp&w=600&q=80' },
+            { id: 'ws-5', name: 'Solid Base', price: 6800, img: 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?fm=webp&w=600&q=80' }
         ],
         'Plastic Metal - Cafe Chair': [
-            { id: 'cc-1', name: 'Cafe Red', price: 2500, img: 'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=500&q=80' },
-            { id: 'cc-2', name: 'Bistro Metal', price: 3200, img: 'https://images.unsplash.com/photo-1503602642458-232111445657?w=500&q=80' },
-            { id: 'cc-3', name: 'Stackable Pro', price: 1800, img: 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=500&q=80' },
-            { id: 'cc-4', name: 'Garden Flex', price: 2100, img: 'https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc?w=500&q=80' },
-            { id: 'cc-5', name: 'Minimalist Poly', price: 2800, img: 'https://images.unsplash.com/photo-1517705008128-361805f42e86?w=500&q=80' }
+            { id: 'cc-1', name: 'Cafe Red', price: 2500, img: 'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?fm=webp&w=500&q=80' },
+            { id: 'cc-2', name: 'Bistro Metal', price: 3200, img: 'https://images.unsplash.com/photo-1503602642458-232111445657?fm=webp&w=500&q=80' },
+            { id: 'cc-3', name: 'Stackable Pro', price: 1800, img: 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?fm=webp&w=500&q=80' },
+            { id: 'cc-4', name: 'Garden Flex', price: 2100, img: 'https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc?fm=webp&w=500&q=80' },
+            { id: 'cc-5', name: 'Minimalist Poly', price: 2800, img: 'https://images.unsplash.com/photo-1517705008128-361805f42e86?fm=webp&w=500&q=80' }
         ],
         'Bar Stool Chair': [
-            { id: 'bs-1', name: 'High Rise', price: 4500, img: 'https://images.unsplash.com/photo-1592078615290-033ee584e267?w=500&q=80' },
-            { id: 'bs-2', name: 'Industrial Loft', price: 5200, img: 'https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?w=500&q=80' },
-            { id: 'bs-3', name: 'Swivel Pub', price: 5800, img: 'https://images.unsplash.com/photo-1581539250439-c96689b516dd?w=500&q=80' },
-            { id: 'bs-4', name: 'Sleek Chrome', price: 6200, img: 'https://images.unsplash.com/photo-1580480055273-228ff5388ef8?w=500&q=80' },
-            { id: 'bs-5', name: 'Wooden Bistro', price: 3900, img: 'https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc?w=500&q=80' }
+            { id: 'bs-1', name: 'High Rise', price: 4500, img: 'https://images.unsplash.com/photo-1592078615290-033ee584e267?fm=webp&w=500&q=80' },
+            { id: 'bs-2', name: 'Industrial Loft', price: 5200, img: 'https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?fm=webp&w=500&q=80' },
+            { id: 'bs-3', name: 'Swivel Pub', price: 5800, img: 'https://images.unsplash.com/photo-1581539250439-c96689b516dd?fm=webp&w=500&q=80' },
+            { id: 'bs-4', name: 'Sleek Chrome', price: 6200, img: 'https://images.unsplash.com/photo-1580480055273-228ff5388ef8?fm=webp&w=500&q=80' },
+            { id: 'bs-5', name: 'Wooden Bistro', price: 3900, img: 'https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc?fm=webp&w=500&q=80' }
         ],
         'Puffy Table Chair': [
-            { id: 'pt-1', name: 'Cloud Cube', price: 8500, img: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=500&q=80' },
-            { id: 'pt-2', name: 'Luxe Velvet', price: 12000, img: 'https://images.unsplash.com/photo-1550581190-9c1c48d21d6c?w=500&q=80' },
-            { id: 'pt-3', name: 'Compact Round', price: 5500, img: 'https://images.unsplash.com/photo-1540518614846-7eded433c457?w=500&q=80' },
-            { id: 'pt-4', name: 'Dressing Stool', price: 7200, img: 'https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?w=500&q=80' },
-            { id: 'pt-5', name: 'Storage Ottoman', price: 8900, img: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=500&q=80' }
+            { id: 'pt-1', name: 'Cloud Cube', price: 8500, img: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?fm=webp&w=500&q=80' },
+            { id: 'pt-2', name: 'Luxe Velvet', price: 12000, img: 'https://images.unsplash.com/photo-1550581190-9c1c48d21d6c?fm=webp&w=500&q=80' },
+            { id: 'pt-3', name: 'Compact Round', price: 5500, img: 'https://images.unsplash.com/photo-1540518614846-7eded433c457?fm=webp&w=500&q=80' },
+            { id: 'pt-4', name: 'Dressing Stool', price: 7200, img: 'https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?fm=webp&w=500&q=80' },
+            { id: 'pt-5', name: 'Storage Ottoman', price: 8900, img: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?fm=webp&w=500&q=80' }
         ],
         'Sofa Lounge Seating': [
-            { id: 'sl-1', name: 'Tycoon Sofa', price: 45999, img: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&q=80' },
-            { id: 'sl-2', name: 'Majestic Recliner', price: 28500, img: 'https://images.unsplash.com/photo-1594026112284-02bb6f3352fe?w=600&q=80' },
-            { id: 'sl-3', name: 'Royal Velvet Couch', price: 52000, img: 'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=600&q=80' },
-            { id: 'sl-4', name: 'Cloud L-Shape', price: 78000, img: 'https://images.unsplash.com/photo-1540518614846-7eded433c457?w=600&q=80' },
-            { id: 'sl-5', name: 'Compact Loveseat', price: 19500, img: 'https://images.unsplash.com/photo-1550581190-9c1c48d21d6c?w=600&q=80' }
+            { id: 'sl-1', name: 'Tycoon Sofa', price: 45999, img: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?fm=webp&w=600&q=80' },
+            { id: 'sl-2', name: 'Majestic Recliner', price: 28500, img: 'https://images.unsplash.com/photo-1594026112284-02bb6f3352fe?fm=webp&w=600&q=80' },
+            { id: 'sl-3', name: 'Royal Velvet Couch', price: 52000, img: 'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?fm=webp&w=600&q=80' },
+            { id: 'sl-4', name: 'Cloud L-Shape', price: 78000, img: 'https://images.unsplash.com/photo-1540518614846-7eded433c457?fm=webp&w=600&q=80' },
+            { id: 'sl-5', name: 'Compact Loveseat', price: 19500, img: 'https://images.unsplash.com/photo-1550581190-9c1c48d21d6c?fm=webp&w=600&q=80' }
         ],
         'Educational Furniture': [
-            { id: 'ed-1', name: 'Scholar Desk', price: 4500, img: 'https://images.unsplash.com/photo-1510074377623-8cf13fb86c08?w=600&q=80' },
-            { id: 'ed-2', name: 'Library Rack', price: 8200, img: 'https://images.unsplash.com/photo-1507842217351-5185ba573b0f?w=600&q=80' },
-            { id: 'ed-3', name: 'Seminar Chair', price: 3800, img: 'https://images.unsplash.com/photo-1517502884422-41eaadeff171?w=600&q=80' },
-            { id: 'ed-4', name: 'Lab Stool', price: 2100, img: 'https://images.unsplash.com/photo-1518455027359-f3f8164ba62d?w=600&q=80' },
-            { id: 'ed-5', name: 'Teacher Table', price: 6500, img: 'https://images.unsplash.com/photo-1524178232363-1fb28f74b0cd?w=600&q=80' }
+            { id: 'ed-1', name: 'Scholar Desk', price: 4500, img: 'https://images.unsplash.com/photo-1510074377623-8cf13fb86c08?fm=webp&w=600&q=80' },
+            { id: 'ed-2', name: 'Library Rack', price: 8200, img: 'https://images.unsplash.com/photo-1507842217351-5185ba573b0f?fm=webp&w=600&q=80' },
+            { id: 'ed-3', name: 'Seminar Chair', price: 3800, img: 'https://images.unsplash.com/photo-1517502884422-41eaadeff171?fm=webp&w=600&q=80' },
+            { id: 'ed-4', name: 'Lab Stool', price: 2100, img: 'https://images.unsplash.com/photo-1518455027359-f3f8164ba62d?fm=webp&w=600&q=80' },
+            { id: 'ed-5', name: 'Teacher Table', price: 6500, img: 'https://images.unsplash.com/photo-1524178232363-1fb28f74b0cd?fm=webp&w=600&q=80' }
         ]
     };
 
@@ -353,9 +353,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         products.forEach((prod, i) => {
                             const delay = (i % 5) * 0.1;
                             const safeName = (prod.name || '').replace(/'/g, "\\'");
-                            const safeCat = (prod.category || dbCategory).replace(/'/g, "\\'");
+                            const safeCat = (prod.category || uiCategory).replace(/'/g, "\\'");
                             const url = prod.id ? `product.html?id=${prod.id}` : 'product.html';
-                            const safeImg = prod.img || 'https://via.placeholder.com/600x480?text=No+Image';
+                            const safeImg = prod.image || prod.img || 'https://via.placeholder.com/600x480?text=No+Image';
 
                             const addToCartFn = `window.KNSCart && window.KNSCart.addToCart ? ` +
                                 `KNSCart.addToCart({id: '${prod.id}', name: '${safeName}', category: '${safeCat}', price: ${prod.price}, image: '${safeImg}', stock: ${prod.stock}})` +
@@ -366,7 +366,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             bsCard.style.transitionDelay = `${delay}s`;
                             bsCard.innerHTML = `
                                 <div class="bs-card-img-wrap">
-                                    <img src="${prod.img}" alt="${prod.name}">
+                                    <img src="${safeImg}" alt="${prod.name}" width="300" height="240" loading="lazy">
                                 </div>
                                 <div class="bs-card-info">
                                     <h4>${prod.name}</h4>

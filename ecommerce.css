@@ -156,7 +156,7 @@
 
 .kns-pd-email {
     font-size: 0.75rem;
-    color: #888;
+    color: #717171;
 }
 
 .kns-pd-divider {
@@ -187,7 +187,7 @@
 }
 
 .kns-pd-link svg {
-    color: #888;
+    color: #717171;
 }
 
 .kns-pd-logout {
@@ -972,7 +972,7 @@
 .search-box i {
     position: absolute;
     left: 14px;
-    color: #999;
+    color: #666666;
     pointer-events: none;
     transition: color 0.3s ease;
 }
@@ -1349,7 +1349,7 @@
     justify-content: center;
     font-weight: 700;
     font-size: 0.9rem;
-    color: #999;
+    color: #666666;
     transition: all 0.3s ease;
 }
 
@@ -1386,7 +1386,7 @@
     text-transform: uppercase;
     letter-spacing: 0.05em;
     font-weight: 600;
-    color: #999;
+    color: #666666;
 }
 
 .step.active .step-label {
@@ -1646,7 +1646,7 @@
     display: flex;
     align-items: center;
     gap: 0.8rem;
-    color: #888;
+    color: #717171;
 }
 
 .kns-breadcrumb a {
@@ -1783,7 +1783,7 @@
     font-family: 'Outfit', sans-serif;
     font-size: 0.9rem;
     font-weight: 600;
-    color: #999;
+    color: #666666;
     cursor: pointer;
     transition: color 0.2s;
     border-bottom: 2px solid transparent;
@@ -1959,7 +1959,7 @@
 
 .kns-pd-email {
     font-size: 0.75rem;
-    color: #999;
+    color: #666666;
     margin-top: 0.1rem;
 }
 
@@ -2558,7 +2558,7 @@
 }
 
 .home-blog-meta .date {
-    color: #999;
+    color: #666666;
 }
 
 .home-blog-card h3 {
@@ -2725,7 +2725,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 2rem;
-    color: #888;
+    color: #717171;
     font-size: 0.95rem;
     font-weight: 600;
 }

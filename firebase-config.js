@@ -26,16 +26,6 @@
     const auth = typeof firebase.auth === 'function' ? firebase.auth() : null;
     const db = typeof firebase.firestore === 'function' ? firebase.firestore() : null;
 
-    if (!auth) console.warn("Firebase Auth Service not available.");
-    if (!db) {
-        console.warn("Firebase Firestore Service not available.");
-    } else {
-        // Enable local disk persistence for faster loading and offline support
-        db.enablePersistence({ synchronizeTabs: true }).catch((err) => {
-            console.warn("📁 Firestore Persistence: ", err.code === 'failed-precondition' 
-                ? "Enabled (Single Tab Mode)" : "Unavailable on this browser.");
-        });
-    }
 
     // Mapping for the existing auth.js and database.js logic
     const _originalFirebase = window.firebase;
@@ -78,8 +68,4 @@
     // Override the query logic to handle my specific usage in database.js
     // We'll fix database.js to be simpler for Compat SDK
 
-    window.knsAuth = auth;
-    window.knsDb = db;
-
-    console.log("🔥 Firebase Compat Services initialized for local execution.");
 })();
