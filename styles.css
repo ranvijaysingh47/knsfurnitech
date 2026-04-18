@@ -3672,7 +3672,7 @@ button.quote-btn:hover {
 #kns-back-to-top {
     position: fixed;
     bottom: 30px;
-    right: 30px;
+    left: 30px;
     width: 50px;
     height: 50px;
     background: rgba(26, 26, 26, 0.85);
