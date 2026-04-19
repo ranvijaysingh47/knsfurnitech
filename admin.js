@@ -1326,6 +1326,8 @@ async function processImport() {
                     category: row.category,
                     price: parseInt(row.price) || 0,
                     mrp: parseInt(row.mrp) || 0,
+                    stock: row.stock ? parseInt(row.stock) : null,
+                    delivery: row.delivery || '',
                     description: row.description || '',
                     longDescription: row.longDescription || row.long_description || '',
                     image: row.image_url || row.image || 'https://via.placeholder.com/300',
@@ -1335,7 +1337,7 @@ async function processImport() {
                     specs: parseJSON(row.specs, {}),
                     dimensions: parseJSON(row.dimensions, {}),
                     colors: parseJSON(row.colors, []),
-                    rating: 5,
+                    rating: parseFloat(row.rating) || 5,
                     isNew: row.is_new === 'true' || row.is_new === true
                 });
             } else if (importType === 'coupons') {
