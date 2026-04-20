@@ -64,11 +64,6 @@ const KNSCart = (() => {
     function getTotal() { return load().reduce((s, i) => s + i.price * i.qty, 0); }
 
     function addToCart(product) {
-        if (typeof KNSAuth !== 'undefined' && !KNSAuth.isLoggedIn()) {
-            showToast("Please sign in to add items to your cart.");
-            setTimeout(() => { window.location.href = 'signin.html'; }, 1000);
-            return;
-        }
         const items = load();
         const existing = items.find(i => i.id === product.id);
 
@@ -116,6 +111,28 @@ const KNSCart = (() => {
 
     function clearCart() { save([]); }
 
+    function mergeGuestCart() {
+        try {
+            const guestItems = JSON.parse(localStorage.getItem('kns_cart_guest')) || [];
+            if (!guestItems.length) return;
+
+            console.log("🛒 Cart: Merging guest items info user account...");
+            const items = load(); // Gets logged-in user's cart (or empty)
+            
+            guestItems.forEach(gItem => {
+                const existing = items.find(uItem => uItem.id === gItem.id);
+                if (existing) {
+                    existing.qty += gItem.qty;
+                } else {
+                    items.push(gItem);
+                }
+            });
+
+            save(items); // Saves to user key and syncs to cloud
+            localStorage.removeItem('kns_cart_guest');
+        } catch (e) { console.error("Failed to merge guest cart", e); }
+    }
+
     /* ── Toast notification ── */
     function showToast(msg, showCartLink = false) {
         let toast = document.getElementById('kns-toast');
@@ -136,7 +153,7 @@ const KNSCart = (() => {
         toast._timer = setTimeout(() => toast.classList.remove('kns-toast-show'), 4000);
     }
 
-    return { getCart, getCount, getTotal, addToCart, removeFromCart, updateQty, clearCart, showToast, saveOrder, getOrders, syncFromCloud };
+    return { getCart, getCount, getTotal, addToCart, removeFromCart, updateQty, clearCart, showToast, saveOrder, getOrders, syncFromCloud, mergeGuestCart };
 })();
 
 /**
@@ -164,6 +181,11 @@ document.addEventListener('cart:updated', () => {
 
 /* ── Re-sync when user logs in/out ── */
 document.addEventListener('auth:changed', () => {
+    // If we just logged in, merge any guest items
+    if (typeof KNSAuth !== 'undefined' && KNSAuth.isLoggedIn()) {
+        KNSCart.mergeGuestCart();
+    }
+    
     const count = KNSCart.getCount();
     document.querySelectorAll('.kns-cart-badge').forEach(el => {
         el.textContent = count;

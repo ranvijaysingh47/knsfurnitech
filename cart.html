@@ -170,7 +170,7 @@
                                 <input type="text" id="deliv-name" placeholder="Full Name" required>
                                 <input type="tel" id="deliv-phone" placeholder="Phone Number" required pattern="[0-9]{10}">
                             </div>
-                            <input type="email" id="deliv-email" placeholder="Email Address" required readonly style="background:#f5f5f5; color:#777; cursor:not-allowed;">
+                            <input type="email" id="deliv-email" placeholder="Email Address" required>
                             <input type="text" id="deliv-address" placeholder="Full Delivery Address" required>
                             <div class="checkout-row">
                                 <input type="text" id="deliv-city" placeholder="City" required>
@@ -718,10 +718,16 @@
             // Show target step
             const target = document.getElementById(`checkout-step-${step}`);
             if (target) {
-                // Protection: Must be logged in for Delivery (Step 2) and beyond
-                if (step > 1 && typeof KNSAuth !== 'undefined' && !KNSAuth.isLoggedIn()) {
-                    KNSCart.showToast("Please sign in to proceed with checkout.");
-                    window.location.href = 'signin.html';
+                // Modified Protection Level:
+                // Guests can access Cart (1) and Delivery (2).
+                // They MUST login to access Payment (3).
+                if (step > 2 && typeof KNSAuth !== 'undefined' && !KNSAuth.isLoggedIn()) {
+                    savePendingCheckout(); // Remember form data
+                    KNSCart.showToast("Please sign in to proceed with payment.");
+                    
+                    // Redirect to signin with return path
+                    const returnTo = encodeURIComponent('cart.html?step=2');
+                    window.location.href = `signin.html?redirect=${returnTo}`;
                     return;
                 }
                 target.style.display = 'block';
@@ -780,14 +786,88 @@
             // Load saved addresses when entering Step 2
             if (step === 2) {
                 renderSavedAddresses();
-                // Ensure email is always filled from account
-                if (window.KNSAuth) {
+                // Handle email field state based on auth
+                const emailEl = document.getElementById('deliv-email');
+                if (window.KNSAuth && KNSAuth.isLoggedIn()) {
                     const u = KNSAuth.getUser();
                     if (u && u.email) {
-                        const emailEl = document.getElementById('deliv-email');
-                        if (emailEl) emailEl.value = u.email;
+                        if (emailEl) {
+                            emailEl.value = u.email;
+                            emailEl.readOnly = true;
+                            emailEl.style.background = '#f5f5f5';
+                            emailEl.style.color = '#777';
+                            emailEl.style.cursor = 'not-allowed';
+                        }
+                    }
+                } else {
+                    if (emailEl) {
+                        emailEl.readOnly = false;
+                        emailEl.style.background = '';
+                        emailEl.style.color = '';
+                        emailEl.style.cursor = '';
                     }
                 }
+            }
+        }
+
+        /* ── Persistent Checkout Helpers ── */
+        function savePendingCheckout() {
+            const data = {
+                name: document.getElementById('deliv-name')?.value,
+                phone: document.getElementById('deliv-phone')?.value,
+                email: document.getElementById('deliv-email')?.value,
+                address: document.getElementById('deliv-address')?.value,
+                city: document.getElementById('deliv-city')?.value,
+                pin: document.getElementById('deliv-pin')?.value,
+                notes: document.getElementById('deliv-notes')?.value,
+                saveToProfile: document.getElementById('save-to-profile')?.checked,
+                timestamp: Date.now()
+            };
+            localStorage.setItem('kns_pending_checkout_data', JSON.stringify(data));
+        }
+
+        async function restorePendingCheckout() {
+            const stored = localStorage.getItem('kns_pending_checkout_data');
+            if (!stored) return;
+
+            try {
+                const data = JSON.parse(stored);
+                // Only restore if it's recent (within 24h)
+                if (Date.now() - data.timestamp > 86400000) {
+                    localStorage.removeItem('kns_pending_checkout_data');
+                    return;
+                }
+
+                // Fill form fields
+                if (document.getElementById('deliv-name')) document.getElementById('deliv-name').value = data.name || '';
+                if (document.getElementById('deliv-phone')) document.getElementById('deliv-phone').value = data.phone || '';
+                if (document.getElementById('deliv-email')) document.getElementById('deliv-email').value = data.email || '';
+                if (document.getElementById('deliv-address')) document.getElementById('deliv-address').value = data.address || '';
+                if (document.getElementById('deliv-city')) document.getElementById('deliv-city').value = data.city || '';
+                if (document.getElementById('deliv-pin')) document.getElementById('deliv-pin').value = data.pin || '';
+                if (document.getElementById('deliv-notes')) document.getElementById('deliv-notes').value = data.notes || '';
+                if (document.getElementById('save-to-profile')) document.getElementById('save-to-profile').checked = data.saveToProfile;
+
+                // If user is now logged in, auto-save to profile if requested
+                if (window.KNSAuth && KNSAuth.isLoggedIn() && data.saveToProfile) {
+                    const addr = {
+                        name: data.name,
+                        phone: data.phone,
+                        street: data.address,
+                        city: data.city,
+                        pincode: data.pin,
+                        isDefault: true
+                    };
+                    console.log("🚚 Persistent Checkout: Auto-saving guest address to profile...");
+                    await KNSAuth.addAddress(addr);
+                }
+
+                localStorage.removeItem('kns_pending_checkout_data');
+                
+                // Show success nudge
+                KNSCart.showToast("Welcome back! Your delivery details have been restored.");
+            } catch (e) {
+                console.error("Error restoring pending checkout:", e);
             }
         }
 
@@ -1243,7 +1323,24 @@
 
         /* Robust Initialization */
         document.addEventListener('DOMContentLoaded', async () => {
-            renderPage();
+            // Restore pending data if any (MUST happen before renderPage to avoid flashes)
+            await restorePendingCheckout();
+
+            // Check for step redirection in URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const stepStr = urlParams.get('step');
+            if (stepStr) {
+                const stepInt = parseInt(stepStr);
+                if (!isNaN(stepInt) && stepInt > 1) {
+                    console.log("📍 Redirecting to Step:", stepInt);
+                    goToStep(stepInt);
+                } else {
+                    renderPage();
+                }
+            } else {
+                renderPage();
+            }
+            
             initCouponNudge();
             
             // Trigger Live Data Sync from Cloud

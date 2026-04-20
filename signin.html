@@ -139,7 +139,9 @@
                     document.getElementById('loadingOverlay').classList.add('active');
                     
                     setTimeout(() => {
-                        window.location.href = 'index.html';
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const redirect = urlParams.get('redirect');
+                        window.location.href = redirect ? decodeURIComponent(redirect) : 'index.html';
                     }, 2000);
                 } else {
                     const errorEl = document.getElementById('loginError');
@@ -163,7 +165,9 @@
                 if (res.ok) {
                     document.getElementById('loadingOverlay').classList.add('active');
                     setTimeout(() => {
-                        window.location.href = 'index.html';
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const redirect = urlParams.get('redirect');
+                        window.location.href = redirect ? decodeURIComponent(redirect) : 'index.html';
                     }, 2000);
                 } else {
                     const errorEl = document.getElementById('loginError');
