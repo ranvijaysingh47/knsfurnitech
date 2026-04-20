@@ -439,14 +439,31 @@ function renderActiveUsers(users) {
 /* --- Products CRUD --- */
 function renderProductsTable() {
     const query = (document.getElementById('prod-search').value || '').toLowerCase();
+    const catFilter = document.getElementById('prod-filter-cat')?.value || 'all';
     const allProducts = KNSData.getProducts() || [];
-    const products = allProducts.filter(p =>
+    
+    let products = allProducts.filter(p =>
         (p.name || '').toLowerCase().includes(query) || (p.category || '').toLowerCase().includes(query)
     );
+
+    if (catFilter !== 'all') {
+        products = products.filter(p => p.category === catFilter);
+    }
+
+    // Sort: Recently Uploaded First
+    products.sort((a, b) => {
+        const timeA = a.updatedAt || a.timestamp || (a.id && a.id.startsWith('p-') ? parseInt(a.id.split('-')[1]) : 0);
+        const timeB = b.updatedAt || b.timestamp || (b.id && b.id.startsWith('p-') ? parseInt(b.id.split('-')[1]) : 0);
+        const dateA = new Date(timeA).getTime();
+        const dateB = new Date(timeB).getTime();
+        if (dateA !== dateB) return dateB - dateA;
+        return (parseInt(b.id?.replace(/\D/g, '') || 0)) - (parseInt(a.id?.replace(/\D/g, '') || 0));
+    });
+
     const tbody = document.getElementById('admin-products-table');
     if (!tbody) return;
 
-    console.log(`🖼️ [UI] Rendering ${products.length} Products (Filtered from ${allProducts.length})`);
+    console.log(`🖼️ [UI] Rendering ${products.length} Products (Recent First, Category: ${catFilter})`);
 
     tbody.innerHTML = products.map(p => `
         <tr>
@@ -1261,15 +1278,26 @@ function handleFileSelect(event) {
 
 function parseCSV(text) {
     const lines = text.trim().split('\n');
-    const headers = lines[0].toLowerCase().split(',').map(h => h.trim().replace(/"/g, ''));
+    if (lines.length === 0) return [];
+    
+    // Normalize headers to lowercase for mapping
+    const headers = lines[0].toLowerCase().split(',').map(h => h.trim().replace(/^"|"$/g, ''));
     const rows = [];
 
     for (let i = 1; i < lines.length; i++) {
         if (!lines[i].trim()) continue;
-        const currentline = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/); // Better regex for commas inside quotes
+        
+        // Split by comma but respect commas inside double quotes
+        const regex = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/;
+        const currentline = lines[i].split(regex);
         const obj = {};
+        
         headers.forEach((h, index) => {
-            let val = (currentline[index] || '').trim().replace(/"/g, '');
+            let val = (currentline[index] || '').trim();
+            // Remove outer quotes and unescape double-quotes ("" -> ")
+            if (val.startsWith('"') && val.endsWith('"')) {
+                val = val.substring(1, val.length - 1).replace(/""/g, '"');
+            }
             obj[h] = val;
         });
         rows.push(obj);
@@ -1317,8 +1345,20 @@ async function processImport() {
                 
                 // Helper to parse JSON fields safely
                 const parseJSON = (str, fallback) => {
-                    try { return str ? JSON.parse(str.replace(/""/g, '"')) : fallback; } 
-                    catch(e) { console.warn("JSON Parse Error for field:", str); return fallback; }
+                    if (!str || str.trim() === '') return fallback;
+                    try { 
+                        // String might already be unescaped by parseCSV
+                        return JSON.parse(str); 
+                    } 
+                    catch(e) { 
+                        try {
+                            // Fallback for cases where it might still need unescaping
+                            return JSON.parse(str.replace(/""/g, '"'));
+                        } catch (e2) {
+                            console.warn("JSON Parse Error for field:", str); 
+                            return fallback; 
+                        }
+                    }
                 };
 
                 await KNSData.addProduct({
@@ -1329,7 +1369,7 @@ async function processImport() {
                     stock: row.stock ? parseInt(row.stock) : null,
                     delivery: row.delivery || '',
                     description: row.description || '',
-                    longDescription: row.longDescription || row.long_description || '',
+                    longDescription: row.longdescription || row.long_description || '',
                     image: row.image_url || row.image || 'https://via.placeholder.com/300',
                     images: row.gallery_images ? row.gallery_images.split(',').map(s => s.trim()) : [],
                     material: row.material || 'Standard',

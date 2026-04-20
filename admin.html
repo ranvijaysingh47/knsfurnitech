@@ -945,10 +945,26 @@
                             Product</button>
                     </div>
                 </div>
-                <div style="padding: 1.5rem 2rem; background: #fafafa; display: flex; gap: 1rem;">
-                    <input type="text" placeholder="Search by name or category..." id="prod-search"
-                        style="flex:1; padding: 10px; border: 1px solid #ddd; border-radius: 8px;"
-                        oninput="renderProductsTable()">
+                <div style="padding: 1.5rem 2rem; background: #fafafa; display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 250px;">
+                        <label style="display:block; margin-bottom:5px; font-size:0.8rem; font-weight:700; color:#888; text-transform:uppercase;">Search</label>
+                        <input type="text" placeholder="Search by name or category..." id="prod-search"
+                            style="width:100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;"
+                            oninput="renderProductsTable()">
+                    </div>
+                    <div style="width: 220px;">
+                        <label style="display:block; margin-bottom:5px; font-size:0.8rem; font-weight:700; color:#888; text-transform:uppercase;">Category Filter</label>
+                        <select id="prod-filter-cat" style="width:100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-family:inherit; background:white;" onchange="renderProductsTable()">
+                            <option value="all">All Categories</option>
+                            <option value="Executive Chair">Executive Chair</option>
+                            <option value="Workstation Chair">Workstation Chair</option>
+                            <option value="Sofa Lounge Seating">Sofa Lounge Seating</option>
+                            <option value="Plastic Metal - Cafe Chair">Cafe Chair</option>
+                            <option value="Bar Stool Chair">Bar Stools</option>
+                            <option value="Puffy Table Chair">Puffy & Tables</option>
+                            <option value="Educational Furniture">Educational</option>
+                        </select>
+                    </div>
                 </div>
                 <table class="admin-table">
                     <thead>

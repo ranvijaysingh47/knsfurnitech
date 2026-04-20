@@ -3986,8 +3986,24 @@ button.quote-btn:hover {
     }
 }
 
-@media (max-width: 600px) {
-    .advantage-grid {
-        grid-template-columns: 1fr;
+
+/* --- Homepage Gap Reduction (Desktop Only) --- */
+@media (min-width: 1024px) {
+    .about-bento {
+        padding-top: 4rem;
+        padding-bottom: 4rem;
+    }
+    .section-wrapper {
+        padding-top: 3.5rem;
+        padding-bottom: 3.5rem;
+    }
+    .section-title {
+        margin-bottom: 2rem;
+    }
+    .about-bento-header {
+        margin-bottom: 3rem;
+    }
+    .latest-blogs-section .section-header {
+        margin-bottom: 2.5rem !important;
     }
 }
