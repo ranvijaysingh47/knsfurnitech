@@ -669,6 +669,27 @@ body.page-exit {
     gap: 2rem;
 }
 
+/* Horizontal Discovery Utilities */
+.room-grid,
+.bs-container,
+.bs-tabs-wrapper {
+    scrollbar-width: thin;
+    scrollbar-color: var(--brand-green) transparent;
+}
+
+.room-grid::-webkit-scrollbar,
+.bs-container::-webkit-scrollbar,
+.bs-tabs-wrapper::-webkit-scrollbar {
+    height: 3px;
+}
+
+.room-grid::-webkit-scrollbar-thumb,
+.bs-container::-webkit-scrollbar-thumb,
+.bs-tabs-wrapper::-webkit-scrollbar-thumb {
+    background: var(--brand-green);
+    border-radius: 10px;
+}
+
 .room-card {
     text-align: center;
     cursor: pointer;
@@ -3804,6 +3825,28 @@ button.quote-btn:hover {
 @keyframes shimmer {
     to {
         background-position: 200% center;
+    }
+}
+
+@media (max-width: 768px) {
+    .room-grid {
+        display: flex !important;
+        grid-template-columns: none !important;
+        overflow-x: auto !important;
+        gap: 1.2rem !important;
+        padding: 1rem 5% 2rem !important;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .room-card {
+        flex: 0 0 65% !important; /* Forces Consistent Slippage/Peek */
+        scroll-snap-align: center;
+    }
+
+    .room-img {
+        width: 140px;
+        height: 140px;
     }
 }
 
