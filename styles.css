@@ -412,8 +412,17 @@ body.page-exit {
         display: none !important;
     }
 
-    .main-header .user-actions>.kns-icon-btn:not(.kns-profile-btn) {
+    .main-header .user-actions > .kns-icon-btn:not(.kns-profile-btn):not([data-open-cart]) {
         display: none !important;
+    }
+    
+    .kns-profile-name {
+        display: none !important;
+    }
+
+    .kns-profile-btn {
+        padding: 0.45rem !important; /* Make it circular like other buttons on mobile */
+        background: transparent !important;
     }
 
     .kns-auth-slot,
@@ -458,7 +467,7 @@ body.page-exit {
     }
 
     .user-actions {
-        gap: 0;
+        gap: 0.5rem;
     }
 
     .hamburger-btn {
