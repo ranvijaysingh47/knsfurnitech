@@ -287,6 +287,13 @@
     gap: 1rem;
 }
 
+@media (max-width: 768px) {
+    #kns-drawer-items {
+        padding: 0.75rem 1rem 0.25rem 1rem;
+        gap: 0.75rem;
+    }
+}
+
 .kns-drawer-empty {
     height: 100%;
     display: flex;
@@ -370,6 +377,12 @@
     margin-top: 0.4rem;
 }
 
+@media (max-width: 480px) {
+    .kns-qty-ctrl {
+        margin-top: 0.2rem;
+    }
+}
+
 .kns-qty-btn {
     width: 26px;
     height: 26px;
@@ -440,6 +453,13 @@
     display: flex;
     flex-direction: column;
     gap: 0.8rem;
+}
+
+@media (max-width: 768px) {
+    .kns-drawer-foot {
+        padding: 0.85rem 1.2rem;
+        gap: 0.5rem;
+    }
 }
 
 .kns-drawer-subtotal-row {
