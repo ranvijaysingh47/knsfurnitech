@@ -160,7 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.removeChild(link);
 
         if (typeof KNSCart !== 'undefined' && KNSCart.showToast) {
-            KNSCart.showToast('Starting your download...');
+            KNSCart.showToast('Opening Catalog in new tab... Switch back to this tab to continue shopping.');
         }
     };
 
