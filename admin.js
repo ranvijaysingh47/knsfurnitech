@@ -144,7 +144,8 @@ function initTabs() {
         'reviews': { h1: 'Customer Reviews', p: 'Moderate and manage product reviews submitted by customers.' },
         'inquiries': { h1: 'Customer Inquiries', p: 'Track and manage product inquiries and consultation requests.' },
         'blogs': { h1: 'Blog Management', p: 'Create and manage articles for your website blog.' },
-        'promotions': { h1: 'Promotion Manager', p: 'Create and manage discount coupons, expiry dates and usage limits.' }
+        'promotions': { h1: 'Promotion Manager', p: 'Create and manage discount coupons, expiry dates and usage limits.' },
+        'maintenance': { h1: 'System Maintenance', p: 'Manage browser storage, clear local cache, and perform data cleanup.' }
     };
 
     navItems.forEach(item => {
@@ -167,6 +168,8 @@ function initTabs() {
                 document.getElementById('pageTitle').textContent = info.h1;
                 document.getElementById('pageDesc').textContent = info.p;
             }
+
+            if (tab === 'maintenance') renderMaintenancePage();
 
             if (window.lucide) lucide.createIcons();
         });
@@ -1364,62 +1367,65 @@ async function processImport() {
     btn.innerHTML = '<i data-lucide="loader-2" class="spin"></i> Importing...';
     btn.disabled = true;
 
-    let successCount = 0;
-    try {
-        for (const cb of selectedCbs) {
-            const idx = parseInt(cb.dataset.index);
-            const row = importedData[idx];
+    const toImport = [];
+    for (const cb of selectedCbs) {
+        const idx = parseInt(cb.dataset.index);
+        const row = importedData[idx];
+        
+        if (importType === 'products') {
+            if (!row.name || !row.category) continue;
             
-            if (importType === 'products') {
-                if (!row.name || !row.category) continue;
-                
-                // Helper to parse JSON fields safely
-                const parseJSON = (str, fallback) => {
-                    if (!str || str.trim() === '') return fallback;
-                    try { 
-                        return JSON.parse(str); 
-                    } 
-                    catch(e) { 
-                        try {
-                            return JSON.parse(str.replace(/""/g, '"'));
-                        } catch (e2) {
-                            console.warn("JSON Parse Error for field:", str); 
-                            return fallback; 
-                        }
-                    }
-                };
+            const parseJSON = (str, fallback) => {
+                if (!str || str.trim() === '') return fallback;
+                try { return JSON.parse(str); } 
+                catch(e) { 
+                    try { return JSON.parse(str.replace(/""/g, '"')); }
+                    catch (e2) { return fallback; }
+                }
+            };
 
-                await KNSData.addProduct({
-                    name: row.name,
-                    category: row.category,
-                    price: parseInt(row.price) || 0,
-                    mrp: parseInt(row.mrp) || 0,
-                    stock: row.stock ? parseInt(row.stock) : null,
-                    delivery: row.delivery || '',
-                    description: row.description || '',
-                    longDescription: row.longdescription || row.long_description || '',
-                    image: row.image_url || row.image || 'https://via.placeholder.com/300',
-                    images: row.gallery_images ? row.gallery_images.split(',').map(s => s.trim()) : [],
-                    material: row.material || 'Standard',
-                    badge: row.badge || '',
-                    specs: parseJSON(row.specs, {}),
-                    dimensions: parseJSON(row.dimensions, {}),
-                    colors: parseJSON(row.colors, []),
-                    rating: parseFloat(row.rating) || 5,
-                    isNew: row.is_new === 'true' || row.is_new === true
-                });
-            } else if (importType === 'coupons') {
-                if (!row.code || !row.value) continue;
-                await KNSData.addCoupon({
-                    code: row.code.toUpperCase(),
-                    type: row.type || 'percentage',
-                    value: parseInt(row.value) || 0,
-                    minOrder: parseInt(row.min_order) || parseInt(row.minOrder) || 0,
-                    expiry: row.expiry || new Date().toISOString().split('T')[0],
-                    usageLimit: parseInt(row.usage_limit) || parseInt(row.usageLimit) || 100
-                });
+            toImport.push({
+                name: row.name,
+                category: row.category,
+                price: parseInt(row.price) || 0,
+                mrp: parseInt(row.mrp) || 0,
+                stock: row.stock ? parseInt(row.stock) : null,
+                delivery: row.delivery || '',
+                description: row.description || '',
+                longDescription: row.longdescription || row.long_description || '',
+                image: row.image_url || row.image || 'https://via.placeholder.com/300',
+                images: row.gallery_images ? row.gallery_images.split(',').map(s => s.trim()) : [],
+                material: row.material || 'Standard',
+                badge: row.badge || '',
+                specs: parseJSON(row.specs, {}),
+                dimensions: parseJSON(row.dimensions, {}),
+                colors: parseJSON(row.colors, []),
+                rating: parseFloat(row.rating) || 5,
+                isNew: row.is_new === 'true' || row.is_new === true
+            });
+        }
+    }
+
+    try {
+        if (importType === 'products') {
+            const res = await KNSData.addProductsBatch(toImport);
+            successCount = res.count;
+        } else {
+            // Legacy individual add for coupons
+            for (const cb of selectedCbs) {
+                const row = importedData[parseInt(cb.dataset.index)];
+                if (importType === 'coupons' && row.code) {
+                    await KNSData.addCoupon({
+                        code: row.code.toUpperCase(),
+                        type: row.type || 'percentage',
+                        value: parseInt(row.value) || 0,
+                        minOrder: parseInt(row.min_order) || 0,
+                        expiry: row.expiry || new Date().toISOString().split('T')[0],
+                        usageLimit: parseInt(row.usage_limit) || 100
+                    });
+                    successCount++;
+                }
             }
-            successCount++;
         }
 
         if (window.KNSCart) KNSCart.showToast(`Import completed: ${successCount} items added successfully.`);
@@ -1446,6 +1452,54 @@ window.handleFileSelect = handleFileSelect;
 window.toggleImportSelectAll = toggleImportSelectAll;
 window.updateImportBtnState = updateImportBtnState;
 window.processImport = processImport;
+
+/* --- Maintenance Section --- */
+function renderMaintenancePage() {
+    const stats = KNSData.getStorageStats();
+    const container = document.getElementById('maintenance-stats');
+    if (!container) return;
+
+    container.innerHTML = `
+        <div style="background:white; padding:2rem; border-radius:20px; box-shadow:0 10px 40px rgba(0,0,0,0.03); margin-bottom:2rem;">
+            <h3 style="margin-top:0;">System Health & Storage</h3>
+            <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                <span>Storage Engine:</span>
+                <span style="font-weight:700; color:var(--admin-green)">IndexedDB (High Capacity)</span>
+            </div>
+            <div style="width:100%; height:12px; background:#e8f5e9; border-radius:10px; overflow:hidden;">
+                <div style="width:100%; height:100%; background:var(--admin-green); opacity: 0.3;"></div>
+            </div>
+            <p style="font-size:0.85rem; color:#666; margin-top:1rem;">
+                Your system has been upgraded to <b>IndexedDB</b>. Unlike standard browser storage, this supports virtually unlimited products and large images. 
+                The quota errors you were seeing previously have been permanently resolved.
+            </p>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:2rem;">
+            <div style="background:white; padding:2rem; border-radius:20px; box-shadow:0 10px 40px rgba(0,0,0,0.03);">
+                <h4>1. Performance Cleanup</h4>
+                <p style="font-size:0.9rem; color:#666;">If the admin dashboard feels slow, this tool can replace heavy local image data with placeholders. This only affects your current browser and does not touch your real products in the cloud.</p>
+                <button class="btn-add" onclick="handleCleanData()" style="width:100%; background:var(--admin-dark);">Optimize Database</button>
+            </div>
+            <div style="background:white; padding:2rem; border-radius:20px; box-shadow:0 10px 40px rgba(0,0,0,0.03);">
+                <h4>2. Full System Reset</h4>
+                <p style="font-size:0.9rem; color:#666;">If data seems out of sync or you encounter unexpected errors, use this to clear the local database and force a fresh download from Firestore.</p>
+                <button class="btn-add" onclick="KNSData.clearCache()" style="width:100%; background:#ff4d4d;">Nuclear Reset & Reload</button>
+            </div>
+        </div>
+    `;
+}
+
+async function handleCleanData() {
+    if (confirm("This will replace all local Base64 images with placeholders to free up space. Proceed?")) {
+        KNSData.cleanHeavyData();
+        KNSCart.showToast("Local data cleaned. Storage freed!");
+        renderMaintenancePage();
+    }
+}
+
+window.handleCleanData = handleCleanData;
+window.renderMaintenancePage = renderMaintenancePage;
 window.viewOrder = (id) => {
     // Optional: Pre-cache for instant load
     const orders = window.KNSData && KNSData.getAllOrders ? KNSData.getAllOrders() : [];

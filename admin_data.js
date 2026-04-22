@@ -1,7 +1,59 @@
-/* ================================================================
-   admin_data.js — KNS Furnitech | Centralized Data Repository
-   Handles PRODUCTS and CATALOGS with localStorage persistence.
-   ================================================================ */
+/**
+ * KNSStorage - A simple IndexedDB wrapper for large data sets
+ * Replaces localStorage for heavy keys like products and orders.
+ */
+const KNSStorage = (() => {
+    const DB_NAME = 'KNSFurnitechDB';
+    const DB_VERSION = 1;
+    const STORE_NAME = 'app_data';
+    let db = null;
+
+    const init = () => {
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open(DB_NAME, DB_VERSION);
+            request.onupgradeneeded = (e) => {
+                const db = e.target.result;
+                if (!db.objectStoreNames.contains(STORE_NAME)) db.createObjectStore(STORE_NAME);
+            };
+            request.onsuccess = (e) => { db = e.target.result; resolve(db); };
+            request.onerror = (e) => { console.error("IndexedDB Error:", e.target.error); reject(e.target.error); };
+        });
+    };
+
+    const getItem = async (key) => {
+        if (!db) await init();
+        return new Promise((resolve) => {
+            const transaction = db.transaction([STORE_NAME], 'readonly');
+            const store = transaction.objectStore(STORE_NAME);
+            const request = store.get(key);
+            request.onsuccess = () => resolve(request.result || null);
+            request.onerror = () => resolve(null);
+        });
+    };
+
+    const setItem = async (key, value) => {
+        if (!db) await init();
+        return new Promise((resolve, reject) => {
+            const transaction = db.transaction([STORE_NAME], 'readwrite');
+            const store = transaction.objectStore(STORE_NAME);
+            const request = store.put(value, key);
+            request.onsuccess = () => resolve(true);
+            request.onerror = (e) => reject(e.target.error);
+        });
+    };
+
+    const removeItem = async (key) => {
+        if (!db) await init();
+        return new Promise((resolve) => {
+            const transaction = db.transaction([STORE_NAME], 'readwrite');
+            const store = transaction.objectStore(STORE_NAME);
+            const request = store.delete(key);
+            request.onsuccess = () => resolve(true);
+        });
+    };
+
+    return { getItem, setItem, removeItem };
+})();
 
 const KNSData = (() => {
     const P_KEY = 'kns_products';
@@ -12,34 +64,71 @@ const KNSData = (() => {
     const B_KEY = 'kns_blogs';
     const CP_KEY = 'kns_coupons';
 
-    // Memory-Backed Stores (Resilient against file:// security blocks)
-    let _products = JSON.parse(localStorage.getItem(P_KEY)) || [];
-    let _catalogs = JSON.parse(localStorage.getItem(C_KEY)) || [];
-    let _reviews = JSON.parse(localStorage.getItem(R_KEY)) || [];
-    let _users = JSON.parse(localStorage.getItem(U_KEY)) || [];
+    // Memory-Backed Stores
+    let _products = [];
+    let _catalogs = [];
+    let _reviews = [];
+    let _users = [];
+    let _orders = [];
+    let _blogs = [];
+    let _coupons = [];
     let _inquiries = [];
+
     const I_KEY = 'kns_inquiries';
-    let _orders = JSON.parse(localStorage.getItem(O_KEY)) || [];
-    let _blogs = JSON.parse(localStorage.getItem(B_KEY)) || [];
-    let _coupons = JSON.parse(localStorage.getItem(CP_KEY)) || [];
+
+    // ASYNC INITIALIZATION
+    async function initStorage() {
+        console.log("💾 [Storage] Initializing IndexedDB Layer...");
+        
+        // Helper to load or migrate
+        const loadKey = async (key, fallback = []) => {
+            let data = await KNSStorage.getItem(key);
+            
+            // MIGRATION: Check if it still exists in localStorage
+            if (!data && localStorage.getItem(key)) {
+                console.log(`🚚 [Storage] Migrating ${key} from localStorage to IndexedDB...`);
+                try {
+                    data = JSON.parse(localStorage.getItem(key));
+                    await KNSStorage.setItem(key, data);
+                    // We keep it in localStorage for one more cycle as safety, 
+                    // or clear it if we are confident.
+                    // localStorage.removeItem(key); 
+                } catch(e) { console.error("Migration failed for", key, e); }
+            }
+            return data || fallback;
+        };
+
+        _products = await loadKey(P_KEY, DEFAULT_PRODUCTS);
+        _catalogs = await loadKey(C_KEY, DEFAULT_CATALOGS);
+        _reviews = await loadKey(R_KEY, []);
+        _users = await loadKey(U_KEY, []);
+        _orders = await loadKey(O_KEY, []);
+        _blogs = await loadKey(B_KEY, []);
+        _coupons = await loadKey(CP_KEY, []);
+        
+        console.log("✅ [Storage] IndexedDB Data Loaded.");
+    }
+
+    // Call init immediately (non-blocking for now, but admin.js will wait for it via sync)
+    initStorage();
 
     const DEFAULT_PRODUCTS = [
-        { 
-            id:'p1', name:'Tycoon Leatherette Sofa', category:'Sofa Lounge Seating', price:45999, mrp:52000, material:'Leatherette', 
-            image:'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&q=80', badge:'New', rating:4.5, isNew:true, 
+        {
+            id: 'p1', name: 'Tycoon Leatherette Sofa', category: 'Sofa Lounge Seating', price: 45999, mrp: 52000, material: 'Leatherette',
+            image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&q=80', badge: 'New', rating: 4.5, isNew: true,
             description: 'Premium leatherette sofa for luxury living. Features a modular design with high-density foam for maximum comfort.',
             dimensions: { height: '32"', width: '84"', depth: '36"', seatHeight: '18"' },
             colors: [
-                { 
-                    name: 'Brown', code: '#8B4513', 
+                {
+                    name: 'Brown', code: '#8B4513',
                     images: [
                         'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&q=80',
                         'https://images.unsplash.com/photo-1550254478-ead40cc54513?w=600&q=80',
                         'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=600&q=80'
                     ]
                 },
-                { 
-                    name: 'Black', code: '#000000', 
+                {
+                    name: 'Black', code: '#000000',
                     images: [
                         'https://images.unsplash.com/photo-1540574163026-643ea20ade25?w=600&q=80',
                         'https://images.unsplash.com/photo-1567016432779-094069958ea5?w=600&q=80'
@@ -47,57 +136,52 @@ const KNSData = (() => {
                 }
             ]
         },
-        { 
-            id:'p2', name:'Zenith King Size Bed', category:'Sofa Lounge Seating', price:32500, mrp:38000, material:'Solid Wood', 
-            image:'https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=600&q=80', badge:'', rating:4.8, isNew:false, 
+        {
+            id: 'p2', name: 'Zenith King Size Bed', category: 'Sofa Lounge Seating', price: 32500, mrp: 38000, material: 'Solid Wood',
+            image: 'https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=600&q=80', badge: '', rating: 4.8, isNew: false,
             description: 'Solid wood bed with modern aesthetics and integrated storage drawers. Handcrafted for durability and style.',
             dimensions: { height: '40"', width: '72"', depth: '78"', headboard: '40"' }
         },
-        { 
-            id:'p3', name:'Apex Ergonomic Desk', category:'Workstation Chair', price:18900, mrp:0, material:'Metal', 
-            image:'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=600&q=80', badge:'Trending', rating:4.6, isNew:false, 
+        {
+            id: 'p3', name: 'Apex Ergonomic Desk', category: 'Workstation Chair', price: 18900, mrp: 0, material: 'Metal',
+            image: 'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=600&q=80', badge: 'Trending', rating: 4.6, isNew: false,
             description: 'Ergonomic metal desk for productivity. Features wire management and a scratch-resistant surface.',
             dimensions: { height: '30"', width: '48"', depth: '24"', legroom: '28"' }
         },
-        { id:'p4', name:'Monarch Dining Table Set', category:'Plastic Metal - Cafe Chair', price:54999, mrp:62000, material:'Solid Wood', image:'https://images.unsplash.com/photo-1617806118233-18e1de247200?w=600&q=80', badge:'', rating:4.7, isNew:true, description: 'Elegant dining set for fine dining.' },
-        { id:'p5', name:'Nordic Accent Chair', category:'Workstation Chair', price:12500, mrp:15000, material:'Fabric', image:'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=600&q=80', badge:'', rating:4.3, isNew:false, description: 'Minimalist fabric chair for modern interiors.' },
-        { id:'p6', name:'Heritage Wardrobe', category:'Educational Furniture', price:41000, mrp:48000, material:'Solid Wood', image:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80', badge:'', rating:4.5, isNew:false, description: 'Solid wood wardrobe with maximum storage.' },
-        { id:'p7', name:'Minimalist Floor Lamp', category:'Executive Chair', price:4200, mrp:0, material:'Metal', image:'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80', badge:'', rating:4.2, isNew:false, description: 'Sleek metal lamp for ambient lighting.' },
-        { id:'p8', name:'Modular Kitchen Set', category:'Sofa Lounge Seating', price:150000, mrp:180000, material:'Solid Wood', image:'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&q=80', badge:'Premium', rating:4.9, isNew:true, description: 'Premium modular kitchen for modern homes.' },
-        { id:'p9', name:'Comfort Recliner Chair', category:'Executive Chair', price:28500, mrp:33000, material:'Leatherette', image:'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600&q=80', badge:'', rating:4.6, isNew:false, description: 'Adjustable recliner for ultimate relaxation.' },
-        { id:'p10', name:'Storage Ottoman', category:'Puffy Table Chair', price:8900, mrp:11000, material:'Fabric', image:'https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?w=600&q=80', badge:'', rating:4.1, isNew:false, description: 'Compact storage ottoman for living rooms.' },
-        { id:'p11', name:'Executive Office Chair', category:'Executive Chair', price:22000, mrp:27000, material:'Leatherette', image:'https://images.unsplash.com/photo-1541558869434-2840d308329a?w=600&q=80', badge:'', rating:4.7, isNew:true, description: 'Premium executive chair for professional workspaces.' },
-        { id:'p12', name:'Kids Study Table', category:'Educational Furniture', price:9800, mrp:12000, material:'Solid Wood', image:'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&q=80', badge:'', rating:4.4, isNew:false, description: 'Sturdy study table for budding minds.' }
+        { id: 'p4', name: 'Monarch Dining Table Set', category: 'Plastic Metal - Cafe Chair', price: 54999, mrp: 62000, material: 'Solid Wood', image: 'https://images.unsplash.com/photo-1617806118233-18e1de247200?w=600&q=80', badge: '', rating: 4.7, isNew: true, description: 'Elegant dining set for fine dining.' },
+        { id: 'p5', name: 'Nordic Accent Chair', category: 'Workstation Chair', price: 12500, mrp: 15000, material: 'Fabric', image: 'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=600&q=80', badge: '', rating: 4.3, isNew: false, description: 'Minimalist fabric chair for modern interiors.' },
+        { id: 'p6', name: 'Heritage Wardrobe', category: 'Educational Furniture', price: 41000, mrp: 48000, material: 'Solid Wood', image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80', badge: '', rating: 4.5, isNew: false, description: 'Solid wood wardrobe with maximum storage.' },
+        { id: 'p7', name: 'Minimalist Floor Lamp', category: 'Executive Chair', price: 4200, mrp: 0, material: 'Metal', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80', badge: '', rating: 4.2, isNew: false, description: 'Sleek metal lamp for ambient lighting.' },
+        { id: 'p8', name: 'Modular Kitchen Set', category: 'Sofa Lounge Seating', price: 150000, mrp: 180000, material: 'Solid Wood', image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&q=80', badge: 'Premium', rating: 4.9, isNew: true, description: 'Premium modular kitchen for modern homes.' },
+        { id: 'p9', name: 'Comfort Recliner Chair', category: 'Executive Chair', price: 28500, mrp: 33000, material: 'Leatherette', image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600&q=80', badge: '', rating: 4.6, isNew: false, description: 'Adjustable recliner for ultimate relaxation.' },
+        { id: 'p10', name: 'Storage Ottoman', category: 'Puffy Table Chair', price: 8900, mrp: 11000, material: 'Fabric', image: 'https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?w=600&q=80', badge: '', rating: 4.1, isNew: false, description: 'Compact storage ottoman for living rooms.' },
+        { id: 'p11', name: 'Executive Office Chair', category: 'Executive Chair', price: 22000, mrp: 27000, material: 'Leatherette', image: 'https://images.unsplash.com/photo-1541558869434-2840d308329a?w=600&q=80', badge: '', rating: 4.7, isNew: true, description: 'Premium executive chair for professional workspaces.' },
+        { id: 'p12', name: 'Kids Study Table', category: 'Educational Furniture', price: 9800, mrp: 12000, material: 'Solid Wood', image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&q=80', badge: '', rating: 4.4, isNew: false, description: 'Sturdy study table for budding minds.' }
     ];
 
     const DEFAULT_CATALOGS = [
-        { id:'c1', name:'Executive Collection', category:'Executive Chair', description:'Premium ergonomic chairs for leadership.', image:'https://images.unsplash.com/photo-1541558869434-2840d308329a?w=400', pdf:'https://docs.google.com/spreadsheets/d/1-NA_9n-eTnxjor5Gn3SzPqmBG5GDBc-w11Wa5YiLRn4/export?format=xlsx' },
-        { id:'c2', name:'Workstation Series', category:'Workstation Chair', description:'Durable seating for task efficiency.', image:'https://images.unsplash.com/photo-1519947486511-46149fa0a254?w=400', pdf:'https://docs.google.com/spreadsheets/d/1-NA_9n-eTnxjor5Gn3SzPqmBG5GDBc-w11Wa5YiLRn4/export?format=xlsx' },
-        { id:'c3', name:'Cafe & Bistro', category:'Plastic Metal - Cafe Chair', description:'Stylish chairs for collaborative spaces.', image:'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=400', pdf:'https://docs.google.com/spreadsheets/d/1-NA_9n-eTnxjor5Gn3SzPqmBG5GDBc-w11Wa5YiLRn4/export?format=xlsx' },
-        { id:'c4', name:'Lounge & Sofa', category:'Sofa Lounge Seating', description:'Comfortable seating for relaxation.', image:'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400', pdf:'https://docs.google.com/spreadsheets/d/1-NA_9n-eTnxjor5Gn3SzPqmBG5GDBc-w11Wa5YiLRn4/export?format=xlsx' },
-        { id:'c5', name:'Bar Stools', category:'Bar Stool Chair', description:'Modern and sleek stools for bars and counters.', image:'https://images.unsplash.com/photo-1592078615290-033ee584e267?w=400', pdf:'https://docs.google.com/spreadsheets/d/1-NA_9n-eTnxjor5Gn3SzPqmBG5GDBc-w11Wa5YiLRn4/export?format=xlsx' },
-        { id:'c6', name:'Puffy & Tables', category:'Puffy Table Chair', description:'Versatile puffies and accent tables.', image:'https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc?w=400', pdf:'https://docs.google.com/spreadsheets/d/1-NA_9n-eTnxjor5Gn3SzPqmBG5GDBc-w11Wa5YiLRn4/export?format=xlsx' },
-        { id:'c7', name:'Educational Series', category:'Educational Furniture', description:'Ergonomic desks and chairs for classrooms.', image:'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400', pdf:'https://docs.google.com/spreadsheets/d/1-NA_9n-eTnxjor5Gn3SzPqmBG5GDBc-w11Wa5YiLRn4/export?format=xlsx' }
+        { id: 'c1', name: 'Executive Collection', category: 'Executive Chair', description: 'Premium ergonomic chairs for leadership.', image: 'https://images.unsplash.com/photo-1541558869434-2840d308329a?w=400', pdf: 'https://docs.google.com/spreadsheets/d/1-NA_9n-eTnxjor5Gn3SzPqmBG5GDBc-w11Wa5YiLRn4/export?format=xlsx' },
+        { id: 'c2', name: 'Workstation Series', category: 'Workstation Chair', description: 'Durable seating for task efficiency.', image: 'https://images.unsplash.com/photo-1519947486511-46149fa0a254?w=400', pdf: 'https://docs.google.com/spreadsheets/d/1-NA_9n-eTnxjor5Gn3SzPqmBG5GDBc-w11Wa5YiLRn4/export?format=xlsx' },
+        { id: 'c3', name: 'Cafe & Bistro', category: 'Plastic Metal - Cafe Chair', description: 'Stylish chairs for collaborative spaces.', image: 'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=400', pdf: 'https://docs.google.com/spreadsheets/d/1-NA_9n-eTnxjor5Gn3SzPqmBG5GDBc-w11Wa5YiLRn4/export?format=xlsx' },
+        { id: 'c4', name: 'Lounge & Sofa', category: 'Sofa Lounge Seating', description: 'Comfortable seating for relaxation.', image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400', pdf: 'https://docs.google.com/spreadsheets/d/1-NA_9n-eTnxjor5Gn3SzPqmBG5GDBc-w11Wa5YiLRn4/export?format=xlsx' },
+        { id: 'c5', name: 'Bar Stools', category: 'Bar Stool Chair', description: 'Modern and sleek stools for bars and counters.', image: 'https://images.unsplash.com/photo-1592078615290-033ee584e267?w=400', pdf: 'https://docs.google.com/spreadsheets/d/1-NA_9n-eTnxjor5Gn3SzPqmBG5GDBc-w11Wa5YiLRn4/export?format=xlsx' },
+        { id: 'c6', name: 'Puffy & Tables', category: 'Puffy Table Chair', description: 'Versatile puffies and accent tables.', image: 'https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc?w=400', pdf: 'https://docs.google.com/spreadsheets/d/1-NA_9n-eTnxjor5Gn3SzPqmBG5GDBc-w11Wa5YiLRn4/export?format=xlsx' },
+        { id: 'c7', name: 'Educational Series', category: 'Educational Furniture', description: 'Ergonomic desks and chairs for classrooms.', image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400', pdf: 'https://docs.google.com/spreadsheets/d/1-NA_9n-eTnxjor5Gn3SzPqmBG5GDBc-w11Wa5YiLRn4/export?format=xlsx' }
     ];
 
-    // Initialize Products
-    try {
-        const storedProducts = localStorage.getItem(P_KEY);
-        if (!storedProducts) {
-            // First run: Use defaults but don't commit to localStorage yet to allow sync to overwrite
-            _products = DEFAULT_PRODUCTS;
-        } else {
-            const existing = JSON.parse(storedProducts);
-            if (Array.isArray(existing)) {
-                _products = existing;
-            } else {
-                _products = DEFAULT_PRODUCTS;
-            }
+    // Helper for safe storage
+    async function safeSave(key, data) {
+        try {
+            await KNSStorage.setItem(key, data);
+            return true;
+        } catch (e) {
+            console.error(`[Storage] Save failed for ${key}:`, e);
+            alert("Storage Write Error: " + e.message);
+            return false;
         }
-    } catch (e) {
-        console.error("KNSData Init Error:", e);
-        _products = DEFAULT_PRODUCTS;
     }
+
+    // Initialize Products (Legacy check removed, handled in initStorage)
 
     // Initialize Reviews
     try {
@@ -129,36 +213,63 @@ const KNSData = (() => {
 
     /* --- Products CRUD --- */
     function getProducts() { return _products; }
-    function getProductById(id) { 
+    function getProductById(id) {
         if (!id) return null;
-        return _products.find(p => 
-            p.id === id || 
-            p.firestoreId === id || 
+        return _products.find(p =>
+            p.id === id ||
+            p.firestoreId === id ||
             (p.name && p.name.toLowerCase().replace(/\s+/g, '-') === id)
-        ); 
+        );
     }
-    function saveProducts(p) { _products = p; localStorage.setItem(P_KEY, JSON.stringify(p)); document.dispatchEvent(new CustomEvent('products:updated')); }
-    
+    function saveProducts(p) { 
+        _products = p; 
+        safeSave(P_KEY, p).then(ok => {
+            if (ok) document.dispatchEvent(new CustomEvent('products:updated')); 
+        });
+    }
+
     async function addProduct(prod) {
-        prod.id = 'p-' + Date.now();
-        let res = { ok: true };
-        if (window.KNSDb) {
-            res = await KNSDb.saveProduct(prod.id, prod);
+        if (!window.KNSDb) return { ok: false, msg: "Database not ready" };
+        try {
+            const res = await KNSDb.addProduct(prod);
+            if (res.ok) {
+                const p = [..._products, { ...prod, firestoreId: res.id, id: res.id }];
+                saveProducts(p);
+                return res;
+            }
+            return res;
+        } catch (e) { return { ok: false, msg: e.message }; }
+    }
+
+    /**
+     * Adds multiple products and saves to local storage only once.
+     */
+    async function addProductsBatch(products) {
+        if (!window.KNSDb) return { ok: false, msg: "Database not ready" };
+        let successCount = 0;
+        const newProducts = [..._products];
+        
+        for (const prod of products) {
+            try {
+                // Ensure IDs are generated
+                prod.id = 'p-' + Date.now() + '-' + Math.floor(Math.random()*1000);
+                const res = await KNSDb.addProduct(prod);
+                if (res.ok) {
+                    newProducts.push({ ...prod, firestoreId: res.id, id: res.id });
+                    successCount++;
+                }
+            } catch (e) { console.error("Batch add item failed:", e); }
         }
         
-        if (res.ok) {
-            const p = getProducts();
-            p.unshift(prod);
-            saveProducts(p);
-        }
-        return res;
+        saveProducts(newProducts);
+        return { ok: true, count: successCount };
     }
     async function updateProduct(id, updatedProd) {
         let res = { ok: true };
         if (window.KNSDb) {
             res = await KNSDb.saveProduct(id, updatedProd);
         }
-        
+
         if (res.ok) {
             let p = getProducts();
             const idx = p.findIndex(x => x.id === id);
@@ -176,19 +287,22 @@ const KNSData = (() => {
 
     /* --- Catalogs CRUD --- */
     function getCatalogs() { return _catalogs; }
-    function saveCatalogs(c) { _catalogs = c; localStorage.setItem(C_KEY, JSON.stringify(c)); document.dispatchEvent(new CustomEvent('catalogs:updated')); }
+    function saveCatalogs(c) { 
+        _catalogs = c; 
+        safeSave(C_KEY, c).then(() => document.dispatchEvent(new CustomEvent('catalogs:updated')));
+    }
 
     async function addCatalog(cat) {
         cat.id = 'c-' + Date.now();
         if (window.KNSDb) await KNSDb.saveCatalog(cat.id, cat);
-        
+
         const c = getCatalogs();
         c.unshift(cat);
         saveCatalogs(c);
     }
     async function updateCatalog(id, updatedCat) {
         if (window.KNSDb) await KNSDb.saveCatalog(id, updatedCat);
-        
+
         let c = getCatalogs();
         const idx = c.findIndex(x => x.id === id);
         if (idx !== -1) {
@@ -203,8 +317,11 @@ const KNSData = (() => {
 
     /* --- Reviews management --- */
     function getReviews() { return _reviews; }
-    function saveReviews(r) { _reviews = r; localStorage.setItem(R_KEY, JSON.stringify(r)); document.dispatchEvent(new CustomEvent('reviews:updated')); }
-    
+    function saveReviews(r) { 
+        _reviews = r; 
+        safeSave(R_KEY, r).then(() => document.dispatchEvent(new CustomEvent('reviews:updated')));
+    }
+
     async function addReview(review) {
         review.id = 'rev-' + Date.now();
         review.date = new Date().toISOString();
@@ -214,7 +331,7 @@ const KNSData = (() => {
         r.unshift(review);
         saveReviews(r);
     }
-    
+
     async function deleteReview(id) {
         if (window.KNSDb) await KNSDb.deleteReview(id);
         saveReviews(getReviews().filter(x => x.id !== id));
@@ -222,21 +339,24 @@ const KNSData = (() => {
 
     /* --- Coupons CRUD --- */
     function getCoupons() { return _coupons; }
-    function saveCoupons(cp) { _coupons = cp; localStorage.setItem(CP_KEY, JSON.stringify(cp)); document.dispatchEvent(new CustomEvent('coupons:updated')); }
-    
+    function saveCoupons(cp) { 
+        _coupons = cp; 
+        safeSave(CP_KEY, cp).then(() => document.dispatchEvent(new CustomEvent('coupons:updated')));
+    }
+
     async function addCoupon(cp) {
         cp.id = 'cp-' + Date.now();
         cp.usedCount = 0;
         cp.status = 'Active';
         if (window.KNSDb) await KNSDb.saveDocument('coupons', cp, cp.id);
-        
+
         const coupons = getCoupons();
         coupons.unshift(cp);
         saveCoupons(coupons);
     }
     async function updateCoupon(id, updatedCp) {
         if (window.KNSDb) await KNSDb.saveDocument('coupons', updatedCp, id);
-        
+
         let coupons = getCoupons();
         const idx = coupons.findIndex(x => x.id === id);
         if (idx !== -1) {
@@ -251,8 +371,11 @@ const KNSData = (() => {
 
     /* --- Blogs CRUD --- */
     function getBlogs() { return _blogs; }
-    function saveBlogs(b) { _blogs = b; localStorage.setItem(B_KEY, JSON.stringify(b)); document.dispatchEvent(new CustomEvent('blogs:updated')); }
-    
+    function saveBlogs(b) { 
+        _blogs = b; 
+        safeSave(B_KEY, b).then(() => document.dispatchEvent(new CustomEvent('blogs:updated')));
+    }
+
     async function addBlog(blog) {
         if (window.KNSDb) {
             const res = await KNSDb.saveBlog(blog);
@@ -311,7 +434,7 @@ const KNSData = (() => {
         console.log("📊 [KNSData] getStats() returning:", stats);
         return stats;
     }
-    
+
     async function syncWithCloud() {
         if (!window.firebase || !window.firebase.db) {
             console.warn("🚫 KNSData: Cannot sync - Firebase not ready.");
@@ -320,12 +443,12 @@ const KNSData = (() => {
 
         const SYNC_META_KEY = 'kns_sync_meta';
         const localMeta = JSON.parse(localStorage.getItem(SYNC_META_KEY) || '{}');
-        
+
         console.log("📡 KNSData: Global Sync Check Started...");
         try {
             // 0. Check Metadata First (Smart Sync)
             const remoteMeta = await KNSDb.getSyncMetadata();
-            
+
             // FORCE SYNC if first time this session or if version mismatch
             if (remoteMeta && localMeta.version === remoteMeta.version && window._kns_synced) {
                 console.log("⚡ KNSData: Local data is up-to-date. Skipping full sync.");
@@ -339,35 +462,35 @@ const KNSData = (() => {
             const cloudProducts = await KNSDb.getDocuments('products');
             console.log(`📦 Synced Products: ${cloudProducts.length}`);
             _products = cloudProducts || [];
-            localStorage.setItem(P_KEY, JSON.stringify(_products));
+            safeSave(P_KEY, _products);
             document.dispatchEvent(new CustomEvent('products:updated'));
 
             // 2. Sync Catalogs
             const cloudCatalogs = await KNSDb.getDocuments('catalogs');
             console.log(`📚 Synced Catalogs: ${cloudCatalogs.length}`);
             _catalogs = cloudCatalogs || [];
-            localStorage.setItem(C_KEY, JSON.stringify(_catalogs));
+            safeSave(C_KEY, _catalogs);
             document.dispatchEvent(new CustomEvent('catalogs:updated'));
 
             // 3. Sync Reviews
             const cloudReviews = await KNSDb.getDocuments('reviews');
             console.log(`⭐ Synced Reviews: ${cloudReviews.length}`);
             _reviews = cloudReviews || [];
-            localStorage.setItem(R_KEY, JSON.stringify(_reviews));
+            safeSave(R_KEY, _reviews);
             document.dispatchEvent(new CustomEvent('reviews:updated'));
 
             // 4. Sync Orders
             const cloudOrders = await KNSDb.getDocuments('orders');
             console.log(`🛒 Synced Orders: ${cloudOrders.length}`);
             _orders = cloudOrders || [];
-            localStorage.setItem(O_KEY, JSON.stringify(_orders));
+            safeSave(O_KEY, _orders);
             document.dispatchEvent(new CustomEvent('orders:updated'));
 
             // 5. Sync Users
             const cloudUsers = await KNSDb.getDocuments('users');
             console.log(`👥 Synced Users: ${cloudUsers.length}`);
             _users = cloudUsers || [];
-            localStorage.setItem(U_KEY, JSON.stringify(_users));
+            safeSave(U_KEY, _users);
             document.dispatchEvent(new CustomEvent('users:updated'));
 
             // 6. Sync Inquiries
@@ -380,14 +503,14 @@ const KNSData = (() => {
             const cloudBlogs = await KNSDb.getBlogs();
             console.log(`📰 Synced Blogs: ${cloudBlogs.length}`);
             _blogs = cloudBlogs || [];
-            localStorage.setItem(B_KEY, JSON.stringify(_blogs));
+            safeSave(B_KEY, _blogs);
             document.dispatchEvent(new CustomEvent('blogs:updated'));
 
             // 8. Sync Coupons
             const cloudCoupons = await KNSDb.getDocuments('coupons');
             console.log(`🎟️ Synced Coupons: ${cloudCoupons.length}`);
             _coupons = cloudCoupons || [];
-            localStorage.setItem(CP_KEY, JSON.stringify(_coupons));
+            safeSave(CP_KEY, _coupons);
             document.dispatchEvent(new CustomEvent('coupons:updated'));
 
             // Update Local Metadata after successful sync
@@ -412,7 +535,7 @@ const KNSData = (() => {
     function getUsers() { return _users; }
     function getAllOrders() { return _orders; }
 
-    return { 
+    return {
         getProducts, getProductById, addProduct, updateProduct, deleteProduct,
         getCatalogs, addCatalog, updateCatalog, deleteCatalog,
         getReviews, getReviewsForProduct, addReview, deleteReview,
@@ -420,6 +543,7 @@ const KNSData = (() => {
         syncWithCloud,
         getUsers,
         getAllOrders,
+        initStorage, // Exposed for admin.js to await
         getInquiries: () => _inquiries,
         deleteInquiry: async (id) => {
             const res = await KNSDb.deleteDocument('inquiries', id);
@@ -430,7 +554,36 @@ const KNSData = (() => {
             return res;
         },
         getBlogs, addBlog, updateBlog, deleteBlog,
-        getCoupons, addCoupon, updateCoupon, deleteCoupon
+        getCoupons, addCoupon, updateCoupon, deleteCoupon,
+        addProductsBatch,
+        getStorageStats: () => {
+            return { total: 'Unlimited (IndexedDB)', details: [] };
+        },
+        cleanHeavyData: () => {
+            // Still useful to clear cloud space if they re-upload
+            const cleaned = _products.map(p => {
+                const isBase64 = (s) => s && typeof s === 'string' && s.startsWith('data:image');
+                if (isBase64(p.image)) p.image = 'https://via.placeholder.com/300?text=Image+Cleared';
+                if (p.images && Array.isArray(p.images)) {
+                    p.images = p.images.map(img => isBase64(img) ? 'https://via.placeholder.com/300?text=Image+Cleared' : img);
+                }
+                return p;
+            });
+            saveProducts(cleaned);
+            return true;
+        },
+        clearCache: async () => {
+            await KNSStorage.removeItem(P_KEY);
+            await KNSStorage.removeItem(C_KEY);
+            await KNSStorage.removeItem(B_KEY);
+            await KNSStorage.removeItem(CP_KEY);
+            await KNSStorage.removeItem(O_KEY);
+            await KNSStorage.removeItem(R_KEY);
+            await KNSStorage.removeItem(U_KEY);
+            // Also clear legacy
+            localStorage.clear();
+            location.reload();
+        }
     };
 })();
 
