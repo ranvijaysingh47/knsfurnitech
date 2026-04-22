@@ -1309,6 +1309,7 @@ function showImportPreview() {
     const preview = document.getElementById('import-preview');
     const countSpan = document.getElementById('preview-count');
     const table = document.getElementById('preview-table');
+    const btn = document.querySelector('#import-preview .btn-add');
     
     countSpan.textContent = importedData.length;
     
@@ -1316,21 +1317,47 @@ function showImportPreview() {
         const headers = Object.keys(importedData[0]);
         table.innerHTML = `
             <thead>
-                <tr>${headers.map(h => `<th style="text-align:left; border-bottom:1px solid #ddd; padding:5px;">${h}</th>`).join('')}</tr>
+                <tr>
+                    <th style="width:30px; text-align:left; border-bottom:1px solid #ddd; padding:5px;">
+                        <input type="checkbox" id="import-select-all" checked onchange="toggleImportSelectAll()">
+                    </th>
+                    ${headers.map(h => `<th style="text-align:left; border-bottom:1px solid #ddd; padding:5px;">${h}</th>`).join('')}
+                </tr>
             </thead>
             <tbody>
-                ${importedData.slice(0, 5).map(row => `
-                    <tr>${headers.map(h => `<td style="padding:5px; border-bottom:1px solid #eee;">${row[h]}</td>`).join('')}</tr>
+                ${importedData.map((row, idx) => `
+                    <tr>
+                        <td style="padding:5px; border-bottom:1px solid #eee;">
+                            <input type="checkbox" class="import-row-cb" data-index="${idx}" checked onchange="updateImportBtnState()">
+                        </td>
+                        ${headers.map(h => `<td style="padding:5px; border-bottom:1px solid #eee;">${row[h]}</td>`).join('')}
+                    </tr>
                 `).join('')}
-                ${importedData.length > 5 ? `<tr><td colspan="${headers.length}" style="text-align:center; padding-top:10px; color:#999;">...and ${importedData.length - 5} more rows</td></tr>` : ''}
             </tbody>
         `;
         preview.style.display = 'block';
+        updateImportBtnState();
+    }
+}
+
+function toggleImportSelectAll() {
+    const isChecked = document.getElementById('import-select-all').checked;
+    document.querySelectorAll('.import-row-cb').forEach(cb => cb.checked = isChecked);
+    updateImportBtnState();
+}
+
+function updateImportBtnState() {
+    const selected = document.querySelectorAll('.import-row-cb:checked');
+    const btn = document.querySelector('#import-preview .btn-add');
+    if (btn) {
+        btn.textContent = `Process Import (${selected.length} items)`;
+        btn.disabled = selected.length === 0;
     }
 }
 
 async function processImport() {
-    if (!importedData.length) return;
+    const selectedCbs = document.querySelectorAll('.import-row-cb:checked');
+    if (!selectedCbs.length) return;
     
     const btn = document.querySelector('#import-preview .btn-add');
     const originalText = btn.innerHTML;
@@ -1339,7 +1366,10 @@ async function processImport() {
 
     let successCount = 0;
     try {
-        for (const row of importedData) {
+        for (const cb of selectedCbs) {
+            const idx = parseInt(cb.dataset.index);
+            const row = importedData[idx];
+            
             if (importType === 'products') {
                 if (!row.name || !row.category) continue;
                 
@@ -1347,12 +1377,10 @@ async function processImport() {
                 const parseJSON = (str, fallback) => {
                     if (!str || str.trim() === '') return fallback;
                     try { 
-                        // String might already be unescaped by parseCSV
                         return JSON.parse(str); 
                     } 
                     catch(e) { 
                         try {
-                            // Fallback for cases where it might still need unescaping
                             return JSON.parse(str.replace(/""/g, '"'));
                         } catch (e2) {
                             console.warn("JSON Parse Error for field:", str); 
@@ -1406,6 +1434,7 @@ async function processImport() {
     } finally {
         btn.innerHTML = originalText;
         btn.disabled = false;
+        if (window.lucide) lucide.createIcons();
     }
 }
 
@@ -1414,6 +1443,8 @@ window.updateBulkActionBar = updateBulkActionBar;
 window.handleBulkDelete = handleBulkDelete;
 window.openImportModal = openImportModal;
 window.handleFileSelect = handleFileSelect;
+window.toggleImportSelectAll = toggleImportSelectAll;
+window.updateImportBtnState = updateImportBtnState;
 window.processImport = processImport;
 window.viewOrder = (id) => {
     // Optional: Pre-cache for instant load
