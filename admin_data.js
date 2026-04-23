@@ -429,6 +429,7 @@ const KNSData = (() => {
             totalUsers: _users.length,
             totalOrders: _orders.length,
             totalBlogs: _blogs.length,
+            outOfStockCount: _products.filter(p => p.stock !== null && p.stock !== undefined && p.stock <= 0).length,
             revenue: _orders.reduce((sum, o) => sum + (o.total || 0), 0)
         };
         console.log("📊 [KNSData] getStats() returning:", stats);

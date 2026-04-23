@@ -818,6 +818,11 @@
             <div class="stat-val" id="stat-products">0</div>
             <div class="stat-label">Stock Items</div>
         </div>
+        <div class="admin-stat-card">
+            <div class="stat-icon" style="background: #fff5f5; color: #ff4d4d;"><i data-lucide="alert-triangle"></i></div>
+            <div class="stat-val" id="stat-out-of-stock" style="color: #ff4d4d;">0</div>
+            <div class="stat-label">Out of Stock</div>
+        </div>
         </div>
 
         <!-- VISUAL ANALYTICS (NEW) -->
@@ -908,6 +913,34 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Out of Stock Alerts -->
+            <div class="admin-table-container" style="grid-column: 1 / -1; margin-top: 1rem;">
+                <div class="admin-card">
+                    <div class="card-header" style="background: #fff5f5;">
+                        <h3 style="color: #c62828; display: flex; align-items: center; gap: 10px;">
+                            <i data-lucide="alert-circle" size="20"></i> Out of Stock Inventory
+                        </h3>
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Preview</th>
+                                    <th>Product Name</th>
+                                    <th>Category</th>
+                                    <th>Current Stock</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dash-out-of-stock-list">
+                                <!-- Injected -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
 
             <!-- Advanced Analytics Grid -->
             <div class="admin-stats-grid" style="margin-top: 3rem;">

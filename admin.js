@@ -179,17 +179,19 @@ function initTabs() {
 /* --- Dashboard Refresh --- */
 function refreshDashboard() {
     try {
-        const stats = (window.KNSData && KNSData.getStats) ? KNSData.getStats() : { revenue: 0, totalOrders: 0, totalUsers: 0, totalProducts: 0 };
+        const stats = (window.KNSData && KNSData.getStats) ? KNSData.getStats() : { revenue: 0, totalOrders: 0, totalUsers: 0, totalProducts: 0, outOfStockCount: 0 };
 
         const revElem = document.getElementById('stat-revenue');
         const ordElem = document.getElementById('stat-orders');
         const usrElem = document.getElementById('stat-users');
         const prdElem = document.getElementById('stat-products');
+        const oosElem = document.getElementById('stat-out-of-stock');
 
         if (revElem) revElem.textContent = '₹ ' + (stats.revenue || 0).toLocaleString('en-IN');
         if (ordElem) ordElem.textContent = stats.totalOrders || 0;
         if (usrElem) usrElem.textContent = stats.totalUsers || 0;
         if (prdElem) prdElem.textContent = stats.totalProducts || 0;
+        if (oosElem) oosElem.textContent = stats.outOfStockCount || 0;
 
         // Render Recent Orders in Dashboard
         const allOrders = (window.KNSData && KNSData.getAllOrders ? KNSData.getAllOrders() : getAllOrders());
@@ -202,6 +204,27 @@ function refreshDashboard() {
         // Update Active Users Widget (NEW)
         const users = (window.KNSData && KNSData.getUsers) ? KNSData.getUsers() : [];
         renderActiveUsers(users);
+
+        // Update Out of Stock List (NEW)
+        const allProducts = (window.KNSData && KNSData.getProducts) ? KNSData.getProducts() : [];
+        const outOfStockProducts = allProducts.filter(p => p.stock !== null && p.stock !== undefined && p.stock <= 0);
+        const oosTbody = document.getElementById('dash-out-of-stock-list');
+        if (oosTbody) {
+            oosTbody.innerHTML = outOfStockProducts.map(p => `
+                <tr>
+                    <td data-label="Preview"><img src="${p.image}" class="table-img" alt="${p.name}"></td>
+                    <td data-label="Product Name" style="font-weight:600;">${p.name}</td>
+                    <td data-label="Category">${p.category}</td>
+                    <td data-label="Stock"><span class="status-badge deleted" style="background:#fff5f5; color:#ff4d4d; border:1px solid #ff4d4d;">${p.stock} (Out)</span></td>
+                    <td data-label="Actions">
+                        <button class="btn-add" onclick="openProductModal('${p.id}')" style="padding: 5px 12px; font-size: 0.85rem;">
+                            <i data-lucide="edit-3" size="14"></i> Restock
+                        </button>
+                    </td>
+                </tr>
+            `).join('') || '<tr><td colspan="5" style="text-align:center; padding: 2rem; color: #888;">All items are currently in stock.</td></tr>';
+            if (window.lucide) lucide.createIcons();
+        }
 
         if (!tbody) return;
 
@@ -643,7 +666,7 @@ async function handleProductSubmit(e) {
         mrp: parseInt(document.getElementById('prod-mrp').value) || 0,
         description: document.getElementById('prod-desc').value,
         longDescription: document.getElementById('prod-long-desc').value,
-        stock: parseInt(document.getElementById('prod-stock').value) || null,
+        stock: document.getElementById('prod-stock').value !== '' ? parseInt(document.getElementById('prod-stock').value) : null,
         delivery: document.getElementById('prod-delivery').value || null,
         specs: specs,
         dimensions: dimens,
