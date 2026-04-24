@@ -12,6 +12,20 @@
     x.parentNode.insertBefore(s1, x);
 })();
 
+// Global XSS Mitigation Helper
+window.escapeHTML = function(str) {
+    if (typeof str !== 'string') return str;
+    return str.replace(/[&<>'"]/g, 
+        tag => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            "'": '&#39;',
+            '"': '&quot;'
+        }[tag] || tag)
+    );
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     // Scroll Animation Observer Setup
     const observerOptions = {

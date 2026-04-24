@@ -17,10 +17,10 @@ const KNSDb = (() => {
         try {
             const db = getDb();
             if (!db) throw new Error("Firestore not initialized");
- 
+
             const timestamp = new Date().toISOString();
             const documentData = { ...data, timestamp };
- 
+
             let docRef;
             if (customId) {
                 // Use setDoc for specific IDs (Preferred for Coupons/Products)
@@ -121,7 +121,7 @@ const KNSDb = (() => {
                 db.collection(db.instance, 'orders'),
                 db.where('customerEmail', '==', searchEmail)
             );
-            
+
             const querySnapshot = await db.getDocs(q);
             const orders = [];
 

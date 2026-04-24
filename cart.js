@@ -118,7 +118,7 @@ const KNSCart = (() => {
 
             console.log("🛒 Cart: Merging guest items info user account...");
             const items = load(); // Gets logged-in user's cart (or empty)
-            
+
             guestItems.forEach(gItem => {
                 const existing = items.find(uItem => uItem.id === gItem.id);
                 if (existing) {
@@ -185,7 +185,7 @@ document.addEventListener('auth:changed', () => {
     if (typeof KNSAuth !== 'undefined' && KNSAuth.isLoggedIn()) {
         KNSCart.mergeGuestCart();
     }
-    
+
     const count = KNSCart.getCount();
     document.querySelectorAll('.kns-cart-badge').forEach(el => {
         el.textContent = count;
@@ -275,15 +275,18 @@ function renderCartDrawer() {
         return;
     }
 
-    list.innerHTML = items.map(item => `
+    list.innerHTML = items.map(item => {
+      const safeName = window.escapeHTML ? escapeHTML(item.name) : item.name;
+      const safeCat = window.escapeHTML ? escapeHTML(item.category) : item.category;
+      return `
       <div class="kns-drawer-item" data-id="${item.id}">
         <a href="product.html?id=${item.id}" class="kns-di-img-link" onclick="closeCartDrawer()">
           <div class="kns-di-img" style="background-image:url('${item.image}')"></div>
         </a>
         <div class="kns-di-info">
-          <span class="kns-di-cat">${item.category}</span>
+          <span class="kns-di-cat">${safeCat}</span>
           <a href="product.html?id=${item.id}" class="kns-di-name-link" onclick="closeCartDrawer()">
-            <span class="kns-di-name">${item.name}</span>
+            <span class="kns-di-name">${safeName}</span>
           </a>
 
           ${(item.stock <= 0 && item.stock !== null && item.stock !== undefined) ?
@@ -299,7 +302,7 @@ function renderCartDrawer() {
             </button>
           </div>
         </div>
-      </div>`).join('');
+      </div>`}).join('');
 
     if (subtotalEl) subtotalEl.textContent = '₹' + KNSCart.getTotal().toLocaleString('en-IN');
 }

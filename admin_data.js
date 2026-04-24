@@ -231,11 +231,12 @@ const KNSData = (() => {
     async function addProduct(prod) {
         if (!window.KNSDb) return { ok: false, msg: "Database not ready" };
         try {
-            const res = await KNSDb.addProduct(prod);
+            prod.id = prod.id || 'p-' + Date.now() + '-' + Math.floor(Math.random()*1000);
+            const res = await KNSDb.saveProduct(prod.id, prod);
             if (res.ok) {
-                const p = [..._products, { ...prod, firestoreId: res.id, id: res.id }];
+                const p = [..._products, { ...prod, firestoreId: prod.id, id: prod.id }];
                 saveProducts(p);
-                return res;
+                return { ok: true, id: prod.id };
             }
             return res;
         } catch (e) { return { ok: false, msg: e.message }; }
@@ -253,9 +254,9 @@ const KNSData = (() => {
             try {
                 // Ensure IDs are generated
                 prod.id = 'p-' + Date.now() + '-' + Math.floor(Math.random()*1000);
-                const res = await KNSDb.addProduct(prod);
+                const res = await KNSDb.saveProduct(prod.id, prod);
                 if (res.ok) {
-                    newProducts.push({ ...prod, firestoreId: res.id, id: res.id });
+                    newProducts.push({ ...prod, firestoreId: prod.id, id: prod.id });
                     successCount++;
                 }
             } catch (e) { console.error("Batch add item failed:", e); }

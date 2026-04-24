@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Cart - KNS Furnitech</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- reCAPTCHA v3 -->
     <script src="https://www.google.com/recaptcha/api.js?render=6LfgZqYsAAAAAIARfVd_5xzKFB-IKP513QVxUgIh"></script>
@@ -17,6 +19,7 @@
     <!-- Cashfree Checkout SDK -->
     <script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
 </head>
+
 <body>
     <div class="top-bar">
         Welcome to KNS Furnitech. Enjoy Hassle-free Exchange & Standard Delivery!
@@ -38,7 +41,7 @@
                     <button type="submit" aria-label="Search"><i data-lucide="search" size="20"></i></button>
                 </form>
             </div>
-            
+
             <!-- User Actions -->
             <div class="user-actions kns-nav-icons">
                 <!-- Auth slot -->
@@ -81,8 +84,10 @@
         <div class="cart-page">
             <!-- Premium Breadcrumbs (Synced with Contact Page) -->
             <ul class="kns-breadcrumb animate-slide-right" style="margin-bottom: 2rem;">
-                <li><a href="index.html"><i data-lucide="home" size="14" style="margin-right:6px;"></i> Home</a><span class="sep"><i data-lucide="chevron-right" size="14"></i></span></li>
-                <li><a href="shop.html">Shop</a><span class="sep"><i data-lucide="chevron-right" size="14"></i></span></li>
+                <li><a href="index.html"><i data-lucide="home" size="14" style="margin-right:6px;"></i> Home</a><span
+                        class="sep"><i data-lucide="chevron-right" size="14"></i></span></li>
+                <li><a href="shop.html">Shop</a><span class="sep"><i data-lucide="chevron-right" size="14"></i></span>
+                </li>
                 <li class="cur">Your Cart</li>
             </ul>
 
@@ -109,16 +114,24 @@
                 </div>
             </div>
 
-            <div id="new-user-nudge" class="animate-slide-down" style="display:none; background:linear-gradient(135deg, #8CC63F 0%, #7ab332 100%); color:white; padding:1.2rem 2rem; border-radius:16px; margin-bottom:2rem; position:relative; box-shadow:0 10px 30px rgba(140,198,63,0.25);">
+            <div id="new-user-nudge" class="animate-slide-down"
+                style="display:none; background:linear-gradient(135deg, #8CC63F 0%, #7ab332 100%); color:white; padding:1.2rem 2rem; border-radius:16px; margin-bottom:2rem; position:relative; box-shadow:0 10px 30px rgba(140,198,63,0.25);">
                 <div style="display:flex; align-items:center; gap:1.2rem;">
-                    <div style="background:rgba(255,255,255,0.2); width:48px; height:48px; border-radius:12px; display:flex; align-items:center; justify-content:center;">
+                    <div
+                        style="background:rgba(255,255,255,0.2); width:48px; height:48px; border-radius:12px; display:flex; align-items:center; justify-content:center;">
                         <i data-lucide="sparkles" size="24"></i>
                     </div>
                     <div>
                         <h4 style="margin:0; font-size:1.1rem; font-weight:700;">Welcome to KNS Furnitech! 🏠</h4>
-                        <p style="margin:4px 0 0; font-size:0.9rem; opacity:0.9;">Score 10% OFF your very first order. Use code <strong style="background:rgba(255,255,255,0.3); padding:2px 8px; border-radius:4px; font-weight:800; cursor:pointer;" onclick="navigator.clipboard.writeText('WELCOME10'); KNSCart.showToast('Code WELCOME10 Copied!')">WELCOME10</strong> at checkout.</p>
+                        <p style="margin:4px 0 0; font-size:0.9rem; opacity:0.9;">Score 10% OFF your very first order.
+                            Use code <strong
+                                style="background:rgba(255,255,255,0.3); padding:2px 8px; border-radius:4px; font-weight:800; cursor:pointer;"
+                                onclick="navigator.clipboard.writeText('WELCOME10'); KNSCart.showToast('Code WELCOME10 Copied!')">WELCOME10</strong>
+                            at checkout.</p>
                     </div>
-                    <button onclick="this.parentElement.parentElement.style.display='none'" style="margin-left:auto; background:none; border:none; color:white; cursor:pointer; opacity:0.7;"><i data-lucide="x" size="20"></i></button>
+                    <button onclick="this.parentElement.parentElement.style.display='none'"
+                        style="margin-left:auto; background:none; border:none; color:white; cursor:pointer; opacity:0.7;"><i
+                            data-lucide="x" size="20"></i></button>
                 </div>
             </div>
 
@@ -126,7 +139,12 @@
 
             <!-- Empty state -->
             <div class="cart-empty" id="cartEmpty" style="display:none;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="none" stroke="#ccc" stroke-width="1.5" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="none" stroke="#ccc"
+                    stroke-width="1.5" viewBox="0 0 24 24">
+                    <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                    <line x1="3" y1="6" x2="21" y2="6" />
+                    <path d="M16 10a4 4 0 0 1-8 0" />
+                </svg>
                 <p style="font-size:1.1rem; color:#999;">Your cart is empty</p>
                 <a href="shop.html" class="kns-ec-btn kns-ec-btn-primary" style="margin-top:0.5rem;">Browse Products</a>
             </div>
@@ -138,12 +156,17 @@
                     <div id="checkout-step-1" class="checkout-step active">
                         <div class="cart-items-list" id="cartItemsList"></div>
                         <div style="margin-top:1.5rem; display:flex; gap:1rem; align-items:center;">
-                            <a href="shop.html" style="color:#8CC63F; font-size:0.9rem; font-weight:600; text-decoration:none; display:flex; align-items:center; gap:0.4rem;">
+                            <a href="shop.html"
+                                style="color:#8CC63F; font-size:0.9rem; font-weight:600; text-decoration:none; display:flex; align-items:center; gap:0.4rem;">
                                 ← Continue Shopping
                             </a>
-                            <button onclick="KNSCart.clearCart(); renderPage()" style="margin-left:auto; background:none; border:1.5px solid #eee; color:#999; padding:0.5rem 1rem; border-radius:8px; cursor:pointer; font-family:'Outfit',sans-serif; font-size:0.85rem; transition:border-color 0.2s, color 0.2s;" onmouseover="this.style.borderColor='#e53e3e';this.style.color='#e53e3e'" onmouseout="this.style.borderColor='#eee';this.style.color='#999'">Clear Cart</button>
+                            <button onclick="KNSCart.clearCart(); renderPage()"
+                                style="margin-left:auto; background:none; border:1.5px solid #eee; color:#999; padding:0.5rem 1rem; border-radius:8px; cursor:pointer; font-family:'Outfit',sans-serif; font-size:0.85rem; transition:border-color 0.2s, color 0.2s;"
+                                onmouseover="this.style.borderColor='#e53e3e';this.style.color='#e53e3e'"
+                                onmouseout="this.style.borderColor='#eee';this.style.color='#999'">Clear Cart</button>
                         </div>
-                        <button class="kns-ec-btn kns-ec-btn-primary" onclick="goToStep(2)" style="width:100%; margin-top:2rem; padding:1.2rem; font-size:1.1rem;">
+                        <button class="kns-ec-btn kns-ec-btn-primary" onclick="goToStep(2)"
+                            style="width:100%; margin-top:2rem; padding:1.2rem; font-size:1.1rem;">
                             Proceed to Delivery →
                         </button>
                     </div>
@@ -151,24 +174,29 @@
                     <!-- Step 2: Delivery Details -->
                     <div id="checkout-step-2" class="checkout-step" style="display:none;">
                         <div class="checkout-divider" style="margin-top:0;">Delivery Details</div>
-                        
+
                         <!-- Saved Addresses Selector -->
                         <div id="saved-addresses-selection" style="margin-bottom: 2rem; display:none;">
-                            <p style="font-size:0.9rem; font-weight:700; color:#1A1A1A; margin-bottom:1rem; display:flex; align-items:center; gap:0.5rem;">
+                            <p
+                                style="font-size:0.9rem; font-weight:700; color:#1A1A1A; margin-bottom:1rem; display:flex; align-items:center; gap:0.5rem;">
                                 <i data-lucide="map-pin" size="16"></i> Select a saved address:
                             </p>
-                            <div id="saved-addresses-list" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:1rem;">
+                            <div id="saved-addresses-list"
+                                style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:1rem;">
                                 <!-- Injected by JS -->
                             </div>
                             <div style="margin-top:1rem; text-align:right;">
-                                <button type="button" onclick="clearAddressForm()" style="background:none; border:none; color:var(--brand-green); font-size:0.85rem; font-weight:600; cursor:pointer;">+ Use a different address</button>
+                                <button type="button" onclick="clearAddressForm()"
+                                    style="background:none; border:none; color:var(--brand-green); font-size:0.85rem; font-weight:600; cursor:pointer;">+
+                                    Use a different address</button>
                             </div>
                         </div>
 
                         <form class="checkout-form" id="deliveryForm" onsubmit="event.preventDefault(); goToStep(3)">
                             <div class="checkout-row">
                                 <input type="text" id="deliv-name" placeholder="Full Name" required>
-                                <input type="tel" id="deliv-phone" placeholder="Phone Number" required pattern="[0-9]{10}">
+                                <input type="tel" id="deliv-phone" placeholder="Phone Number" required
+                                    pattern="[0-9]{10}">
                             </div>
                             <input type="email" id="deliv-email" placeholder="Email Address" required>
                             <input type="text" id="deliv-address" placeholder="Full Delivery Address" required>
@@ -176,101 +204,150 @@
                                 <input type="text" id="deliv-city" placeholder="City" required>
                                 <input type="text" id="deliv-pin" placeholder="Pincode" required pattern="[0-9]{6}">
                             </div>
-                            <textarea id="deliv-notes" placeholder="Delivery instructions (optional)" rows="3"></textarea>
+                            <textarea id="deliv-notes" placeholder="Delivery instructions (optional)"
+                                rows="3"></textarea>
 
                             <!-- New Address Options (Visible when not using a saved address) -->
-                            <div id="new-address-options" style="margin-top:1.5rem; display:block; padding: 1.2rem; background: #f9f9f9; border-radius: 12px; border: 1.5px solid #eee;">
+                            <div id="new-address-options"
+                                style="margin-top:1.5rem; display:block; padding: 1.2rem; background: #f9f9f9; border-radius: 12px; border: 1.5px solid #eee;">
                                 <div style="display:flex; align-items:center; gap:0.8rem; margin-bottom:0.8rem;">
-                                    <input type="checkbox" id="save-to-profile" style="width:18px; height:18px; cursor:pointer;" checked>
-                                    <label for="save-to-profile" style="font-size:0.9rem; color:#444; cursor:pointer; font-weight:600;">Save this address to my profile</label>
+                                    <input type="checkbox" id="save-to-profile"
+                                        style="width:18px; height:18px; cursor:pointer;" checked>
+                                    <label for="save-to-profile"
+                                        style="font-size:0.9rem; color:#444; cursor:pointer; font-weight:600;">Save this
+                                        address to my profile</label>
                                 </div>
                                 <div style="display:flex; align-items:center; gap:0.8rem;">
-                                    <input type="checkbox" id="save-as-default" style="width:18px; height:18px; cursor:pointer;">
-                                    <label for="save-as-default" style="font-size:0.9rem; color:#444; cursor:pointer; font-weight:600;">Set as default address</label>
+                                    <input type="checkbox" id="save-as-default"
+                                        style="width:18px; height:18px; cursor:pointer;">
+                                    <label for="save-as-default"
+                                        style="font-size:0.9rem; color:#444; cursor:pointer; font-weight:600;">Set as
+                                        default address</label>
                                 </div>
                             </div>
 
-                            <button type="submit" class="kns-ec-btn kns-ec-btn-primary" style="width:100%; margin-top:0.8rem; font-size:1.1rem; padding:1.1rem;">
+                            <button type="submit" class="kns-ec-btn kns-ec-btn-primary"
+                                style="width:100%; margin-top:0.8rem; font-size:1.1rem; padding:1.1rem;">
                                 Next: Payment Details →
                             </button>
-                            <button type="button" onclick="goToStep(1)" style="margin-top:0.8rem; background:none; border:none; color:#999; width:100%; font-size:0.9rem; cursor:pointer; font-weight:600;">← Back to Cart</button>
+                            <button type="button" onclick="goToStep(1)"
+                                style="margin-top:0.8rem; background:none; border:none; color:#999; width:100%; font-size:0.9rem; cursor:pointer; font-weight:600;">←
+                                Back to Cart</button>
                         </form>
                     </div>
 
                     <!-- Step 3: Payment -->
                     <div id="checkout-step-3" class="checkout-step" style="display:none;">
                         <div class="checkout-divider" style="margin-top:0;">Payment Method</div>
-                        <div class="payment-options" style="display:flex; flex-direction:column; gap:1rem; margin-top:1.5rem;">
-                            <label style="display:flex; align-items:center; gap:1rem; padding:1.4rem; border:1.5px solid var(--admin-green); border-radius:14px; cursor:pointer; background:rgba(140,198,63,0.05);">
-                                <input type="radio" id="pay-cod" name="pay" checked value="Cash on Delivery" style="width:20px; height:20px;">
+                        <div class="payment-options"
+                            style="display:flex; flex-direction:column; gap:1rem; margin-top:1.5rem;">
+                            <label
+                                style="display:flex; align-items:center; gap:1rem; padding:1.4rem; border:1.5px solid var(--admin-green); border-radius:14px; cursor:pointer; background:rgba(140,198,63,0.05);">
+                                <input type="radio" id="pay-cod" name="pay" checked value="Cash on Delivery"
+                                    style="width:20px; height:20px;">
                                 <div style="display:flex; flex-direction:column;">
-                                    <span style="font-weight:700; color:#1A1A1A; font-size:1.1rem;">Cash on Delivery (COD)</span>
-                                    <span style="font-size:0.85rem; color:#666;">Pay via Cash, Card or UPI at the time of delivery</span>
+                                    <span style="font-weight:700; color:#1A1A1A; font-size:1.1rem;">Cash on Delivery
+                                        (COD)</span>
+                                    <span style="font-size:0.85rem; color:#666;">Pay via Cash, Card or UPI at the time
+                                        of delivery</span>
                                 </div>
                             </label>
-                            <label style="display:flex; align-items:center; gap:1rem; padding:1.4rem; border:1.5px solid #eee; border-radius:14px; cursor:pointer; background:white;">
-                                <input type="radio" id="pay-online" name="pay" value="Online Payment" style="width:20px; height:20px;">
+                            <label
+                                style="display:flex; align-items:center; gap:1rem; padding:1.4rem; border:1.5px solid #eee; border-radius:14px; cursor:pointer; background:white;">
+                                <input type="radio" id="pay-online" name="pay" value="Online Payment"
+                                    style="width:20px; height:20px;">
                                 <div style="display:flex; flex-direction:column;">
-                                    <span style="font-weight:700; color:#1A1A1A; font-size:1.1rem;">Online Payment (Razorpay)</span>
+                                    <span style="font-weight:700; color:#1A1A1A; font-size:1.1rem;">Online Payment
+                                        (Razorpay)</span>
                                     <span style="font-size:0.85rem; color:#666;">Secure payment via Razorpay</span>
                                 </div>
                             </label>
-                            <label style="display:flex; align-items:center; gap:1rem; padding:1.4rem; border:1.5px solid #eee; border-radius:14px; cursor:pointer; background:white;">
-                                <input type="radio" id="pay-cashfree" name="pay" value="Cashfree Payment" style="width:20px; height:20px;">
+                            <label
+                                style="display:flex; align-items:center; gap:1rem; padding:1.4rem; border:1.5px solid #eee; border-radius:14px; cursor:pointer; background:white;">
+                                <input type="radio" id="pay-cashfree" name="pay" value="Cashfree Payment"
+                                    style="width:20px; height:20px;">
                                 <div style="display:flex; flex-direction:column;">
-                                    <span style="font-weight:700; color:#1A1A1A; font-size:1.1rem;">Cashfree (UPI / Card / NetBanking)</span>
+                                    <span style="font-weight:700; color:#1A1A1A; font-size:1.1rem;">Cashfree (UPI / Card
+                                        / NetBanking)</span>
                                     <span style="font-size:0.85rem; color:#666;">Secure payment via Cashfree</span>
                                 </div>
                             </label>
                         </div>
-                        <button onclick="placeOrder(event)" class="kns-ec-btn kns-ec-btn-primary" style="width:100%; margin-top:2rem; font-size:1.2rem; padding:1.2rem;">
+                        <button onclick="placeOrder(event)" class="kns-ec-btn kns-ec-btn-primary"
+                            style="width:100%; margin-top:2rem; font-size:1.2rem; padding:1.2rem;">
                             Place Order ₹<span class="step3-total">0</span> →
                         </button>
-                        <button type="button" onclick="goToStep(2)" style="margin-top:1rem; background:none; border:none; color:#999; width:100%; font-size:0.9rem; cursor:pointer; font-weight:600;">← Back to Delivery</button>
+                        <button type="button" onclick="goToStep(2)"
+                            style="margin-top:1rem; background:none; border:none; color:#999; width:100%; font-size:0.9rem; cursor:pointer; font-weight:600;">←
+                            Back to Delivery</button>
                     </div>
 
                     <!-- Step 4: Success -->
-                    <div id="checkout-step-4" class="checkout-step" style="display:none; text-align:center; padding:3rem 1rem;">
+                    <div id="checkout-step-4" class="checkout-step"
+                        style="display:none; text-align:center; padding:3rem 1rem;">
                         <div class="success-hero animate-scale-up">
                             <div class="success-check-wrapper">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="none" stroke="#8CC63F" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="none"
+                                    stroke="#8CC63F" stroke-width="2.5" viewBox="0 0 24 24">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                    <polyline points="22 4 12 14.01 9 11.01" />
+                                </svg>
                             </div>
-                            <h2 style="font-size:2.5rem; color:#1A1A1A; margin:1.5rem 0 0.5rem; font-family:'Outfit',sans-serif;">Order Placed Successfully! 🎉</h2>
-                            <p style="color:#666; font-size:1.1rem; max-width:500px; margin:0 auto 2rem;">Woohoo! Your local oasis is on its way. We're getting things ready for you.</p>
+                            <h2
+                                style="font-size:2.5rem; color:#1A1A1A; margin:1.5rem 0 0.5rem; font-family:'Outfit',sans-serif;">
+                                Order Placed Successfully! 🎉</h2>
+                            <p style="color:#666; font-size:1.1rem; max-width:500px; margin:0 auto 2rem;">Woohoo! Your
+                                local oasis is on its way. We're getting things ready for you.</p>
                         </div>
-                        
-                        <div class="order-id-box" style="background:#f8fdf2; border:1px dashed #8CC63F; padding:1.5rem; border-radius:12px; display:inline-block; margin-bottom:2rem;">
-                            <span style="color:#666; font-size:0.9rem; text-transform:uppercase; letter-spacing:1px;">Order ID</span>
-                            <h3 id="displayOrderId" style="font-size:1.8rem; color:#8CC63F; margin-top:0.5rem; font-family:'Outfit',sans-serif;">#ORD-000000</h3>
+
+                        <div class="order-id-box"
+                            style="background:#f8fdf2; border:1px dashed #8CC63F; padding:1.5rem; border-radius:12px; display:inline-block; margin-bottom:2rem;">
+                            <span
+                                style="color:#666; font-size:0.9rem; text-transform:uppercase; letter-spacing:1px;">Order
+                                ID</span>
+                            <h3 id="displayOrderId"
+                                style="font-size:1.8rem; color:#8CC63F; margin-top:0.5rem; font-family:'Outfit',sans-serif;">
+                                #ORD-000000</h3>
                         </div>
 
                         <div style="margin-bottom: 3rem;">
-                            <button onclick="window.open('invoice.html', '_blank')" class="kns-ec-btn kns-ec-btn-primary" style="padding: 1rem 2.5rem; display: inline-flex; align-items: center; gap: 10px; font-size: 1.1rem; border-radius: 50px; background: #1A1A1A; color: #fff;">
+                            <button onclick="window.open('invoice.html', '_blank')"
+                                class="kns-ec-btn kns-ec-btn-primary"
+                                style="padding: 1rem 2.5rem; display: inline-flex; align-items: center; gap: 10px; font-size: 1.1rem; border-radius: 50px; background: #1A1A1A; color: #fff;">
                                 <i data-lucide="file-text" size="20"></i> Download Invoice
                             </button>
                         </div>
 
-                        <div class="next-steps-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:2rem; text-align:left; max-width:800px; margin:0 auto 3rem; border-top:1px solid #eee; padding-top:2.5rem;">
+                        <div class="next-steps-grid"
+                            style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:2rem; text-align:left; max-width:800px; margin:0 auto 3rem; border-top:1px solid #eee; padding-top:2.5rem;">
                             <div class="step-card">
-                                <div style="color:#8CC63F; margin-bottom:0.8rem;"><i data-lucide="mail" size="24"></i></div>
+                                <div style="color:#8CC63F; margin-bottom:0.8rem;"><i data-lucide="mail" size="24"></i>
+                                </div>
                                 <h4 style="margin-bottom:0.5rem; color:#1A1A1A;">Confirmation</h4>
-                                <p style="font-size:0.9rem; color:#777; line-height:1.5;">A detailed confirmation has been sent to your registered email address.</p>
+                                <p style="font-size:0.9rem; color:#777; line-height:1.5;">A detailed confirmation has
+                                    been sent to your registered email address.</p>
                             </div>
                             <div class="step-card">
-                                <div style="color:#8CC63F; margin-bottom:0.8rem;"><i data-lucide="phone-call" size="24"></i></div>
+                                <div style="color:#8CC63F; margin-bottom:0.8rem;"><i data-lucide="phone-call"
+                                        size="24"></i></div>
                                 <h4 style="margin-bottom:0.5rem; color:#1A1A1A;">Verification</h4>
-                                <p style="font-size:0.9rem; color:#777; line-height:1.5;">Our team will call you within 24 hours to verify the delivery slot and address.</p>
+                                <p style="font-size:0.9rem; color:#777; line-height:1.5;">Our team will call you within
+                                    24 hours to verify the delivery slot and address.</p>
                             </div>
                             <div class="step-card">
-                                <div style="color:#8CC63F; margin-bottom:0.8rem;"><i data-lucide="truck" size="24"></i></div>
+                                <div style="color:#8CC63F; margin-bottom:0.8rem;"><i data-lucide="truck" size="24"></i>
+                                </div>
                                 <h4 style="margin-bottom:0.5rem; color:#1A1A1A;">Preparation</h4>
-                                <p style="font-size:0.9rem; color:#777; line-height:1.5;">Your items are being carefully packed ensuring safe transit to your space.</p>
+                                <p style="font-size:0.9rem; color:#777; line-height:1.5;">Your items are being carefully
+                                    packed ensuring safe transit to your space.</p>
                             </div>
                         </div>
 
                         <div class="no-print" style="display:flex; gap:1rem; justify-content:center;">
-                            <a href="shop.html" class="kns-ec-btn kns-ec-btn-primary" style="padding:1rem 2rem;">Continue Shopping</a>
-                            <button onclick="window.print()" class="kns-ec-btn kns-ec-btn-outline" style="padding:1rem 2rem;">
+                            <a href="shop.html" class="kns-ec-btn kns-ec-btn-primary"
+                                style="padding:1rem 2rem;">Continue Shopping</a>
+                            <button onclick="window.print()" class="kns-ec-btn kns-ec-btn-outline"
+                                style="padding:1rem 2rem;">
                                 <i data-lucide="printer" size="18" style="margin-right:8px;"></i> Print Receipt
                             </button>
                         </div>
@@ -281,7 +358,8 @@
                 <div class="order-summary" id="orderSummary">
                     <h3>Order Summary</h3>
                     <div class="summary-row"><span>Subtotal</span><span id="summarySubtotal">₹0</span></div>
-                    <div class="summary-row" id="summaryDiscountRow" style="display:none; color:#10B981; font-weight:600;">
+                    <div class="summary-row" id="summaryDiscountRow"
+                        style="display:none; color:#10B981; font-weight:600;">
                         <span>Discount (<span id="appliedCouponCode"></span>)</span>
                         <span id="summaryDiscount">-₹0</span>
                     </div>
@@ -289,13 +367,18 @@
                     <div class="summary-row"><span>GST (18%)</span><span id="summaryGst">₹0</span></div>
                     <div class="summary-row total"><span>Total</span><span id="summaryTotal">₹0</span></div>
 
-                    <div class="coupon-section" style="margin-top:1.5rem; padding-top:1.5rem; border-top:1px dashed #eee;">
-                        <p style="font-size:0.85rem; font-weight:700; color:#1A1A1A; margin-bottom:0.8rem; display:flex; align-items:center; gap:0.5rem;">
+                    <div class="coupon-section"
+                        style="margin-top:1.5rem; padding-top:1.5rem; border-top:1px dashed #eee;">
+                        <p
+                            style="font-size:0.85rem; font-weight:700; color:#1A1A1A; margin-bottom:0.8rem; display:flex; align-items:center; gap:0.5rem;">
                             <i data-lucide="ticket" size="16"></i> Have a coupon code?
                         </p>
                         <div style="display:flex; gap:0.5rem;">
-                            <input type="text" id="couponInput" placeholder="e.g. WELCOME10" style="flex:1; padding:0.8rem 1rem; border:1.5px solid #eee; border-radius:10px; font-family:inherit; font-size:0.9rem; transition:0.3s;" onfocus="this.style.borderColor='#8CC63F'">
-                            <button onclick="applyCoupon()" class="kns-ec-btn" style="padding:0.8rem 1.2rem; background:#1A1A1A; color:white; border:none; border-radius:10px; font-weight:600; cursor:pointer; font-size:0.9rem;">Apply</button>
+                            <input type="text" id="couponInput" placeholder="e.g. WELCOME10"
+                                style="flex:1; padding:0.8rem 1rem; border:1.5px solid #eee; border-radius:10px; font-family:inherit; font-size:0.9rem; transition:0.3s;"
+                                onfocus="this.style.borderColor='#8CC63F'">
+                            <button onclick="applyCoupon()" class="kns-ec-btn"
+                                style="padding:0.8rem 1.2rem; background:#1A1A1A; color:white; border:none; border-radius:10px; font-weight:600; cursor:pointer; font-size:0.9rem;">Apply</button>
                         </div>
                         <div id="couponMessage" style="font-size:0.8rem; margin-top:0.5rem; display:none;"></div>
                     </div>
@@ -313,7 +396,8 @@
 
 
                     <!-- Trust Badges Section -->
-                    <div class="trust-badges-grid animate-on-scroll" style="grid-template-columns: repeat(2, 1fr); gap: 1rem; padding-top: 1.5rem; margin-top: 1.5rem; border-top: 1px dashed #eee;">
+                    <div class="trust-badges-grid animate-on-scroll"
+                        style="grid-template-columns: repeat(2, 1fr); gap: 1rem; padding-top: 1.5rem; margin-top: 1.5rem; border-top: 1px dashed #eee;">
                         <div class="trust-item" style="flex-direction: column; text-align: center; gap: 0.3rem;">
                             <i data-lucide="shield-check" size="20"></i>
                             <span style="font-size: 0.75rem;">3 Year Warranty</span>
@@ -342,7 +426,11 @@
         <div class="kns-auth-header">
             <span class="logo-sm">KNS FURNITECH</span>
             <button class="kns-auth-close" onclick="closeAuthModal()">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor"
+                    stroke-width="2.5" viewBox="0 0 24 24">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
             </button>
         </div>
         <div class="kns-auth-tabs">
@@ -356,7 +444,8 @@
                 <input type="password" id="loginPassword" placeholder="Password" required>
                 <button type="submit" class="kns-auth-submit">Sign In &rarr;</button>
                 <div class="kns-auth-divider">New to KNS?</div>
-                <button type="button" class="kns-auth-submit" style="background:#f5f5f5;color:#1A1A1A;" onclick="switchAuthTab('register')">Create an Account</button>
+                <button type="button" class="kns-auth-submit" style="background:#f5f5f5;color:#1A1A1A;"
+                    onclick="switchAuthTab('register')">Create an Account</button>
             </form>
             <form id="kns-register-form" class="kns-auth-form" onsubmit="handleRegister(event)">
                 <div class="kns-auth-error" id="regError"></div>
@@ -375,7 +464,11 @@
         <div class="kns-drawer-head">
             <h3>🛒 Your Cart</h3>
             <button id="kns-drawer-close" aria-label="Close cart">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor"
+                    stroke-width="2.5" viewBox="0 0 24 24">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
             </button>
         </div>
         <div id="kns-drawer-items"></div>
@@ -401,7 +494,8 @@
             <p>Please enter your email address to receive your free 2026 KNS Furnitech catalog.</p>
             <form id="catalog-email-form" onsubmit="handleCatalogEmailSubmit(event)">
                 <input type="email" id="catalog-email" class="catalog-input" placeholder="Your Work Email" required>
-                <button type="submit" class="btn-primary" style="width:100%; justify-content:center;">Get My Catalog &rarr;</button>
+                <button type="submit" class="btn-primary" style="width:100%; justify-content:center;">Get My Catalog
+                    &rarr;</button>
             </form>
         </div>
     </div>
@@ -414,20 +508,35 @@
                     <img src="images/logo.png" alt="KNS Furnitech" class="logo-img">
                     <span>KNS FURNITECH</span>
                 </a>
-                <p>Elevating living spaces across India with premium, modular, and sustainable furniture. Discover the perfect blend of modern aesthetics and unparalleled comfort.</p>
+                <p>Elevating living spaces across India with premium, modular, and sustainable furniture. Discover the
+                    perfect blend of modern aesthetics and unparalleled comfort.</p>
                 <div class="social-icons">
                     <a href="https://www.facebook.com/knsfurnitech/" target="_blank" aria-label="Facebook">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                        </svg>
                     </a>
                     <a href="https://www.instagram.com/kns_furnitech/?hl=en" target="_blank" aria-label="Instagram">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
+                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                            <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
+                        </svg>
                     </a>
                     <a href="https://www.linkedin.com/company/kns-furnitech/" target="_blank" aria-label="LinkedIn">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z">
+                            </path>
+                            <rect width="4" height="12" x="2" y="9"></rect>
+                            <circle cx="4" cy="4" r="2"></circle>
+                        </svg>
                     </a>
                 </div>
             </div>
-            
+
             <div class="footer-col animate-on-scroll">
                 <h4>Shop Categories</h4>
                 <ul class="footer-links">
@@ -440,7 +549,7 @@
                     <li><a href="shop.html?cat=Educational+Furniture">Educational Furniture</a></li>
                 </ul>
             </div>
-            
+
             <div class="footer-col animate-on-scroll">
                 <h4>Customer Service</h4>
                 <ul class="footer-links">
@@ -452,17 +561,18 @@
                     <li><a href="contact.html">Contact Us</a></li>
                 </ul>
             </div>
-            
+
             <div class="footer-col animate-on-scroll">
                 <h4>Newsletter</h4>
-                <p style="color: #aaa; margin-bottom: 1rem; font-size: 0.95rem;">Subscribe to get special offers, free giveaways, and design inspiration.</p>
+                <p style="color: #aaa; margin-bottom: 1rem; font-size: 0.95rem;">Subscribe to get special offers, free
+                    giveaways, and design inspiration.</p>
                 <form class="newsletter-form" onsubmit="event.preventDefault();">
                     <input type="email" placeholder="Enter your email">
                     <button type="submit">Subscribe</button>
                 </form>
             </div>
         </div>
-        
+
         <div class="footer-bottom">
             <p>&copy; 2026 KNS Furnitech. All Rights Reserved.</p>
             <div class="footer-bottom-links">
@@ -476,14 +586,18 @@
     <!-- Inquiry Modal -->
     <div id="quote-modal" class="modal-overlay">
         <div class="modal-content">
-            <button class="modal-close" onclick="document.getElementById('quote-modal').classList.remove('active')"><i data-lucide="x" size="24"></i></button>
+            <button class="modal-close" onclick="document.getElementById('quote-modal').classList.remove('active')"><i
+                    data-lucide="x" size="24"></i></button>
             <h2 style="margin-bottom: 0.5rem; color: var(--brand-dark);">Request a Quote</h2>
-            <p style="color: var(--text-secondary); margin-bottom: 2rem;">Our design consultants will get back to you within 24 hours.</p>
-            <form class="quote-form" onsubmit="event.preventDefault(); alert('Your inquiry has been sent! Our team will contact you shortly.'); document.getElementById('quote-modal').classList.remove('active');">
+            <p style="color: var(--text-secondary); margin-bottom: 2rem;">Our design consultants will get back to you
+                within 24 hours.</p>
+            <form class="quote-form"
+                onsubmit="event.preventDefault(); alert('Your inquiry has been sent! Our team will contact you shortly.'); document.getElementById('quote-modal').classList.remove('active');">
                 <input type="text" placeholder="Your Name" required>
                 <input type="email" placeholder="Email Address" required>
                 <input type="tel" placeholder="Phone Number">
-                <textarea placeholder="Tell us about the products or project you are interested in..." rows="4" required></textarea>
+                <textarea placeholder="Tell us about the products or project you are interested in..." rows="4"
+                    required></textarea>
                 <button type="submit" class="btn-primary" style="width: 100%;">Submit Inquiry</button>
             </form>
         </div>
@@ -503,7 +617,7 @@
     <script src="auth.js?v=4"></script>
     <script>
         lucide.createIcons();
- 
+
         const SHIPPING_FEE = 999;
         const GST_RATE = 0.18;
         let appliedCoupon = null;
@@ -511,10 +625,10 @@
 
         async function initCouponNudge() {
             const items = KNSCart.getCart();
-            if(!items.length) return;
+            if (!items.length) return;
 
             const nudge = document.getElementById('new-user-nudge');
-            if(!nudge) return;
+            if (!nudge) return;
 
             // Check if user is eligible (no orders)
             let isNew = true;
@@ -580,7 +694,7 @@
             if (code.includes('WELCOME')) {
                 const isAdmin = (window.KNSAuth && KNSAuth.isAdmin) ? KNSAuth.isAdmin() : false;
                 const email = (window.KNSAuth && KNSAuth.getUser()) ? KNSAuth.getUser().email : null;
-                
+
                 if (!email) {
                     msg.style.color = '#ef6c00';
                     msg.textContent = '⚠️ Please sign in to use this welcome offer.';
@@ -605,76 +719,79 @@
             appliedCoupon = cp;
             msg.style.color = '#10B981';
             msg.textContent = `✅ Coupon ${code} applied successfully!`;
-            
+
             // Sync with Summary
             document.getElementById('appliedCouponCode').textContent = code;
             document.getElementById('summaryDiscountRow').style.display = 'flex';
-            
+
             renderPage();
             if (window.KNSCart) KNSCart.showToast(`Code ${code} applied!`);
         }
 
         function renderPage() {
             const items = KNSCart.getCart();
-            const empty   = document.getElementById('cartEmpty');
-            const layout  = document.getElementById('cartLayout');
-            const list    = document.getElementById('cartItemsList');
+            const empty = document.getElementById('cartEmpty');
+            const layout = document.getElementById('cartLayout');
+            const list = document.getElementById('cartItemsList');
 
             const isSuccess = document.getElementById('checkout-step-4')?.style.display === 'block';
             const title = document.getElementById('cartPageTitle');
 
             if (isSuccess) {
-                if(empty) empty.style.display = 'none';
-                if(title) title.style.display = 'none';
+                if (empty) empty.style.display = 'none';
+                if (title) title.style.display = 'none';
             } else {
-                if(title) title.style.display = 'block';
-                if(!items.length) {
-                    if(empty) empty.style.display = 'flex';
-                    if(layout) layout.style.display = 'none';
+                if (title) title.style.display = 'block';
+                if (!items.length) {
+                    if (empty) empty.style.display = 'flex';
+                    if (layout) layout.style.display = 'none';
                     return;
                 }
-                if(empty) empty.style.display = 'none';
+                if (empty) empty.style.display = 'none';
             }
-            
-            if(layout) layout.style.display = (isSuccess) ? 'block' : 'grid';
 
-            if(!list) return;
-            list.innerHTML = items.map(item => `
+            if (layout) layout.style.display = (isSuccess) ? 'block' : 'grid';
+
+            if (!list) return;
+            list.innerHTML = items.map(item => {
+              const safeName = window.escapeHTML ? escapeHTML(item.name) : item.name;
+              const safeCat = window.escapeHTML ? escapeHTML(item.category) : item.category;
+              return `
               <div class="cart-item">
                 <a href="product.html?id=${item.id}" class="cart-item-img-link">
                     <div class="cart-item-img" style="background-image:url('${item.image}')"></div>
                 </a>
                 <div class="cart-item-info">
-                    <div class="cart-item-cat">${item.category}</div>
-                    <a href="product.html?id=${item.id}" style="text-decoration:none; color:inherit;"><div class="cart-item-name">${item.name}</div></a>
+                    <div class="cart-item-cat">${safeCat}</div>
+                    <a href="product.html?id=${item.id}" style="text-decoration:none; color:inherit;"><div class="cart-item-name">${safeName}</div></a>
                     
-                    ${(item.stock <= 0 && item.stock !== null && item.stock !== undefined) ? 
-                        `<div style="color:#e53e3e; font-size:0.8rem; font-weight:700; margin-top:4px;">⚠️ ITEM OUT OF STOCK</div>` : ''
-                    }
+                    ${(item.stock <= 0 && item.stock !== null && item.stock !== undefined) ?
+                    `<div style="color:#e53e3e; font-size:0.8rem; font-weight:700; margin-top:4px;">⚠️ ITEM OUT OF STOCK</div>` : ''
+                }
 
                     <div class="cart-item-price">₹${item.price.toLocaleString('en-IN')}</div>
                     <div class="kns-qty-ctrl" style="margin-top:0.5rem;">
-                        <button class="kns-qty-btn" onclick="KNSCart.updateQty('${item.id}',${item.qty-1}); renderPage()">−</button>
+                        <button class="kns-qty-btn" onclick="KNSCart.updateQty('${item.id}',${item.qty - 1}); renderPage()">−</button>
                         <span>${item.qty}</span>
-                        <button class="kns-qty-btn" onclick="KNSCart.updateQty('${item.id}',${item.qty+1}); renderPage()">+</button>
+                        <button class="kns-qty-btn" onclick="KNSCart.updateQty('${item.id}',${item.qty + 1}); renderPage()">+</button>
                     </div>
                 </div>
                 <div style="display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between;">
                     <button class="cart-item-remove" onclick="KNSCart.removeFromCart('${item.id}'); renderPage()" title="Remove">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
                     </button>
-                    <div style="font-weight:700;color:#1A1A1A;">₹${(item.price*item.qty).toLocaleString('en-IN')}</div>
+                    <div style="font-weight:700;color:#1A1A1A;">₹${(item.price * item.qty).toLocaleString('en-IN')}</div>
                 </div>
-              </div>`).join('');
+              </div>`}).join('');
 
             updateSummary(items);
             renderRecommendations();
         }
 
         function updateSummary(items) {
-            const subtotal = items.reduce((s,i) => s+i.price*i.qty, 0);
+            const subtotal = items.reduce((s, i) => s + i.price * i.qty, 0);
             const delivery = SHIPPING_FEE;
-            
+
             let discount = 0;
             if (appliedCoupon) {
                 if (appliedCoupon.type === 'percentage') {
@@ -686,11 +803,11 @@
                 if (discount > subtotal) discount = subtotal;
             }
 
-            const gst      = Math.round((subtotal - discount) * GST_RATE);
-            const total    = (subtotal - discount) + delivery + gst;
+            const gst = Math.round((subtotal - discount) * GST_RATE);
+            const total = (subtotal - discount) + delivery + gst;
 
-            document.getElementById('summarySubtotal').textContent = '₹'+subtotal.toLocaleString('en-IN');
-            
+            document.getElementById('summarySubtotal').textContent = '₹' + subtotal.toLocaleString('en-IN');
+
             const discRow = document.getElementById('summaryDiscountRow');
             const discVal = document.getElementById('summaryDiscount');
             if (appliedCoupon && discount > 0) {
@@ -701,11 +818,11 @@
             }
 
             const delEl = document.getElementById('summaryDelivery');
-            delEl.textContent = '₹'+delivery.toLocaleString('en-IN');
-            delEl.className   = '';
-            document.getElementById('summaryGst').textContent   = '₹'+gst.toLocaleString('en-IN');
-            document.getElementById('summaryTotal').textContent = '₹'+total.toLocaleString('en-IN');
-            
+            delEl.textContent = '₹' + delivery.toLocaleString('en-IN');
+            delEl.className = '';
+            document.getElementById('summaryGst').textContent = '₹' + gst.toLocaleString('en-IN');
+            document.getElementById('summaryTotal').textContent = '₹' + total.toLocaleString('en-IN');
+
             // Update Step 3 button total
             const step3TotalEl = document.querySelector('.step3-total');
             if (step3TotalEl) step3TotalEl.textContent = total.toLocaleString('en-IN');
@@ -714,7 +831,7 @@
         function goToStep(step) {
             // Hide all checkout steps in main col
             document.querySelectorAll('.checkout-step').forEach(el => el.style.display = 'none');
-            
+
             // Show target step
             const target = document.getElementById(`checkout-step-${step}`);
             if (target) {
@@ -724,7 +841,7 @@
                 if (step > 2 && typeof KNSAuth !== 'undefined' && !KNSAuth.isLoggedIn()) {
                     savePendingCheckout(); // Remember form data
                     KNSCart.showToast("Please sign in to proceed with payment.");
-                    
+
                     // Redirect to signin with return path
                     const returnTo = encodeURIComponent('cart.html?step=2');
                     window.location.href = `signin.html?redirect=${returnTo}`;
@@ -738,43 +855,43 @@
             const breadcrumb = document.querySelector('.ecommerce-breadcrumb');
 
             if (step === 1) {
-                if(cartHeader) cartHeader.style.display = 'block';
-                if(breadcrumb) breadcrumb.style.display = 'block';
+                if (cartHeader) cartHeader.style.display = 'block';
+                if (breadcrumb) breadcrumb.style.display = 'block';
                 document.getElementById('orderSummary').style.display = 'block';
                 document.getElementById('recommendationsSection').style.display = 'block';
             } else if (step === 4) {
                 // Success Step
-                if(cartHeader) cartHeader.style.display = 'none';
-                if(breadcrumb) breadcrumb.style.display = 'none';
-                
+                if (cartHeader) cartHeader.style.display = 'none';
+                if (breadcrumb) breadcrumb.style.display = 'none';
+
                 // Make main col full width
                 const mainCol = document.getElementById('checkout-main-col');
-                if(mainCol) {
+                if (mainCol) {
                     mainCol.style.width = '1000px';
                     mainCol.style.maxWidth = '100%';
                     mainCol.style.margin = '0 auto';
                 }
-                
-                document.getElementById('cartLayout').style.display = 'block'; 
+
+                document.getElementById('cartLayout').style.display = 'block';
                 document.getElementById('orderSummary').style.display = 'none';
                 document.getElementById('recommendationsSection').style.display = 'none';
 
                 // Explicitly hide elements to avoid flashes
                 const empty = document.getElementById('cartEmpty');
                 const title = document.getElementById('cartPageTitle');
-                if(empty) empty.style.display = 'none';
-                if(title) title.style.display = 'none';
+                if (empty) empty.style.display = 'none';
+                if (title) title.style.display = 'none';
             } else {
-                if(cartHeader) cartHeader.style.display = 'block';
-                if(breadcrumb) breadcrumb.style.display = 'block';
-                
+                if (cartHeader) cartHeader.style.display = 'block';
+                if (breadcrumb) breadcrumb.style.display = 'block';
+
                 const mainCol = document.getElementById('checkout-main-col');
-                if(mainCol) {
-                    mainCol.style.width = ''; 
+                if (mainCol) {
+                    mainCol.style.width = '';
                     mainCol.style.maxWidth = '';
                     mainCol.style.margin = '';
                 }
-                
+
                 document.getElementById('cartLayout').style.display = 'grid';
                 document.getElementById('recommendationsSection').style.display = 'block';
                 document.getElementById('orderSummary').style.display = 'block';
@@ -863,7 +980,7 @@
                 }
 
                 localStorage.removeItem('kns_pending_checkout_data');
-                
+
                 // Show success nudge
                 KNSCart.showToast("Welcome back! Your delivery details have been restored.");
             } catch (e) {
@@ -942,7 +1059,7 @@
                 // Always fill name/phone ONLY from address (strict auto-fill)
                 const nameEl = document.getElementById('deliv-name');
                 const phoneEl = document.getElementById('deliv-phone');
-                
+
                 if (nameEl) nameEl.value = addr.receiverName || '';
                 if (phoneEl) phoneEl.value = addr.phone || '';
             });
@@ -963,7 +1080,7 @@
                 const stepNum = index + 1;
                 const dot = step.querySelector('.step-dot');
                 step.classList.remove('active', 'completed');
-                
+
                 if (stepNum === activeStep) {
                     step.classList.add('active');
                     dot.textContent = stepNum;
@@ -978,7 +1095,7 @@
 
         async function placeOrder(e) {
             e.preventDefault();
-            
+
             // Capture data for history
             // Capture data for history
             const orderId = '#KNS-' + Math.floor(100000 + Math.random() * 900000);
@@ -992,13 +1109,13 @@
                 return;
             }
 
-            const subtotal = items.reduce((s,i) => s + i.price * i.qty, 0);
+            const subtotal = items.reduce((s, i) => s + i.price * i.qty, 0);
             const delivery = SHIPPING_FEE;
 
             let discount = 0;
             if (appliedCoupon) {
-                discount = (appliedCoupon.type === 'percentage') 
-                    ? Math.round(subtotal * (appliedCoupon.value / 100)) 
+                discount = (appliedCoupon.type === 'percentage')
+                    ? Math.round(subtotal * (appliedCoupon.value / 100))
                     : appliedCoupon.value;
                 if (discount > subtotal) discount = subtotal;
             }
@@ -1058,11 +1175,11 @@
                 "handler": function (response) {
                     // Payment successful!
                     console.log("✅ Razorpay Payment Successful:", response.razorpay_payment_id);
-                    
+
                     orderData.paymentStatus = 'Paid';
                     orderData.razorpayPaymentId = response.razorpay_payment_id;
                     orderData.status = 'Confirmed';
-                    
+
                     finalizeOrder(orderData);
                 },
                 "prefill": {
@@ -1078,14 +1195,14 @@
                     "color": "#8CC63F" // KNS Green
                 },
                 "modal": {
-                    "ondismiss": function() {
+                    "ondismiss": function () {
                         KNSCart.showToast("Payment cancelled. You can try again or choose COD.");
                     }
                 }
             };
-            
+
             const rzp1 = new Razorpay(options);
-            rzp1.on('payment.failed', function (response){
+            rzp1.on('payment.failed', function (response) {
                 console.error("❌ Payment Failed:", response.error);
                 KNSCart.showToast("Payment Failed: " + response.error.description);
             });
@@ -1098,14 +1215,14 @@
         async function initiateCashfreePayment(orderData) {
             const APP_ID = "TEST110517431c2462771dfa8211719634715011";
             const SECRET_KEY = "cfsk_ma_test_69de04e44461b16d8194a728dccfa60d_ffcb5ba8";
-            
+
             KNSCart.showToast("Initializing Cashfree Payment...");
 
             try {
                 // EASY TEST WAY: Using corsproxy.io for local testing
                 const targetUrl = "https://sandbox.cashfree.com/pg/orders";
                 const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`;
-                
+
                 const orderPayload = {
                     order_id: orderData.id.replace('#', 'ORD-') + '-' + Date.now(),
                     order_amount: orderData.total,
@@ -1133,7 +1250,7 @@
                         },
                         body: JSON.stringify(orderPayload)
                     });
-                    
+
                     data = await response.json();
                     if (!response.ok) throw new Error(data.message || "API Error");
                 } catch (e) {
@@ -1145,7 +1262,7 @@
                 console.log("✅ Cashfree Order Status:", data);
 
                 const cashfree = Cashfree({ mode: "sandbox" });
-                
+
                 // If it's a test session, simulate success logic for the user
                 if (data.payment_session_id.startsWith("TEST_SESSION_")) {
                     KNSCart.showToast("Test Mode: Simulating Payment Success...");
@@ -1189,14 +1306,14 @@
 
             // Save to Local History
             KNSCart.saveOrder(orderData);
-            
+
             // Set for Invoice Generation
             localStorage.setItem('kns_last_order', JSON.stringify(orderData));
 
             // Save to Firestore Database
             try {
                 await KNSDb.saveOrder(orderData);
-                
+
                 // Auto-save address to profile if new or explicitly requested
                 if (window.KNSAuth && KNSAuth.isLoggedIn()) {
                     const shouldSave = document.getElementById('save-to-profile')?.checked;
@@ -1236,7 +1353,7 @@
 
             // Set UI for success step
             const orderIdEl = document.getElementById('displayOrderId');
-            if(orderIdEl) orderIdEl.textContent = orderId;
+            if (orderIdEl) orderIdEl.textContent = orderId;
 
             goToStep(4);
             KNSCart.clearCart();
@@ -1245,15 +1362,15 @@
         /* WhatsApp Share Logic */
         function shareCartViaWhatsApp() {
             const items = KNSCart.getCart();
-            if(!items.length) return alert("Your cart is empty!");
-            
+            if (!items.length) return alert("Your cart is empty!");
+
             let message = "*Hi KNS Furnitech!* I'm interested in these items from your store:\n\n";
             items.forEach((item, index) => {
                 message += `${index + 1}. *${item.name}* (Qty: ${item.qty}) - ₹${(item.price * item.qty).toLocaleString('en-IN')}\n`;
             });
-            message += `\n*Total Order Value: ₹${items.reduce((s,i)=>s+i.price*i.qty,0).toLocaleString('en-IN')}*`;
+            message += `\n*Total Order Value: ₹${items.reduce((s, i) => s + i.price * i.qty, 0).toLocaleString('en-IN')}*`;
             message += `\n\nPlease confirm these items for me. Thanks!`;
-            
+
             const encoded = encodeURIComponent(message);
             window.open(`https://wa.me/?text=${encoded}`, '_blank');
         }
@@ -1262,7 +1379,7 @@
         function renderRecommendations() {
             const allProd = (window.KNSData && KNSData.getProducts) ? KNSData.getProducts() : [];
             const cartItems = KNSCart.getCart();
-            
+
             if (!allProd.length) return;
 
             const cartIds = cartItems.map(x => x.id);
@@ -1273,7 +1390,7 @@
                 .filter(p => !cartIds.includes(p.id)) // 1. Exclude what's already in cart
                 .map(p => {
                     let score = parseFloat(p.rating) || 0;
-                    
+
                     // Logic A: Prioritize Different Categories (Cross-selling)
                     // If buying a chair, suggest a sofa or desk, not another chair.
                     if (cartItems.length > 0 && !cartCats.includes(p.category)) {
@@ -1297,12 +1414,12 @@
 
             const grid = document.getElementById('recommendationsGrid');
             const section = document.getElementById('recommendationsSection');
-            
+
             if (!recs.length) {
                 section.style.display = 'none';
                 return;
             }
-            
+
             section.style.display = 'block';
             grid.innerHTML = recs.map(p => `
                 <div class="sidebar-rec-item animate-fade-in">
@@ -1316,7 +1433,7 @@
                     </div>
                 </div>
             `).join('');
-            
+
             // Clean up: Refresh any Lucide icons inside the new items
             if (window.lucide) lucide.createIcons();
         }
@@ -1340,22 +1457,22 @@
             } else {
                 renderPage();
             }
-            
+
             initCouponNudge();
-            
+
             // Trigger Live Data Sync from Cloud
             if (window.KNSData && KNSData.syncWithCloud) {
                 console.log("☁️ [Cart] Initiating Live Product Sync...");
                 await KNSData.syncWithCloud();
             }
-            
+
             // Dispatch a refresh just in case
             document.dispatchEvent(new CustomEvent('cart:updated'));
         });
 
         /* Listen for product updates from DB sync to refresh recommendations */
         document.addEventListener('products:updated', renderRecommendations);
-        
+
         /* Listen for cart changes to re-render everything */
         document.addEventListener('cart:updated', () => {
             renderPage();
@@ -1363,4 +1480,5 @@
         });
     </script>
 </body>
+
 </html>

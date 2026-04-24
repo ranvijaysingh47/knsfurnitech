@@ -212,9 +212,9 @@ function refreshDashboard() {
         if (oosTbody) {
             oosTbody.innerHTML = outOfStockProducts.map(p => `
                 <tr>
-                    <td data-label="Preview"><img src="${p.image}" class="table-img" alt="${p.name}"></td>
-                    <td data-label="Product Name" style="font-weight:600;">${p.name}</td>
-                    <td data-label="Category">${p.category}</td>
+                    <td data-label="Preview"><img src="${p.image}" class="table-img" alt="${escapeHTML(p.name)}"></td>
+                    <td data-label="Product Name" style="font-weight:600;">${escapeHTML(p.name)}</td>
+                    <td data-label="Category">${escapeHTML(p.category)}</td>
                     <td data-label="Stock"><span class="status-badge deleted" style="background:#fff5f5; color:#ff4d4d; border:1px solid #ff4d4d;">${p.stock} (Out)</span></td>
                     <td data-label="Actions">
                         <button class="btn-add" onclick="openProductModal('${p.id}')" style="padding: 5px 12px; font-size: 0.85rem;">
@@ -231,7 +231,7 @@ function refreshDashboard() {
         tbody.innerHTML = dashOrders.map(o => `
         <tr>
             <td data-label="Order ID" style="font-weight:600;">#ORD-${(o.id || o.orderNumber || o.firestoreId || '').replace('#ORD-', '').replace('#KNS-', '').slice(-6)}</td>
-            <td data-label="Customer">${o.customerName || o.userName || 'Guest'}</td>
+            <td data-label="Customer">${escapeHTML(o.customerName || o.userName || \'Guest\')}</td>
             <td data-label="Total">₹ ${(o.total || 0).toLocaleString('en-IN')}</td>
             <td data-label="Status"><span class="status-badge confirmed">Success</span></td>
         </tr>
@@ -451,8 +451,8 @@ function renderActiveUsers(users) {
                     ${isActive ? '<span style="position:absolute; bottom:0; right:0; width:10px; height:10px; background:#8CC63F; border:2px solid #f9f9f9; border-radius:50%;"></span>' : ''}
                 </div>
                 <div style="flex:1;">
-                    <div style="font-weight:600; font-size:0.9rem;">${name}</div>
-                    <div style="font-size:0.75rem; color:#888;">${(u.email || '').substring(0, 20)}...</div>
+                    <div style="font-weight:600; font-size:0.9rem;">${escapeHTML(name)}</div>
+                    <div style="font-size:0.75rem; color:#888;">${escapeHTML((u.email || \'\').substring(0, 20))}...</div>
                 </div>
                 <div style="font-size:0.75rem; color:${isActive ? '#8CC63F' : '#aaa'}; font-weight:700;">
                     ${isActive ? 'Active' : 'Offline'}
@@ -494,9 +494,9 @@ function renderProductsTable() {
     tbody.innerHTML = products.map(p => `
         <tr>
             <td><input type="checkbox" class="select-row-products" value="${p.id}" onchange="updateBulkActionBar('products')"></td>
-            <td data-label="Preview"><img src="${p.image}" class="table-img" alt="${p.name}"></td>
-            <td data-label="Product Name" style="font-weight:600;">${p.name}</td>
-            <td data-label="Category">${p.category}</td>
+            <td data-label="Preview"><img src="${p.image}" class="table-img" alt="${escapeHTML(p.name)}"></td>
+            <td data-label="Product Name" style="font-weight:600;">${escapeHTML(p.name)}</td>
+            <td data-label="Category">${escapeHTML(p.category)}</td>
             <td data-label="Price" style="font-weight:700;">₹ ${p.price.toLocaleString('en-IN')}</td>
             <td data-label="Actions">
                 <div class="action-btns">
@@ -736,9 +736,9 @@ function renderCatalogsTable() {
     tbody.innerHTML = catalogs.map(c => `
         <tr>
             <td data-label="Preview"><img src="${c.image}" class="table-img"></td>
-            <td data-label="Catalog Name" style="font-weight:600;">${c.name}</td>
-            <td data-label="Badge"><span class="status-badge confirmed">${c.category}</span></td>
-            <td data-label="Description" style="color:#888; font-size:0.9rem;">${c.description.slice(0, 40)}...</td>
+            <td data-label="Catalog Name" style="font-weight:600;">${escapeHTML(c.name)}</td>
+            <td data-label="Badge"><span class="status-badge confirmed">${escapeHTML(c.category)}</span></td>
+            <td data-label="Description" style="color:#888; font-size:0.9rem;">${escapeHTML(c.description).slice(0, 40)}...</td>
             <td data-label="Actions">
                 <div class="action-btns">
                     <div class="action-btn btn-edit" title="Edit" onclick="editCatalog('${c.id}')"><i data-lucide="edit-3" size="16"></i></div>
@@ -892,7 +892,7 @@ function renderReviewsTable() {
         const rDate = r.timestamp || r.date || Date.now();
         return `
             <tr>
-                <td data-label="Product" style="font-weight:600;">${p.name}</td>
+                <td data-label="Product" style="font-weight:600;">${escapeHTML(p.name)}</td>
                 <td data-label="Author">${uName}</td>
                 <td data-label="Rating">${"★".repeat(r.rating || 0)}${"☆".repeat(5 - (r.rating || 0))}</td>
                 <td data-label="Comment" style="font-size:0.9rem; color:#666; max-width:300px;">${r.comment || 'No comment provided.'}</td>
