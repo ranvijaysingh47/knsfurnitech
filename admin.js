@@ -2,6 +2,19 @@
    admin.js — KNS Furnitech | Admin Dashboard Logic
    Powers the sidebar, tabs, and all management screens.
    ================================================================ */
+
+window.escapeHTML = window.escapeHTML || function(str) {
+    if (typeof str !== 'string') return str;
+    return str.replace(/[&<>'"]/g, 
+        tag => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            "'": '&#39;',
+            '"': '&quot;'
+        }[tag] || tag)
+    );
+};
 document.addEventListener('DOMContentLoaded', async () => {
     console.log("🚀 [System] admin.js: DOMContentLoaded Fired. Starting up...");
 
