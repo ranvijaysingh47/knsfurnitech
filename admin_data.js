@@ -109,8 +109,7 @@ const KNSData = (() => {
         console.log("✅ [Storage] IndexedDB Data Loaded.");
     }
 
-    // Call init immediately (non-blocking for now, but admin.js will wait for it via sync)
-    initStorage();
+    // Will call initStorage() after constants are defined
 
     const DEFAULT_PRODUCTS = [
         {
@@ -168,6 +167,9 @@ const KNSData = (() => {
         { id: 'c6', name: 'Puffy & Tables', category: 'Puffy Table Chair', description: 'Versatile puffies and accent tables.', image: 'https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc?w=400', pdf: 'https://docs.google.com/spreadsheets/d/1-NA_9n-eTnxjor5Gn3SzPqmBG5GDBc-w11Wa5YiLRn4/export?format=xlsx' },
         { id: 'c7', name: 'Educational Series', category: 'Educational Furniture', description: 'Ergonomic desks and chairs for classrooms.', image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400', pdf: 'https://docs.google.com/spreadsheets/d/1-NA_9n-eTnxjor5Gn3SzPqmBG5GDBc-w11Wa5YiLRn4/export?format=xlsx' }
     ];
+
+    // Call init immediately (non-blocking for now, but admin.js will wait for it via sync)
+    initStorage();
 
     // Helper for safe storage
     async function safeSave(key, data) {

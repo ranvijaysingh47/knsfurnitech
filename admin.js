@@ -231,7 +231,7 @@ function refreshDashboard() {
         tbody.innerHTML = dashOrders.map(o => `
         <tr>
             <td data-label="Order ID" style="font-weight:600;">#ORD-${(o.id || o.orderNumber || o.firestoreId || '').replace('#ORD-', '').replace('#KNS-', '').slice(-6)}</td>
-            <td data-label="Customer">${escapeHTML(o.customerName || o.userName || \'Guest\')}</td>
+            <td data-label="Customer">${escapeHTML(o.customerName || o.userName || 'Guest')}</td>
             <td data-label="Total">₹ ${(o.total || 0).toLocaleString('en-IN')}</td>
             <td data-label="Status"><span class="status-badge confirmed">Success</span></td>
         </tr>
@@ -452,7 +452,7 @@ function renderActiveUsers(users) {
                 </div>
                 <div style="flex:1;">
                     <div style="font-weight:600; font-size:0.9rem;">${escapeHTML(name)}</div>
-                    <div style="font-size:0.75rem; color:#888;">${escapeHTML((u.email || \'\').substring(0, 20))}...</div>
+                    <div style="font-size:0.75rem; color:#888;">${escapeHTML((u.email || '').substring(0, 20))}...</div>
                 </div>
                 <div style="font-size:0.75rem; color:${isActive ? '#8CC63F' : '#aaa'}; font-weight:700;">
                     ${isActive ? 'Active' : 'Offline'}
