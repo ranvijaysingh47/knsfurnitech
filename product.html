@@ -1893,14 +1893,18 @@
     <!-- Related Products -->
     <section class="pdp-related section-wrapper">
         <h2 class="section-title animate-on-scroll">More from this Category</h2>
-        <div class="shop-grid" id="related-node"></div>
+        <div class="shop-grid" id="related-node">
+            <script>document.write(KNSSkeleton.getProductSkeleton(4));</script>
+        </div>
     </section>
 
     <!-- Recently Viewed -->
     <section id="recently-viewed-section" class="pdp-related section-wrapper"
         style="display: none; background: #fafafa; padding-top: 5rem;">
         <h2 class="section-title" style="font-size: 2rem; margin-bottom: 3rem;">Products You Recently Viewed</h2>
-        <div class="shop-grid" id="recently-viewed-node"></div>
+        <div class="shop-grid" id="recently-viewed-node">
+            <script>document.write(KNSSkeleton.getProductSkeleton(4));</script>
+        </div>
     </section>
 
     <!-- Comprehensive Godrej-Style Footer -->
@@ -2312,6 +2316,11 @@
             }
 
             // More from this category logic
+            if (currentProducts.length === 0) {
+                const relatedNode = document.getElementById('related-node');
+                if (relatedNode) relatedNode.innerHTML = KNSSkeleton.getProductSkeleton(4);
+                return;
+            }
             const rel = currentProducts.filter(x => x.category === p.category && x.id !== p.id).slice(0, 4);
             // If fewer than 4 in same category, fill with others
             if (rel.length < 4) {
@@ -2558,6 +2567,10 @@
             const section = document.getElementById('recently-viewed-section');
             if (recentNode && section) {
                 section.style.display = 'block';
+                if (PRODUCTS.length === 0) {
+                    recentNode.innerHTML = KNSSkeleton.getProductSkeleton(4);
+                    return;
+                }
                 // Map the filtered IDs back to product objects to maintain the correct historical order
                 const recentProds = filtered.map(id => PRODUCTS.find(x => x.id === id)).filter(Boolean).slice(0, 4);
                 recentNode.innerHTML = recentProds.map(x => `

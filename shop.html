@@ -192,7 +192,7 @@
             </div>
 
             <div class="shop-grid" id="shopGrid">
-                <!-- Products injected by JS -->
+                <script>document.write(KNSSkeleton.getProductSkeleton(8));</script>
             </div>
 
             <!-- Load More Container -->
@@ -538,6 +538,11 @@
             const grid = document.getElementById('shopGrid');
             const loadMoreBtn = document.getElementById('load-more-container');
             document.getElementById('resultCount').textContent = filteredProducts.length;
+
+            if (PRODUCTS.length === 0) {
+                grid.innerHTML = KNSSkeleton.getProductSkeleton(8);
+                return;
+            }
 
             const toShow = filteredProducts.slice(0, displayCount);
             grid.innerHTML = toShow.length

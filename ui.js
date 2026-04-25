@@ -26,6 +26,50 @@ window.escapeHTML = function(str) {
     );
 };
 
+// --- Skeleton Loader Engine ---
+window.KNSSkeleton = {
+    getProductSkeleton: (count = 4) => {
+        let html = '<div class="kns-skeleton-container">';
+        for(let i=0; i<count; i++) {
+            html += `
+                <div class="product-card-skeleton">
+                    <div class="skel-img kns-skeleton"></div>
+                    <div class="skel-info">
+                        <div class="skel-line-sm kns-skeleton"></div>
+                        <div class="skel-line kns-skeleton" style="width: 90%;"></div>
+                        <div class="skel-line kns-skeleton" style="width: 70%;"></div>
+                        <div class="skel-line-xs kns-skeleton"></div>
+                        <div class="skel-btn-group">
+                            <div class="skel-btn kns-skeleton"></div>
+                            <div class="skel-btn-sm kns-skeleton"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        html += '</div>';
+        return html;
+    },
+    getBlogSkeleton: (count = 3) => {
+        let html = '<div class="kns-skeleton-container">';
+        for(let i=0; i<count; i++) {
+            html += `
+                <div class="blog-card-skeleton">
+                    <div class="skel-blog-img kns-skeleton"></div>
+                    <div class="skel-blog-content">
+                        <div class="skel-line-sm kns-skeleton"></div>
+                        <div class="skel-line kns-skeleton" style="width: 100%;"></div>
+                        <div class="skel-line kns-skeleton" style="width: 100%;"></div>
+                        <div class="skel-line-xs kns-skeleton"></div>
+                    </div>
+                </div>
+            `;
+        }
+        html += '</div>';
+        return html;
+    }
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     // Scroll Animation Observer Setup
     const observerOptions = {
