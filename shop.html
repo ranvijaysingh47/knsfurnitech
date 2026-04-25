@@ -401,13 +401,16 @@
             KNSData.syncWithCloud();
         });
 
-        function stars(rating) {
+        function stars(rating, id) {
+            const reviews = KNSData.getReviews().filter(r => r.productId === id);
+            const count = reviews.length;
             const full = Math.floor(rating);
             const half = rating % 1 >= 0.5;
             let s = '';
             for (let i = 0; i < full; i++) s += '<span class="kns-star">★</span>';
             if (half) s += '<span class="kns-star-half">☆</span>';
-            return `<div class="kns-stars">${s}<span class="kns-star-count">(${rating})</span></div>`;
+            const displayVal = count > 0 ? `(${count} Reviews)` : `(${rating})`;
+            return `<div class="kns-stars">${s}<span class="kns-star-count">${displayVal}</span></div>`;
         }
 
         function renderCard(p) {
@@ -433,7 +436,7 @@
                 </div>
                 <div class="product-info">
                     <div class="product-category">${p.category}</div>
-                    ${stars(p.rating)}
+                    ${stars(p.rating, p.id)}
                     <h3 class="product-title">${p.name}</h3>
                     <div class="product-price">₹ ${p.price.toLocaleString('en-IN')}${p.mrp ? ` <span class="original">₹ ${p.mrp.toLocaleString('en-IN')}</span>` : ''}</div>
                     <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
@@ -463,7 +466,7 @@
                     <div class="qv-info">
                         <div class="product-category">${p.category}</div>
                         <h2 style="font-size: 2rem; color: #1A1A1A; margin: 0.5rem 0;">${p.name}</h2>
-                        ${stars(p.rating)}
+                        ${stars(p.rating, p.id)}
                         <div class="product-price" style="font-size: 1.5rem; margin: 1rem 0;">₹ ${p.price.toLocaleString('en-IN')}${p.mrp ? ` <span class="original" style="font-size: 1.1rem;">₹ ${p.mrp.toLocaleString('en-IN')}</span>` : ''}</div>
                         <p style="color: #666; line-height: 1.6; margin-bottom: 2rem;">Experience ultimate comfort and modern design with the ${p.name}. Crafted with premium materials to elevate your workspace or home.</p>
                         <div style="display: flex; gap: 1rem;">

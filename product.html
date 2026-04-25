@@ -2120,6 +2120,18 @@
             if (el) el.textContent = val;
         }
 
+        function getStarsHtml(rating, id) {
+            const reviews = KNSData.getReviews().filter(r => r.productId === id);
+            const count = reviews.length;
+            const full = Math.floor(rating);
+            const half = rating % 1 >= 0.5;
+            let s = '';
+            for (let i = 0; i < full; i++) s += '<span>★</span>';
+            if (half) s += '<span>☆</span>';
+            const displayVal = count > 0 ? `(${count} Reviews)` : `(${rating})`;
+            return `${s} <span>${displayVal}</span>`;
+        }
+
         async function renderProductDetails() {
             if (!p) return;
             window.ActiveProduct = p;
@@ -2214,10 +2226,7 @@
             safeText('sticky-name', p.name);
             safeText('sticky-price', `₹ ${p.price.toLocaleString('en-IN')}`);
 
-            const starsArr = [];
-            for (let i = 0; i < Math.floor(p.rating); i++) starsArr.push('★');
-            if (p.rating % 1 >= 0.5) starsArr.push('☆');
-            document.getElementById('pdp-stars-node').innerHTML = `${starsArr.map(s => `<span>${s}</span>`).join('')} <span>(${p.rating})</span>`;
+            document.getElementById('pdp-stars-node').innerHTML = getStarsHtml(p.rating, p.id);
 
             const thumbs = (p.images && p.images.length > 0) ? p.images : [p.image];
             const validThumbs = thumbs.filter(Boolean); // Remove empty values
@@ -2323,6 +2332,7 @@
                     </a>
                     <div class="product-info">
                         <div class="product-category">${x.category}</div>
+                        <div class="pdp-stars" style="font-size: 0.9rem; margin-bottom: 0.5rem; color: #f6ad55;">${getStarsHtml(x.rating, x.id)}</div>
                         <a href="product.html?id=${x.id}" style="text-decoration:none; color:inherit;"><h3 class="product-title">${x.name}</h3></a>
                         <div class="product-price">₹ ${x.price.toLocaleString('en-IN')}</div>
                         <button class="kns-add-cart-btn" style="margin-top: 1.2rem;" onclick="KNSCart.addToCart({id:'${x.id}',name:'${x.name}',category:'${x.category}',price:${x.price},image:'${x.image}'})">
@@ -2356,6 +2366,9 @@
 
             const revCount = document.querySelector('[data-reviews-count]');
             if (revCount) revCount.textContent = `Reviews (${reviews.length})`;
+
+            const starsNode = document.getElementById('pdp-stars-node');
+            if (starsNode) starsNode.innerHTML = getStarsHtml(p.rating, p.id);
 
             list.innerHTML = reviews.map(r => {
                 const starsArr = "★".repeat(r.rating) + "☆".repeat(5 - r.rating);
@@ -2554,6 +2567,7 @@
                         </a>
                         <div class="product-info">
                             <div class="product-category">${x.category}</div>
+                            <div class="pdp-stars" style="font-size: 0.9rem; margin-bottom: 0.5rem; color: #f6ad55;">${getStarsHtml(x.rating, x.id)}</div>
                             <h3 class="product-title" style="font-size:1.1rem;">${x.name}</h3>
                             <div class="product-price">₹ ${x.price.toLocaleString('en-IN')}</div>
                             <a href="product.html?id=${x.id}" class="btn-outline" style="margin-top:0;">View Details</a>
