@@ -367,8 +367,7 @@
             document.querySelector('.page-hero').style.display = 'block';
 
             if (window.KNSData && KNSData.syncWithCloud) {
-                grid.innerHTML = '<div style="text-align:center; width:100%; grid-column: 1/-1; padding: 4rem 0;"><i data-lucide="loader-2" class="spin" size="40"></i><p style="margin-top:1rem;">Syncing Journal...</p></div>';
-                lucide.createIcons();
+                grid.innerHTML = KNSSkeleton.getBlogSkeleton(6);
                 await KNSData.syncWithCloud();
             }
 
@@ -463,6 +462,13 @@
         }
 
         async function renderSingleBlog(id) {
+            document.getElementById('blog-listing-view').style.display = 'none';
+            document.getElementById('single-blog-view').style.display = 'block';
+            document.querySelector('.page-hero').style.display = 'none';
+            
+            const container = document.getElementById('blog-post-full-content');
+            container.innerHTML = KNSSkeleton.getBlogDetailSkeleton();
+
             if (window.KNSData && KNSData.syncWithCloud) await KNSData.syncWithCloud();
             const blog = KNSData.getBlogs().find(b => (b.id || b.firestoreId) === id);
             
@@ -480,12 +486,6 @@
                     backBtn.onclick = () => showBlogListing();
                 }
             }
-            
-            document.getElementById('blog-listing-view').style.display = 'none';
-            document.getElementById('single-blog-view').style.display = 'block';
-            document.querySelector('.page-hero').style.display = 'none';
-            
-            const container = document.getElementById('blog-post-full-content');
             
             if (!blog) {
                 container.innerHTML = `<div style="text-align:center; padding: 5rem 0;"><i data-lucide="alert-triangle" size="64" color="#ff4d4d"></i><h2 style="margin-top:1.5rem;">Story Not Found</h2></div>`;

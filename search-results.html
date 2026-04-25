@@ -189,11 +189,7 @@
         </div>
 
         <div id="results-container">
-            <!-- Results injected here -->
-            <div class="no-results" id="loading-state">
-                <i data-lucide="loader-2" size="48" class="animate-spin"></i>
-                <p>Searching through products, blogs, and pages...</p>
-            </div>
+            <script>document.write(KNSSkeleton.getProductSkeleton(8));</script>
         </div>
     </main>
 
@@ -433,6 +429,10 @@
                 renderNoResults();
                 return;
             }
+
+            // Show skeleton while searching
+            const container = document.getElementById('results-container');
+            container.innerHTML = KNSSkeleton.getProductSkeleton(8);
 
             performSearch(query);
             

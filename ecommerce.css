@@ -3108,3 +3108,36 @@
 
 .skel-blog-img { height: 200px; width: 100%; }
 .skel-blog-content { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
+
+/* Blog Detail Skeleton */
+.blog-detail-skeleton {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 2rem 0;
+}
+.skel-blog-hero {
+    width: 100%;
+    aspect-ratio: 21 / 9;
+    border-radius: 30px;
+    margin-bottom: 3.5rem;
+}
+.skel-blog-title {
+    height: 60px;
+    width: 80%;
+    margin-bottom: 2rem;
+    border-radius: 8px;
+}
+.skel-blog-meta {
+    height: 30px;
+    width: 40%;
+    margin-bottom: 3rem;
+    border-radius: 50px;
+}
+.skel-blog-line {
+    height: 18px;
+    width: 100%;
+    margin-bottom: 1.2rem;
+    border-radius: 4px;
+}
+.skel-blog-line.med { width: 85%; }
+.skel-blog-line.short { width: 60%; }

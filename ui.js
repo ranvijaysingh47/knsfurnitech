@@ -48,7 +48,24 @@ window.KNSSkeleton = {
             `;
         }
         html += '</div>';
-        return html;
+    },
+    getBlogDetailSkeleton: () => {
+        return `
+            <div class="blog-detail-skeleton">
+                <div class="skel-blog-hero kns-skeleton"></div>
+                <div class="skel-blog-meta kns-skeleton"></div>
+                <div class="skel-blog-title kns-skeleton"></div>
+                <div class="skel-blog-line kns-skeleton"></div>
+                <div class="skel-blog-line kns-skeleton med"></div>
+                <div class="skel-blog-line kns-skeleton med"></div>
+                <div class="skel-blog-line kns-skeleton short"></div>
+                <br><br>
+                <div class="skel-blog-line kns-skeleton"></div>
+                <div class="skel-blog-line kns-skeleton med"></div>
+                <div class="skel-blog-line kns-skeleton"></div>
+                <div class="skel-blog-line kns-skeleton short"></div>
+            </div>
+        `;
     },
     getBlogSkeleton: (count = 3) => {
         let html = '<div class="kns-skeleton-container">';
