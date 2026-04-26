@@ -712,6 +712,8 @@
     align-items: center;
     gap: 0.2rem;
     margin-bottom: 0.5rem;
+    white-space: nowrap;
+    flex-wrap: nowrap;
 }
 
 .kns-star {
@@ -727,6 +729,11 @@
     font-size: 0.8rem;
     color: #666;
     margin-left: 0.3rem;
+}
+
+/* Hide review count on product cards to keep layout clean on all devices */
+.product-card .kns-star-count {
+    display: none !important;
 }
 
 /* ── Stock Badge ── */

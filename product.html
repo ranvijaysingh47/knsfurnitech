@@ -225,9 +225,15 @@
         .pdp-stars {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 4px;
+            white-space: nowrap;
+            flex-wrap: nowrap;
             color: #f6ad55;
             font-size: 1.2rem;
+        }
+
+        .product-card .pdp-star-count {
+            display: none !important;
         }
 
         .pdp-stars span {
@@ -1166,6 +1172,18 @@
 
             .review-layout {
                 grid-template-columns: 1fr;
+                gap: 2.5rem;
+            }
+
+            .review-card {
+                padding: 1.5rem;
+                border-radius: 16px;
+            }
+
+            .review-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
             }
 
             .sticky-prod-info {
@@ -2133,7 +2151,7 @@
             for (let i = 0; i < full; i++) s += '<span>★</span>';
             if (half) s += '<span>☆</span>';
             const displayVal = count > 0 ? `(${count} Reviews)` : `(${rating})`;
-            return `${s} <span>${displayVal}</span>`;
+            return `${s} <span class="pdp-star-count">${displayVal}</span>`;
         }
 
         async function renderProductDetails() {
