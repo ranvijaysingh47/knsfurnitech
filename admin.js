@@ -1480,6 +1480,72 @@ async function processImport() {
     }
 }
 
+/**
+ * 📥 Export Products to CSV
+ * Generates a CSV file containing all products in the catalog.
+ * Matches the format of the products_template.csv for full compatibility.
+ */
+function exportProductsToCSV() {
+    const products = (window.KNSData && KNSData.getProducts) ? KNSData.getProducts() : [];
+    if (products.length === 0) {
+        if (window.KNSCart) KNSCart.showToast("No products available to export.");
+        else alert("No products to export.");
+        return;
+    }
+
+    // Headers matching products_template.csv
+    const headers = [
+        "name", "category", "material", "price", "mrp", "stock", "delivery", 
+        "description", "longDescription", "specs", "dimensions", "colors", 
+        "image_url", "gallery_images", "badge", "is_new", "rating"
+    ];
+
+    const rows = products.map(p => {
+        // Map product object to the expected CSV structure
+        const data = [
+            p.name || '',
+            p.category || '',
+            p.material || '',
+            p.price || 0,
+            p.mrp || 0,
+            p.stock !== null && p.stock !== undefined ? p.stock : '',
+            p.delivery || '',
+            p.description || '',
+            p.longDescription || '',
+            p.specs ? JSON.stringify(p.specs) : '{}',
+            p.dimensions ? JSON.stringify(p.dimensions) : '{}',
+            p.colors ? JSON.stringify(p.colors) : '[]',
+            p.image || '',
+            (p.images || []).join(','),
+            p.badge || '',
+            p.isNew ? 'true' : 'false',
+            p.rating || 5
+        ];
+
+        // Escape commas and quotes for CSV
+        return data.map(val => {
+            const str = String(val).replace(/"/g, '""');
+            return `"${str}"`;
+        }).join(',');
+    });
+
+    const csvContent = [headers.join(','), ...rows].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    
+    const fileName = `kns_products_export_${new Date().toISOString().split('T')[0]}.csv`;
+    
+    link.setAttribute("href", url);
+    link.setAttribute("download", fileName);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    if (window.KNSCart) KNSCart.showToast(`Exported ${products.length} products to ${fileName}`);
+}
+
 window.toggleSelectAll = toggleSelectAll;
 window.updateBulkActionBar = updateBulkActionBar;
 window.handleBulkDelete = handleBulkDelete;
@@ -1488,6 +1554,7 @@ window.handleFileSelect = handleFileSelect;
 window.toggleImportSelectAll = toggleImportSelectAll;
 window.updateImportBtnState = updateImportBtnState;
 window.processImport = processImport;
+window.exportProductsToCSV = exportProductsToCSV;
 
 /* --- Maintenance Section --- */
 function renderMaintenancePage() {

@@ -974,6 +974,10 @@
                             style="background:#4DB6AC; color:white; border:none; padding: 10px 20px; border-radius: 10px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:8px;">
                             <i data-lucide="upload"></i> Import CSV
                         </button>
+                        <button class="btn-sync" onclick="exportProductsToCSV()"
+                            style="background:#64B5F6; color:white; border:none; padding: 10px 20px; border-radius: 10px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:8px;">
+                            <i data-lucide="download"></i> Export CSV
+                        </button>
                         <button class="btn-sync" id="btn-bulk-delete-products" onclick="handleBulkDelete('products')"
                             style="background:#ff4d4d; color:white; border:none; padding: 10px 20px; border-radius: 10px; font-weight:600; cursor:pointer; display:none; align-items:center; gap:8px;">
                             <i data-lucide="trash-2"></i> Delete Selected (<span id="count-products">0</span>)
@@ -1565,8 +1569,8 @@
 <script src="firebase-config.js?v=5"></script>
 <script src="database.js?v=5"></script>
 <script src="auth.js?v=5"></script>
-<script src="admin_data.js?v=5"></script>
-<script src="admin.js?v=5"></script>
+<script src="admin_data.js?v=6"></script>
+<script src="admin.js?v=6"></script>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         if (typeof KNSData !== 'undefined' && KNSData.syncWithCloud) {
