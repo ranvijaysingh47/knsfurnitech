@@ -162,10 +162,13 @@ body.page-exit {
 @media (min-width: 1024px) {
     .desktop-search-container {
         display: flex;
+        align-items: center;
+        justify-content: center;
         position: absolute;
         left: 50%;
         transform: translateX(-50%);
         z-index: 10;
+        min-width: 280px;
     }
 
     .search-box-animated {
@@ -175,19 +178,19 @@ body.page-exit {
         border: 1px solid transparent;
         border-radius: 30px;
         padding: 5px 15px;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        width: 180px;
-        /* Base width */
+        transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        width: 200px;
         backdrop-filter: blur(10px);
     }
 
+    .desktop-search-container:hover .search-box-animated,
+    .desktop-search-container:focus-within .search-box-animated,
     .search-box-animated:hover,
     .search-box-animated:focus-within {
         width: 280px;
-        /* Expanded focus */
         background: #fff;
         border-color: var(--brand-green);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
     }
 
     .search-box-animated input {
@@ -208,12 +211,22 @@ body.page-exit {
         cursor: pointer;
         display: flex;
         align-items: center;
-        transition: color 0.3s ease;
+        justify-content: center;
+        padding: 4px;
+        border-radius: 50%;
+        transition: color 0.3s ease, transform 0.25s ease, background 0.25s ease;
     }
 
+    .desktop-search-container:hover button,
+    .desktop-search-container:focus-within button,
     .search-box-animated:hover button,
     .search-box-animated:focus-within button {
         color: var(--brand-green);
+    }
+
+    .search-box-animated button:hover {
+        transform: scale(1.15);
+        background: rgba(140, 198, 63, 0.12);
     }
 }
 
