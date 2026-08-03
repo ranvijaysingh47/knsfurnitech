@@ -558,7 +558,7 @@ const KNSHamburger = (() => {
                     <div class="side-menu-content">
                         <div class="menu-drawer-header">
                             <a href="index.html" class="logo" style="gap: 0; align-items: baseline;">
-                                <img src="images/logo.png" alt="KNS Furnitech" class="logo-img" style="height: 42px; transform: scale(2.2) translateY(4px) translateX(-2px); margin-right: -10px;">
+                                <img src="images/logo.webp" alt="KNS Furnitech" class="logo-img" style="height: 42px; transform: scale(2.2) translateY(4px) translateX(-2px); margin-right: -10px;">
                                 <span style="font-weight: 800; font-size: 1.3rem; letter-spacing: -0.5px;">KNS FURNITECH</span>
                             </a>
                             <button class="close-menu" id="close-menu-btn">
