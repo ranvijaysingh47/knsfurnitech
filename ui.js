@@ -683,10 +683,97 @@ const KNSHamburger = (() => {
     return { init };
 })();
 
+/* ── Shop the Look Hotspot Interaction Engine (Hover with Delay & Tap Support) ── */
+const KNSShopTheLook = (() => {
+    let hideTimer = null;
+    const HOVER_DELAY_MS = 450;
+
+    function init() {
+        const hotspots = document.querySelectorAll('.stl-hotspot');
+        if (!hotspots.length) return;
+
+        hotspots.forEach(hotspot => {
+            const tooltip = hotspot.querySelector('.stl-tooltip');
+            const closeBtn = tooltip ? tooltip.querySelector('.stl-close-btn') : null;
+
+            // Show active tooltip
+            const activateTooltip = (e) => {
+                if (hotspot.dataset.justClosed === 'true') return;
+                if (hideTimer) {
+                    clearTimeout(hideTimer);
+                    hideTimer = null;
+                }
+                hotspots.forEach(h => {
+                    if (h !== hotspot) h.classList.remove('is-active', 'is-hovered');
+                });
+                hotspot.classList.add('is-active', 'is-hovered');
+            };
+
+            // Hide tooltip with delay
+            const deactivateWithDelay = () => {
+                if (hideTimer) clearTimeout(hideTimer);
+                hideTimer = setTimeout(() => {
+                    hotspot.classList.remove('is-active', 'is-hovered');
+                }, HOVER_DELAY_MS);
+            };
+
+            // Explicit close button event
+            if (closeBtn) {
+                closeBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (hideTimer) clearTimeout(hideTimer);
+                    hotspot.classList.remove('is-active', 'is-hovered');
+                    hotspot.dataset.justClosed = 'true';
+                    setTimeout(() => { delete hotspot.dataset.justClosed; }, 1000);
+                });
+            }
+
+            // Mouse Hover Events
+            hotspot.addEventListener('mouseenter', activateTooltip);
+            hotspot.addEventListener('mouseleave', deactivateWithDelay);
+
+            if (tooltip) {
+                tooltip.addEventListener('mouseenter', activateTooltip);
+                tooltip.addEventListener('mouseleave', deactivateWithDelay);
+            }
+
+            // Click / Tap Events (for mobile & touch)
+            hotspot.addEventListener('click', (e) => {
+                if (e.target.closest('.stl-close-btn')) return;
+                if (e.target.closest('.stl-tooltip a, .stl-tooltip .stl-btn-cart-mini')) return;
+
+                e.stopPropagation();
+                if (hotspot.dataset.justClosed === 'true') return;
+
+                const wasActive = hotspot.classList.contains('is-active') || hotspot.classList.contains('is-hovered');
+
+                if (hideTimer) clearTimeout(hideTimer);
+                hotspots.forEach(h => h.classList.remove('is-active', 'is-hovered'));
+
+                if (!wasActive) {
+                    hotspot.classList.add('is-active', 'is-hovered');
+                }
+            });
+        });
+
+        // Close on outside click
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.stl-hotspot')) {
+                if (hideTimer) clearTimeout(hideTimer);
+                hotspots.forEach(h => h.classList.remove('is-active', 'is-hovered'));
+            }
+        });
+    }
+
+    return { init };
+})();
+
 /* ── Global Bootstrapper ── */
 document.addEventListener('DOMContentLoaded', () => {
     KNSCategories.init();
     KNSHamburger.init();
+    KNSShopTheLook.init();
 });
 
 /* Legacy Mega Menu Disabled */

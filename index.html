@@ -265,7 +265,7 @@
                 <div class="bento-card bento-card--stat animate-on-scroll delay-3">
                     <div class="bento-stat-icon"><i data-lucide="sparkles" size="24"></i></div>
                     <span class="bento-stat-num">2020</span>
-                    <span class="bento-stat-label">Founded</span>
+                    <span class="bento-stat-label">Started</span>
                 </div>
                 <div class="bento-card bento-card--stat animate-on-scroll delay-4">
                     <div class="bento-stat-icon"><i data-lucide="map-pin" size="24"></i></div>
@@ -487,14 +487,18 @@
         <section class="shop-the-look section-wrapper">
             <h2 class="section-title animate-on-scroll">Shop the Look</h2>
             <p style="text-align:center; color:#666; margin-top:-2rem; margin-bottom:3rem;" class="animate-on-scroll">
-                Hover over the <b>+</b> icons to discover products used in this modern living space.</p>
+                Hover or tap on the <b>+</b> icons to discover products used in this modern living space.</p>
             <div class="stl-container animate-on-scroll">
-                <img src="images/stl_main_home.png"
-                    alt="Modern Living Room with KNS Furniture" class="stl-img" loading="lazy">
+                <div class="stl-img-wrap">
+                    <img src="images/stl_main_home.png"
+                        alt="Modern Living Room with KNS Furniture" class="stl-img" loading="lazy">
+                </div>
 
-                <!-- Hotspot 1: Sovereign Wingback -->
-                <div class="stl-hotspot" style="top: 68%; left: 18%;">
+                <!-- Hotspot 1: Sovereign Wingback (Left-aligned tooltip) -->
+                <div class="stl-hotspot align-left" style="top: 62%; left: 21%;">
+                    <span class="stl-plus">+</span>
                     <div class="stl-tooltip">
+                        <button class="stl-close-btn" aria-label="Close">&times;</button>
                         <div class="stl-tool-img"
                             style="background-image: url('images/products/front1.jpg');">
                         </div>
@@ -511,9 +515,11 @@
                     </div>
                 </div>
 
-                <!-- Hotspot 2: Mid-Century Leather Sofa -->
-                <div class="stl-hotspot" style="top: 62%; left: 48%;">
+                <!-- Hotspot 2: Mid-Century Leather Sofa (Center-aligned tooltip) -->
+                <div class="stl-hotspot" style="top: 52%; left: 44%;">
+                    <span class="stl-plus">+</span>
                     <div class="stl-tooltip">
+                        <button class="stl-close-btn" aria-label="Close">&times;</button>
                         <div class="stl-tool-img"
                             style="background-image: url('images/products/Mid-Century%20Modern%20Top-Grain%20Leather%20Sofa%20Front.jpg');">
                         </div>
