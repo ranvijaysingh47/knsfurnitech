@@ -647,6 +647,10 @@ function renderProductsTable() {
                         style="width: 34px; height: 34px; border-radius: 8px; border: 1px solid rgba(140, 198, 63, 0.4); background: rgba(140, 198, 63, 0.12); color: #5b8e1f; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s;">
                         <i data-lucide="edit-3" size="15"></i>
                     </button>
+                    <a href="product.html?id=${encodeURIComponent(p.id)}" target="_blank" rel="noopener noreferrer" class="action-btn btn-view" title="View Product on Store"
+                        style="width: 34px; height: 34px; border-radius: 8px; border: 1px solid rgba(99, 102, 241, 0.4); background: rgba(99, 102, 241, 0.1); color: #4f46e5; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s;">
+                        <i data-lucide="eye" size="15"></i>
+                    </a>
                     <button type="button" class="action-btn btn-duplicate" title="Duplicate / Clone Product" onclick="duplicateProduct('${p.id}')"
                         style="width: 34px; height: 34px; border-radius: 8px; border: 1px solid rgba(14, 165, 233, 0.4); background: rgba(14, 165, 233, 0.1); color: #0284c7; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s;">
                         <i data-lucide="copy" size="15"></i>
@@ -1850,6 +1854,7 @@ function logoutAdmin() {
 
 // Expose globals for onclick
 window.editProduct = openProductModal;
+window.viewProduct = (id) => window.open('product.html?id=' + encodeURIComponent(id), '_blank');
 window.deleteProduct = deleteProduct;
 window.editCatalog = openCatalogModal;
 window.deleteCatalog = deleteCatalog;
