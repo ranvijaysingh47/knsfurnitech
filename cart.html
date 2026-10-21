@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-
+ 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1304,11 +1304,38 @@
         async function finalizeOrder(orderData) {
             const orderId = orderData.id;
 
-            // Save to Local History
-            KNSCart.saveOrder(orderData);
+            // Sanitize order for local storage (strip heavy base64 image strings to prevent QuotaExceededError)
+            const cleanOrder = JSON.parse(JSON.stringify(orderData));
+            if (cleanOrder.items && Array.isArray(cleanOrder.items)) {
+                cleanOrder.items = cleanOrder.items.map(item => {
+                    const itemCopy = { ...item };
+                    if (itemCopy.image && typeof itemCopy.image === 'string' && itemCopy.image.startsWith('data:image')) {
+                        itemCopy.image = 'images/logo.webp';
+                    }
+                    return itemCopy;
+                });
+            }
 
-            // Set for Invoice Generation
-            localStorage.setItem('kns_last_order', JSON.stringify(orderData));
+            // Save to Local History safely
+            try {
+                KNSCart.saveOrder(cleanOrder);
+            } catch (err) {
+                console.warn("Could not save to local cart history:", err);
+            }
+
+            // Set for Invoice Generation safely
+            try {
+                localStorage.setItem('kns_last_order', JSON.stringify(cleanOrder));
+            } catch (err) {
+                console.warn("Quota exceeded for kns_last_order, pruning temp storage:", err);
+                try {
+                    localStorage.removeItem('kns_view_order_temp');
+                    localStorage.removeItem('kns_pending_checkout_data');
+                    localStorage.setItem('kns_last_order', JSON.stringify(cleanOrder));
+                } catch (e2) {
+                    console.warn("Storage still full, proceeding with order completion:", e2);
+                }
+            }
 
             // Save to Firestore Database
             try {

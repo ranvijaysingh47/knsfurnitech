@@ -285,34 +285,59 @@
             color: var(--admin-dark);
         }
 
+        .table-responsive-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+        }
+
+        .table-responsive-wrapper::-webkit-scrollbar {
+            height: 7px;
+        }
+
+        .table-responsive-wrapper::-webkit-scrollbar-thumb {
+            background: #bbb;
+            border-radius: 4px;
+        }
+
+        .table-responsive-wrapper::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
         .admin-table {
             width: 100%;
+            min-width: 950px;
             border-collapse: collapse;
         }
 
         .admin-table th {
             text-align: left;
             background: #fafafa;
-            padding: 1.2rem 2rem;
+            padding: 1rem 1.4rem;
             color: #666;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            white-space: nowrap;
         }
 
         .admin-table td {
-            padding: 1.2rem 2rem;
+            padding: 1rem 1.4rem;
             border-bottom: 1px solid var(--admin-border);
             color: #444;
-            font-size: 1rem;
+            font-size: 0.95rem;
+            vertical-align: middle;
         }
 
-        /* Ensure Actions column is always wide enough */
+        /* Ensure Actions column is always wide enough, visible, and aligned */
         .admin-table th:last-child,
         .admin-table td:last-child {
-            min-width: 120px;
+            width: 130px;
+            min-width: 130px;
             text-align: right;
+            padding-right: 1.5rem;
         }
 
         .admin-table tr:last-child td {
@@ -420,6 +445,23 @@
             border-color: #ff4d4d;
         }
 
+        .btn-duplicate:hover {
+            background: #0284c7 !important;
+            border-color: #0284c7 !important;
+            color: white !important;
+            transform: translateY(-2px);
+        }
+
+        .btn-whatsapp-direct:hover {
+            background: #1ea952 !important;
+            transform: scale(1.05);
+        }
+
+        .btn-email-direct:hover {
+            background: #0284c7 !important;
+            transform: scale(1.05);
+        }
+
         .btn-add {
             background: var(--admin-dark);
             color: white;
@@ -479,6 +521,26 @@
 
         .modal-header {
             margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            line-height: 1;
+            cursor: pointer;
+            color: #888;
+            padding: 4px 8px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .close-modal:hover {
+            color: #ff4d4d;
+            background: #fff5f5;
         }
 
         .modal-header h2 {
@@ -525,6 +587,166 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 1.5rem;
+        }
+
+        /* --- Visual Product Form Builders --- */
+        #product-modal .modal-content {
+            max-width: 820px;
+            width: 95%;
+        }
+
+        .builder-box {
+            background: #fafafa;
+            border: 1px solid #e8e8e8;
+            border-radius: 12px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .visual-kv-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .visual-kv-row input {
+            padding: 8px 12px !important;
+            font-size: 0.88rem !important;
+            background: #fff;
+            border-radius: 8px !important;
+        }
+
+        .visual-color-row {
+            display: grid;
+            grid-template-columns: 46px 95px 1.2fr 1.6fr 36px;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 6px;
+            background: #fff;
+            padding: 6px 10px;
+            border: 1px solid #eee;
+            border-radius: 10px;
+        }
+
+        .visual-color-row input {
+            padding: 8px 10px !important;
+            font-size: 0.88rem !important;
+            border-radius: 8px !important;
+        }
+
+        .color-picker-input {
+            width: 46px;
+            height: 38px;
+            padding: 2px !important;
+            border: 1px solid #ddd !important;
+            border-radius: 8px !important;
+            cursor: pointer;
+            background: #fff;
+        }
+
+        .btn-row-del {
+            width: 36px;
+            height: 36px;
+            border: 1px solid #ffdddd;
+            background: #fff5f5;
+            color: #e53935;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .btn-row-del:hover {
+            background: #e53935;
+            color: white;
+            border-color: #e53935;
+        }
+
+        .builder-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: center;
+            margin-top: 4px;
+            padding-top: 6px;
+            border-top: 1px dashed #e0e0e0;
+        }
+
+        .quick-chip {
+            font-size: 0.74rem;
+            font-weight: 500;
+            padding: 3px 8px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 14px;
+            color: #555;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quick-chip:hover {
+            background: rgba(140, 198, 63, 0.15);
+            color: #5c8c22;
+            border-color: var(--admin-green);
+        }
+
+        .btn-builder-add {
+            align-self: flex-start;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            padding: 6px 12px;
+            background: #fff;
+            border: 1px dashed #aaa;
+            border-radius: 8px;
+            cursor: pointer;
+            color: #333;
+            transition: all 0.2s;
+            margin-top: 4px;
+        }
+
+        .btn-builder-add:hover {
+            border-color: var(--admin-green);
+            color: var(--admin-green);
+            background: rgba(140, 198, 63, 0.08);
+        }
+
+        .btn-toggle-json {
+            font-size: 0.72rem;
+            font-family: inherit;
+            font-weight: 600;
+            background: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            padding: 3px 8px;
+            cursor: pointer;
+            color: #666;
+            transition: all 0.2s;
+        }
+
+        .btn-toggle-json:hover {
+            border-color: var(--admin-green);
+            color: var(--admin-green);
+            background: #fff;
+        }
+
+        @media (max-width: 650px) {
+            .visual-color-row {
+                grid-template-columns: 46px 1fr 36px;
+            }
+            .visual-color-row input.color-image {
+                grid-column: 1 / -1;
+            }
         }
 
         @media (max-width: 768px) {
@@ -798,10 +1020,16 @@
                 <i data-lucide="refresh-cw" size="18"></i> Sync with Cloud
             </button>
         </div>
+        <div class="admin-stats-grid">
         <div class="admin-stat-card">
             <div class="stat-icon"><i data-lucide="indian-rupee"></i></div>
             <div class="stat-val" id="stat-revenue">₹ 0</div>
             <div class="stat-label">Total Revenue</div>
+        </div>
+        <div class="admin-stat-card">
+            <div class="stat-icon" style="background: rgba(140, 198, 63, 0.12); color: #5b8e1f;"><i data-lucide="trending-up"></i></div>
+            <div class="stat-val" id="stat-aov">₹ 0</div>
+            <div class="stat-label">Avg Order Value (AOV)</div>
         </div>
         <div class="admin-stat-card">
             <div class="stat-icon"><i data-lucide="shopping-cart"></i></div>
@@ -854,19 +1082,21 @@
                         <div class="admin-nav-item" style="padding: 5px 10px; font-size: 0.85rem;" data-tab="orders">
                             View All &rarr;</div>
                     </div>
-                    <table class="admin-table">
-                        <thead>
-                            <tr>
-                                <th>Order ID</th>
-                                <th>Customer</th>
-                                <th>Total</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody id="dash-recent-orders">
-                            <!-- Injected -->
-                        </tbody>
-                    </table>
+                    <div class="table-responsive-wrapper">
+                        <table class="admin-table" style="min-width: 500px;">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Customer</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dash-recent-orders">
+                                <!-- Injected -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 <!-- Top Products -->
                 <div class="admin-card">
@@ -910,6 +1140,35 @@
                                 <div style="width:25%; height:100%; background:#aaa;"></div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top Selling Products Leaderboard -->
+            <div class="admin-table-container" style="grid-column: 1 / -1; margin-top: 1rem;">
+                <div class="admin-card">
+                    <div class="card-header" style="display:flex; justify-content:space-between; align-items:center;">
+                        <h3 style="display: flex; align-items: center; gap: 10px; margin: 0;">
+                            <i data-lucide="award" size="22" style="color: #f59e0b;"></i> Top Selling Products
+                        </h3>
+                        <span style="font-size:0.85rem; color:#888; font-weight:500;">Top 5 Revenue Generating Items</span>
+                    </div>
+                    <div class="table-responsive-wrapper">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 70px; text-align:center;">Rank</th>
+                                    <th style="width: 75px;">Preview</th>
+                                    <th>Product Name</th>
+                                    <th>Category</th>
+                                    <th>Units Sold</th>
+                                    <th>Total Revenue</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dash-top-products-list">
+                                <!-- Injected -->
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -1007,22 +1266,25 @@
                         </select>
                     </div>
                 </div>
-                <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th style="width:40px;"><input type="checkbox" id="select-all-products"
-                                    onclick="toggleSelectAll('products')"></th>
-                            <th>Preview</th>
-                            <th>Product Name</th>
-                            <th>Category</th>
-                            <th>Current Price</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="admin-products-table">
-                        <!-- Injected -->
-                    </tbody>
-                </table>
+                <div class="table-responsive-wrapper">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th style="width:40px;"><input type="checkbox" id="select-all-products"
+                                        onclick="toggleSelectAll('products')"></th>
+                                <th style="width:65px;">Preview</th>
+                                <th>Product Name</th>
+                                <th>Category</th>
+                                <th>Current Price</th>
+                                <th style="text-align: center; width: 140px; min-width: 140px;">Actions</th>
+                                <th style="width: 140px; min-width: 130px;">Last Updated</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-products-table">
+                            <!-- Injected -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
     </section>
 
@@ -1034,20 +1296,22 @@
                     <h3>Digital Assets</h3>
                     <button class="btn-add" onclick="openCatalogModal()"><i data-lucide="plus"></i> Add Catalog</button>
                 </div>
-                <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>Preview</th>
-                            <th>Catalog Name</th>
-                            <th>Badge</th>
-                            <th>Description</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="admin-catalogs-table">
-                        <!-- Injected -->
-                    </tbody>
-                </table>
+                <div class="table-responsive-wrapper">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Preview</th>
+                                <th>Catalog Name</th>
+                                <th>Badge</th>
+                                <th>Description</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-catalogs-table">
+                            <!-- Injected -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
     </section>
 
@@ -1057,28 +1321,38 @@
             <div class="admin-card" style="border:none; box-shadow:none;">
                 <div class="card-header">
                     <h3>All Site Orders</h3>
+                    <div style="display:flex; gap:10px;">
+                        <button class="btn-sync" onclick="exportOrdersToCSV()"
+                            style="background: #2563eb; color:white; border:none; padding: 10px 18px; border-radius: 10px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:8px; transition: all 0.2s;">
+                            <i data-lucide="download" size="16"></i> Export Orders CSV
+                        </button>
+                    </div>
                 </div>
                 <div style="padding: 1.5rem 2rem; background: #fafafa; display: flex; gap: 1rem;">
-                    <input type="text" placeholder="Search by order ID or total..." id="order-search"
+                    <input type="text" placeholder="Search by order ID, customer, phone, or total..." id="order-search"
                         style="flex:1; padding: 10px; border: 1px solid #ddd; border-radius: 8px;"
                         oninput="renderOrdersTable()">
                 </div>
-                <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>Order Number</th>
-                            <th>Date</th>
-                            <th>Total Amount</th>
-                            <th>Items</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="admin-orders-table">
-                        <!-- Injected -->
-                    </tbody>
-                </table>
+                <div class="table-responsive-wrapper">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Order Number</th>
+                                <th>Customer & Contact</th>
+                                <th>Date</th>
+                                <th>Total Amount</th>
+                                <th>Items</th>
+                                <th>Status</th>
+                                <th style="text-align: right; width: 140px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-orders-table">
+                            <!-- Injected -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
+        </div>
     </section>
 
     <!-- USERS SECTION -->
@@ -1093,24 +1367,29 @@
                         style="flex:1; padding: 10px; border: 1px solid #ddd; border-radius: 8px;"
                         oninput="renderUsersTable()">
                 </div>
-                <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>Avatar</th>
-                            <th>Name</th>
-                            <th>Email Address</th>
-                            <th>Joined On</th>
-                        </tr>
-                    </thead>
-                    <tbody id="admin-users-table">
-                        <tr id="diagnostic-row">
-                            <td colspan="4" style="text-align:center; padding: 3rem; color: #ff9800; font-weight: 700;">
-                                ⚠️ SYSTEM DIAGNOSTIC: Waiting for Sync...
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="table-responsive-wrapper">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px;">Avatar</th>
+                                <th>Name</th>
+                                <th>Email Address</th>
+                                <th>Total Orders</th>
+                                <th>Lifetime Spent</th>
+                                <th>Joined On</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-users-table">
+                            <tr id="diagnostic-row">
+                                <td colspan="6" style="text-align:center; padding: 3rem; color: #ff9800; font-weight: 700;">
+                                    ⚠️ SYSTEM DIAGNOSTIC: Waiting for Sync...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
+        </div>
     </section>
 
     <!-- REVIEWS SECTION -->
@@ -1125,21 +1404,23 @@
                         style="flex:1; padding: 10px; border: 1px solid #ddd; border-radius: 8px;"
                         oninput="renderReviewsTable()">
                 </div>
-                <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>Product</th>
-                            <th>Author</th>
-                            <th>Rating</th>
-                            <th>Comment</th>
-                            <th>Date</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="admin-reviews-table">
-                        <!-- Injected -->
-                    </tbody>
-                </table>
+                <div class="table-responsive-wrapper">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Author</th>
+                                <th>Rating</th>
+                                <th>Comment</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-reviews-table">
+                            <!-- Injected -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
     </section>
     <!-- INQUIRIES SECTION -->
@@ -1149,21 +1430,24 @@
                 <div class="card-header">
                     <h3>Customer Inquiries</h3>
                 </div>
-                <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Customer</th>
-                            <th>Contact</th>
-                            <th>Message</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="inquiriesTableBody">
-                        <!-- Injected -->
-                    </tbody>
-                </table>
+                <div class="table-responsive-wrapper">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Customer</th>
+                                <th>Contact</th>
+                                <th>Message</th>
+                                <th style="text-align: right; width: 140px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inquiriesTableBody">
+                            <!-- Injected -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
+        </div>
     </section>
 
     <!-- BLOGS SECTION -->
@@ -1334,6 +1618,7 @@
     <div class="modal-content">
         <div class="modal-header">
             <h2 id="prodModalTitle">Add New Product</h2>
+            <button type="button" class="close-modal" onclick="closeModal('product-modal')" title="Close">&times;</button>
         </div>
         <form id="product-form" class="admin-form" onsubmit="handleProductSubmit(event)">
             <input type="hidden" id="edit-prod-id">
@@ -1388,20 +1673,98 @@
                 <textarea id="prod-long-desc" rows="5" placeholder="Comprehensive product details..."></textarea>
             </div>
 
-            <div class="form-row">
+            <!-- SPECIFICATIONS & DIMENSIONS BUILDERS -->
+            <div class="form-row" style="align-items: flex-start;">
+                <!-- Specifications Builder -->
                 <div class="form-group">
-                    <label>Specifications (JSON)</label>
-                    <textarea id="prod-specs" rows="3"
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <label style="margin: 0; font-weight: 600;">Specifications</label>
+                        <button type="button" class="btn-toggle-json" onclick="toggleJsonView('specs')">
+                            <span id="btn-label-specs">{ } Raw JSON</span>
+                        </button>
+                    </div>
+
+                    <!-- Visual Builder -->
+                    <div id="specs-visual-container" class="builder-box">
+                        <div id="specs-rows-container"></div>
+                        <div class="builder-chips">
+                            <span style="font-size:0.75rem; color:#888;">Quick add:</span>
+                            <button type="button" class="quick-chip" onclick="addSpecRow('Material', '')">+ Material</button>
+                            <button type="button" class="quick-chip" onclick="addSpecRow('Finish', '')">+ Finish</button>
+                            <button type="button" class="quick-chip" onclick="addSpecRow('Warranty', '')">+ Warranty</button>
+                            <button type="button" class="quick-chip" onclick="addSpecRow('Mechanism', '')">+ Mechanism</button>
+                            <button type="button" class="quick-chip" onclick="addSpecRow('Base', '')">+ Base</button>
+                        </div>
+                        <button type="button" class="btn-builder-add" onclick="addSpecRow()">
+                            <i data-lucide="plus" size="14"></i> Add Specification
+                        </button>
+                    </div>
+
+                    <!-- Raw JSON Textarea (Hidden by default, shown in JSON mode) -->
+                    <textarea id="prod-specs" rows="4" style="display: none;"
                         placeholder='{"Material": "Teak", "Finish": "Glossy"}'></textarea>
                 </div>
+
+                <!-- Dimensions Builder -->
                 <div class="form-group">
-                    <label>Dimensions (JSON)</label>
-                    <textarea id="prod-dimens" rows="3" placeholder='{"Height": "32\"", "Width": "24\""}'></textarea>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <label style="margin: 0; font-weight: 600;">Dimensions</label>
+                        <button type="button" class="btn-toggle-json" onclick="toggleJsonView('dimens')">
+                            <span id="btn-label-dimens">{ } Raw JSON</span>
+                        </button>
+                    </div>
+
+                    <!-- Visual Builder -->
+                    <div id="dimens-visual-container" class="builder-box">
+                        <div id="dimens-rows-container"></div>
+                        <div class="builder-chips">
+                            <span style="font-size:0.75rem; color:#888;">Quick add:</span>
+                            <button type="button" class="quick-chip" onclick="addDimenRow('Height', '')">+ Height</button>
+                            <button type="button" class="quick-chip" onclick="addDimenRow('Width', '')">+ Width</button>
+                            <button type="button" class="quick-chip" onclick="addDimenRow('Depth', '')">+ Depth</button>
+                            <button type="button" class="quick-chip" onclick="addDimenRow('Weight', '')">+ Weight</button>
+                            <button type="button" class="quick-chip" onclick="addDimenRow('Seat Height', '')">+ Seat Height</button>
+                        </div>
+                        <button type="button" class="btn-builder-add" onclick="addDimenRow()">
+                            <i data-lucide="plus" size="14"></i> Add Dimension
+                        </button>
+                    </div>
+
+                    <!-- Raw JSON Textarea (Hidden by default, shown in JSON mode) -->
+                    <textarea id="prod-dimens" rows="4" style="display: none;"
+                        placeholder='{"Height": "32\"", "Width": "24\""}'></textarea>
                 </div>
             </div>
+
+            <!-- COLOR SWATCHES BUILDER -->
             <div class="form-group">
-                <label>Color Swatches (JSON Array)</label>
-                <textarea id="prod-colors" rows="3"
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <label style="margin: 0; font-weight: 600;">Color Swatches & Variants</label>
+                    <button type="button" class="btn-toggle-json" onclick="toggleJsonView('colors')">
+                        <span id="btn-label-colors">[ ] Raw JSON</span>
+                    </button>
+                </div>
+
+                <!-- Visual Builder -->
+                <div id="colors-visual-container" class="builder-box">
+                    <div id="colors-rows-container"></div>
+                    <div class="builder-chips">
+                        <span style="font-size:0.75rem; color:#888;">Quick presets:</span>
+                        <button type="button" class="quick-chip" onclick="addColorRow('Black', '#1A1A1A')">⚫ Black</button>
+                        <button type="button" class="quick-chip" onclick="addColorRow('Brown', '#8B4513')">🟤 Brown</button>
+                        <button type="button" class="quick-chip" onclick="addColorRow('Tan', '#C67C38')">🟠 Tan</button>
+                        <button type="button" class="quick-chip" onclick="addColorRow('Grey', '#757575')">⚪ Grey</button>
+                        <button type="button" class="quick-chip" onclick="addColorRow('Navy Blue', '#1B2A47')">🔵 Navy</button>
+                        <button type="button" class="quick-chip" onclick="addColorRow('Olive Green', '#476B32')">🟢 Green</button>
+                        <button type="button" class="quick-chip" onclick="addColorRow('Cream Beige', '#F5F5DC')">🟡 Beige</button>
+                    </div>
+                    <button type="button" class="btn-builder-add" onclick="addColorRow()">
+                        <i data-lucide="plus" size="14"></i> Add Color Swatch
+                    </button>
+                </div>
+
+                <!-- Raw JSON Textarea (Hidden by default, shown in JSON mode) -->
+                <textarea id="prod-colors" rows="4" style="display: none;"
                     placeholder='[{"name":"Brown", "code":"#8B4513", "image":"https://..."}]'></textarea>
             </div>
             <div class="form-row">

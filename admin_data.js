@@ -234,6 +234,7 @@ const KNSData = (() => {
         if (!window.KNSDb) return { ok: false, msg: "Database not ready" };
         try {
             prod.id = prod.id || 'p-' + Date.now() + '-' + Math.floor(Math.random()*1000);
+            prod.updatedAt = prod.updatedAt || new Date().toISOString();
             const res = await KNSDb.saveProduct(prod.id, prod);
             if (res.ok) {
                 const p = [..._products, { ...prod, firestoreId: prod.id, id: prod.id }];

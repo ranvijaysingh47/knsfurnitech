@@ -199,24 +199,33 @@ function refreshDashboard() {
         const usrElem = document.getElementById('stat-users');
         const prdElem = document.getElementById('stat-products');
         const oosElem = document.getElementById('stat-out-of-stock');
+        const aovElem = document.getElementById('stat-aov');
 
-        if (revElem) revElem.textContent = '₹ ' + (stats.revenue || 0).toLocaleString('en-IN');
-        if (ordElem) ordElem.textContent = stats.totalOrders || 0;
+        const totalRev = stats.revenue || 0;
+        const totalOrd = stats.totalOrders || 0;
+        const aov = totalOrd > 0 ? Math.round(totalRev / totalOrd) : 0;
+
+        if (revElem) revElem.textContent = '₹ ' + totalRev.toLocaleString('en-IN');
+        if (ordElem) ordElem.textContent = totalOrd;
         if (usrElem) usrElem.textContent = stats.totalUsers || 0;
         if (prdElem) prdElem.textContent = stats.totalProducts || 0;
         if (oosElem) oosElem.textContent = stats.outOfStockCount || 0;
+        if (aovElem) aovElem.textContent = '₹ ' + aov.toLocaleString('en-IN');
 
         // Render Recent Orders in Dashboard
-        const allOrders = (window.KNSData && KNSData.getAllOrders ? KNSData.getAllOrders() : getAllOrders());
+        const allOrders = (window.KNSData && KNSData.getAllOrders ? KNSData.getAllOrders() : getAllOrders()) || [];
         const dashOrders = allOrders.slice(0, 5);
         const tbody = document.getElementById('dash-recent-orders');
 
         // Update Visual Charts
         initCharts(allOrders);
 
-        // Update Active Users Widget (NEW)
+        // Update Active Users Widget
         const users = (window.KNSData && KNSData.getUsers) ? KNSData.getUsers() : [];
         renderActiveUsers(users);
+
+        // Update Top Selling Products Leaderboard (NEW)
+        renderTopSellingProducts(allOrders);
 
         // Update Out of Stock List (NEW)
         const allProducts = (window.KNSData && KNSData.getProducts) ? KNSData.getProducts() : [];
@@ -252,6 +261,76 @@ function refreshDashboard() {
     } catch (e) {
         console.warn("⚠️ [UI] Dashboard Refresh encountered an error:", e);
     }
+}
+
+function renderTopSellingProducts(orders) {
+    const tbody = document.getElementById('dash-top-products-list');
+    if (!tbody) return;
+
+    const allProducts = (window.KNSData && KNSData.getProducts ? KNSData.getProducts() : []) || [];
+    const salesMap = {};
+
+    (orders || []).forEach(o => {
+        if (!o.items || !Array.isArray(o.items)) return;
+        o.items.forEach(item => {
+            const key = item.id || (item.name ? item.name.trim().toLowerCase() : 'unknown');
+            if (!salesMap[key]) {
+                const catalogMatch = allProducts.find(p => p.id === item.id || (p.name && item.name && p.name.trim().toLowerCase() === item.name.trim().toLowerCase()));
+                salesMap[key] = {
+                    id: item.id || (catalogMatch ? catalogMatch.id : ''),
+                    name: item.name || (catalogMatch ? catalogMatch.name : 'Unknown Product'),
+                    image: item.image || (catalogMatch ? catalogMatch.image : 'https://via.placeholder.com/60'),
+                    category: (catalogMatch && catalogMatch.category) || item.category || 'Furniture',
+                    unitsSold: 0,
+                    revenue: 0
+                };
+            }
+            const qty = parseInt(item.quantity) || 1;
+            const price = parseFloat(item.price) || 0;
+            salesMap[key].unitsSold += qty;
+            salesMap[key].revenue += (price * qty);
+        });
+    });
+
+    let topList = Object.values(salesMap).sort((a, b) => b.revenue - a.revenue).slice(0, 5);
+
+    // If no order items exist yet, populate with catalog items as initial preview
+    if (topList.length === 0 && allProducts.length > 0) {
+        topList = allProducts.slice(0, 5).map(p => ({
+            id: p.id,
+            name: p.name,
+            image: p.image || 'https://via.placeholder.com/60',
+            category: p.category || 'Furniture',
+            unitsSold: 0,
+            revenue: 0
+        }));
+    }
+
+    if (topList.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 2rem; color: #888;">No product sales recorded yet.</td></tr>';
+        return;
+    }
+
+    const rankBadges = [
+        '<span style="display:inline-flex; align-items:center; justify-content:center; width:26px; height:26px; background:#FEF3C7; color:#D97706; font-weight:800; border-radius:50%; font-size:0.8rem; border:1px solid #FCD34D;">1</span>',
+        '<span style="display:inline-flex; align-items:center; justify-content:center; width:26px; height:26px; background:#F3F4F6; color:#4B5563; font-weight:800; border-radius:50%; font-size:0.8rem; border:1px solid #E5E7EB;">2</span>',
+        '<span style="display:inline-flex; align-items:center; justify-content:center; width:26px; height:26px; background:#FFEDD5; color:#C2410C; font-weight:800; border-radius:50%; font-size:0.8rem; border:1px solid #FDBA74;">3</span>',
+        '<span style="display:inline-flex; align-items:center; justify-content:center; width:26px; height:26px; background:#F8FAFC; color:#64748B; font-weight:700; border-radius:50%; font-size:0.8rem;">4</span>',
+        '<span style="display:inline-flex; align-items:center; justify-content:center; width:26px; height:26px; background:#F8FAFC; color:#64748B; font-weight:700; border-radius:50%; font-size:0.8rem;">5</span>'
+    ];
+
+    tbody.innerHTML = topList.map((p, idx) => `
+        <tr>
+            <td data-label="Rank" style="text-align:center;">${rankBadges[idx] || (idx + 1)}</td>
+            <td data-label="Preview"><img src="${p.image}" class="table-img" alt="${escapeHTML(p.name)}"></td>
+            <td data-label="Product Name" style="font-weight:600; color:var(--admin-dark);">${escapeHTML(p.name)}</td>
+            <td data-label="Category"><span style="font-size:0.82rem; color:#666;">${escapeHTML(p.category)}</span></td>
+            <td data-label="Units Sold" style="font-weight:700; color:#374151;">${p.unitsSold} pcs</td>
+            <td data-label="Total Revenue" style="font-weight:700; color:var(--admin-green);">₹ ${p.revenue.toLocaleString('en-IN')}</td>
+        </tr>
+    `).join('');
+
+    if (window.lucide) lucide.createIcons();
 }
 
 function initCharts(orders) {
@@ -476,6 +555,57 @@ function renderActiveUsers(users) {
 }
 
 /* --- Products CRUD --- */
+function formatUpdateTime(val) {
+    if (!val) return '<span style="color:#aaa; font-size:0.82rem;">—</span>';
+    let d;
+    if (typeof val === 'number') {
+        d = new Date(val);
+    } else if (typeof val === 'string' && val.startsWith('p-')) {
+        const parts = val.split('-');
+        d = new Date(parseInt(parts[1]) || Date.now());
+    } else {
+        d = new Date(val);
+    }
+    if (isNaN(d.getTime())) return '<span style="color:#aaa; font-size:0.82rem;">—</span>';
+
+    const dateStr = d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+    const timeStr = d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
+
+    const now = new Date();
+    const diffMs = now - d;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMins / 60);
+
+    let display = '';
+    if (diffMins < 1) display = 'Just now';
+    else if (diffMins < 60) display = `${diffMins}m ago`;
+    else if (diffHours < 24 && now.getDate() === d.getDate()) display = `Today, ${timeStr}`;
+    else display = `${dateStr}, ${timeStr}`;
+
+    return `<span title="Last updated on ${dateStr} at ${timeStr}" style="display:inline-flex; align-items:center; gap:5px; font-size:0.82rem; color:#555; white-space:nowrap;">
+        <i data-lucide="clock" size="13" style="color:var(--admin-green);"></i>
+        <span>${display}</span>
+    </span>`;
+}
+
+function formatUpdateTimeSimple(val) {
+    if (!val) return '';
+    let d;
+    if (typeof val === 'number') d = new Date(val);
+    else if (typeof val === 'string' && val.startsWith('p-')) {
+        const parts = val.split('-');
+        d = new Date(parseInt(parts[1]) || Date.now());
+    } else {
+        d = new Date(val);
+    }
+    if (isNaN(d.getTime())) return '';
+    return d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) + ', ' +
+           d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
+}
+
+window.formatUpdateTime = formatUpdateTime;
+window.formatUpdateTimeSimple = formatUpdateTimeSimple;
+
 function renderProductsTable() {
     const query = (document.getElementById('prod-search').value || '').toLowerCase();
     const catFilter = document.getElementById('prod-filter-cat')?.value || 'all';
@@ -511,17 +641,292 @@ function renderProductsTable() {
             <td data-label="Product Name" style="font-weight:600;">${escapeHTML(p.name)}</td>
             <td data-label="Category">${escapeHTML(p.category)}</td>
             <td data-label="Price" style="font-weight:700;">₹ ${p.price.toLocaleString('en-IN')}</td>
-            <td data-label="Actions">
-                <div class="action-btns">
-                    <div class="action-btn btn-edit" title="Edit" onclick="editProduct('${p.id}')"><i data-lucide="edit-3" size="16"></i></div>
-                    <div class="action-btn btn-delete" title="Delete" onclick="deleteProduct('${p.id}')"><i data-lucide="trash-2" size="16"></i></div>
+            <td data-label="Actions" style="text-align: center; min-width: 140px;">
+                <div class="action-btns" style="display: inline-flex; gap: 8px; justify-content: center; align-items: center;">
+                    <button type="button" class="action-btn btn-edit" title="Edit Product" onclick="openProductModal('${p.id}')"
+                        style="width: 34px; height: 34px; border-radius: 8px; border: 1px solid rgba(140, 198, 63, 0.4); background: rgba(140, 198, 63, 0.12); color: #5b8e1f; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s;">
+                        <i data-lucide="edit-3" size="15"></i>
+                    </button>
+                    <button type="button" class="action-btn btn-duplicate" title="Duplicate / Clone Product" onclick="duplicateProduct('${p.id}')"
+                        style="width: 34px; height: 34px; border-radius: 8px; border: 1px solid rgba(14, 165, 233, 0.4); background: rgba(14, 165, 233, 0.1); color: #0284c7; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s;">
+                        <i data-lucide="copy" size="15"></i>
+                    </button>
+                    <button type="button" class="action-btn btn-delete" title="Delete Product" onclick="deleteProduct('${p.id}')"
+                        style="width: 34px; height: 34px; border-radius: 8px; border: 1px solid rgba(255, 77, 77, 0.4); background: rgba(255, 77, 77, 0.1); color: #ff4d4d; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s;">
+                        <i data-lucide="trash-2" size="15"></i>
+                    </button>
                 </div>
             </td>
+            <td data-label="Last Updated">${formatUpdateTime(p.updatedAt || p.timestamp || p.id)}</td>
         </tr>
-    `).join('') || '<tr><td colspan="6" style="text-align:center; padding: 2rem; color: #888;">No products found.</td></tr>';
+    `).join('') || '<tr><td colspan="7" style="text-align:center; padding: 2rem; color: #888;">No products found.</td></tr>';
 
     if (window.lucide) lucide.createIcons();
 }
+
+/* ════════════════════════════════════════════════════════════════
+   VISUAL FORM BUILDERS (Specifications, Dimensions, Colors)
+   ════════════════════════════════════════════════════════════════ */
+
+function addSpecRow(key = '', val = '') {
+    const container = document.getElementById('specs-rows-container');
+    if (!container) return;
+
+    const row = document.createElement('div');
+    row.className = 'visual-kv-row';
+    row.innerHTML = `
+        <input type="text" class="spec-key" placeholder="Attribute (e.g. Material)" value="${escapeHtml(key)}" style="flex: 1;">
+        <input type="text" class="spec-val" placeholder="Value (e.g. Teak Wood)" value="${escapeHtml(val)}" style="flex: 1.2;">
+        <button type="button" class="btn-row-del" title="Remove">&times;</button>
+    `;
+
+    row.querySelector('.spec-key').addEventListener('input', syncVisualBuildersToJson);
+    row.querySelector('.spec-val').addEventListener('input', syncVisualBuildersToJson);
+    row.querySelector('.btn-row-del').addEventListener('click', () => {
+        row.remove();
+        syncVisualBuildersToJson();
+    });
+
+    container.appendChild(row);
+    syncVisualBuildersToJson();
+}
+
+function addDimenRow(key = '', val = '') {
+    const container = document.getElementById('dimens-rows-container');
+    if (!container) return;
+
+    const row = document.createElement('div');
+    row.className = 'visual-kv-row';
+    row.innerHTML = `
+        <input type="text" class="dimen-key" placeholder="Dimension (e.g. Height)" value="${escapeHtml(key)}" style="flex: 1;">
+        <input type="text" class="dimen-val" placeholder="Value (e.g. 32 inches)" value="${escapeHtml(val)}" style="flex: 1.2;">
+        <button type="button" class="btn-row-del" title="Remove">&times;</button>
+    `;
+
+    row.querySelector('.dimen-key').addEventListener('input', syncVisualBuildersToJson);
+    row.querySelector('.dimen-val').addEventListener('input', syncVisualBuildersToJson);
+    row.querySelector('.btn-row-del').addEventListener('click', () => {
+        row.remove();
+        syncVisualBuildersToJson();
+    });
+
+    container.appendChild(row);
+    syncVisualBuildersToJson();
+}
+
+function addColorRow(name = '', code = '#1A1A1A', image = '') {
+    const container = document.getElementById('colors-rows-container');
+    if (!container) return;
+
+    const safeCode = code && code.startsWith('#') ? code : (code ? '#' + code : '#1A1A1A');
+    const row = document.createElement('div');
+    row.className = 'visual-color-row';
+    row.innerHTML = `
+        <input type="color" class="color-picker-input" value="${safeCode}" title="Pick Color">
+        <input type="text" class="color-hex-input" placeholder="#000000" maxlength="7" value="${safeCode}">
+        <input type="text" class="color-name-input" placeholder="Color Name (e.g. Tan)" value="${escapeHtml(name)}">
+        <input type="url" class="color-image color-img-input" placeholder="Optional swatch/variant image link..." value="${escapeHtml(image)}">
+        <button type="button" class="btn-row-del" title="Remove">&times;</button>
+    `;
+
+    const picker = row.querySelector('.color-picker-input');
+    const hex = row.querySelector('.color-hex-input');
+    const nameInput = row.querySelector('.color-name-input');
+    const imgInput = row.querySelector('.color-img-input');
+
+    picker.addEventListener('input', () => {
+        hex.value = picker.value.toUpperCase();
+        syncVisualBuildersToJson();
+    });
+
+    hex.addEventListener('input', () => {
+        let val = hex.value.trim();
+        if (val && !val.startsWith('#')) val = '#' + val;
+        if (/^#[0-9A-Fa-f]{6}$/.test(val)) {
+            picker.value = val;
+        }
+        syncVisualBuildersToJson();
+    });
+
+    nameInput.addEventListener('input', syncVisualBuildersToJson);
+    imgInput.addEventListener('input', syncVisualBuildersToJson);
+
+    row.querySelector('.btn-row-del').addEventListener('click', () => {
+        row.remove();
+        syncVisualBuildersToJson();
+    });
+
+    container.appendChild(row);
+    syncVisualBuildersToJson();
+}
+
+function syncVisualBuildersToJson() {
+    // 1. Specs
+    const specContainer = document.getElementById('specs-rows-container');
+    const specsTextarea = document.getElementById('prod-specs');
+    if (specContainer && specsTextarea && document.getElementById('specs-visual-container')?.style.display !== 'none') {
+        const specs = {};
+        specContainer.querySelectorAll('.visual-kv-row').forEach(r => {
+            const k = r.querySelector('.spec-key')?.value.trim();
+            const v = r.querySelector('.spec-val')?.value.trim();
+            if (k) specs[k] = v || '';
+        });
+        specsTextarea.value = Object.keys(specs).length > 0 ? JSON.stringify(specs, null, 2) : '';
+    }
+
+    // 2. Dimensions
+    const dimContainer = document.getElementById('dimens-rows-container');
+    const dimensTextarea = document.getElementById('prod-dimens');
+    if (dimContainer && dimensTextarea && document.getElementById('dimens-visual-container')?.style.display !== 'none') {
+        const dimens = {};
+        dimContainer.querySelectorAll('.visual-kv-row').forEach(r => {
+            const k = r.querySelector('.dimen-key')?.value.trim();
+            const v = r.querySelector('.dimen-val')?.value.trim();
+            if (k) dimens[k] = v || '';
+        });
+        dimensTextarea.value = Object.keys(dimens).length > 0 ? JSON.stringify(dimens, null, 2) : '';
+    }
+
+    // 3. Colors
+    const colContainer = document.getElementById('colors-rows-container');
+    const colorsTextarea = document.getElementById('prod-colors');
+    if (colContainer && colorsTextarea && document.getElementById('colors-visual-container')?.style.display !== 'none') {
+        const colors = [];
+        colContainer.querySelectorAll('.visual-color-row').forEach(r => {
+            const name = r.querySelector('.color-name-input')?.value.trim();
+            const code = r.querySelector('.color-hex-input')?.value.trim() || r.querySelector('.color-picker-input')?.value;
+            const image = r.querySelector('.color-img-input')?.value.trim();
+            if (name || code) {
+                const item = { name: name || 'Color', code: code || '#000000' };
+                if (image) item.image = image;
+                colors.push(item);
+            }
+        });
+        colorsTextarea.value = colors.length > 0 ? JSON.stringify(colors, null, 2) : '';
+    }
+}
+
+function toggleJsonView(type) {
+    const visual = document.getElementById(`${type}-visual-container`);
+    let textareaId = 'prod-specs';
+    let btnLabelId = 'btn-label-specs';
+    let rawLabel = '{ } Raw JSON';
+
+    if (type === 'dimens') {
+        textareaId = 'prod-dimens';
+        btnLabelId = 'btn-label-dimens';
+        rawLabel = '{ } Raw JSON';
+    } else if (type === 'colors') {
+        textareaId = 'prod-colors';
+        btnLabelId = 'btn-label-colors';
+        rawLabel = '[ ] Raw JSON';
+    }
+
+    const textarea = document.getElementById(textareaId);
+    const btnLabel = document.getElementById(btnLabelId);
+    if (!visual || !textarea || !btnLabel) return;
+
+    if (visual.style.display !== 'none') {
+        syncVisualBuildersToJson();
+        visual.style.display = 'none';
+        textarea.style.display = 'block';
+        btnLabel.textContent = '✏️ Visual Mode';
+    } else {
+        const raw = textarea.value.trim();
+        if (raw) {
+            try {
+                const parsed = JSON.parse(raw);
+                if (type === 'specs') {
+                    const c = document.getElementById('specs-rows-container');
+                    if (c) c.innerHTML = '';
+                    if (typeof parsed === 'object' && !Array.isArray(parsed)) {
+                        Object.entries(parsed).forEach(([k, v]) => addSpecRow(k, v));
+                    }
+                } else if (type === 'dimens') {
+                    const c = document.getElementById('dimens-rows-container');
+                    if (c) c.innerHTML = '';
+                    if (typeof parsed === 'object' && !Array.isArray(parsed)) {
+                        Object.entries(parsed).forEach(([k, v]) => addDimenRow(k, v));
+                    }
+                } else if (type === 'colors') {
+                    const c = document.getElementById('colors-rows-container');
+                    if (c) c.innerHTML = '';
+                    if (Array.isArray(parsed)) {
+                        parsed.forEach(item => addColorRow(item.name || '', item.code || item.hex || '#1A1A1A', item.image || ''));
+                    }
+                }
+            } catch (err) {
+                alert("🚨 Please correct the JSON formatting before switching back to Visual Mode, or discard your changes.");
+                return;
+            }
+        }
+        textarea.style.display = 'none';
+        visual.style.display = 'flex';
+        btnLabel.textContent = rawLabel;
+    }
+    if (window.lucide) lucide.createIcons();
+}
+
+function populateVisualBuilders(specs, dimens, colors) {
+    ['specs', 'dimens', 'colors'].forEach(t => {
+        const v = document.getElementById(`${t}-visual-container`);
+        const ta = document.getElementById(t === 'dimens' ? 'prod-dimens' : (t === 'specs' ? 'prod-specs' : 'prod-colors'));
+        const bl = document.getElementById(`btn-label-${t}`);
+        if (v) v.style.display = 'flex';
+        if (ta) ta.style.display = 'none';
+        if (bl) bl.textContent = t === 'colors' ? '[ ] Raw JSON' : '{ } Raw JSON';
+    });
+
+    const specsContainer = document.getElementById('specs-rows-container');
+    const dimensContainer = document.getElementById('dimens-rows-container');
+    const colorsContainer = document.getElementById('colors-rows-container');
+
+    if (specsContainer) specsContainer.innerHTML = '';
+    if (dimensContainer) dimensContainer.innerHTML = '';
+    if (colorsContainer) colorsContainer.innerHTML = '';
+
+    // Populate Specs
+    let parsedSpecs = specs;
+    if (typeof specs === 'string' && specs.trim()) {
+        try { parsedSpecs = JSON.parse(specs); } catch (e) { parsedSpecs = {}; }
+    }
+    if (parsedSpecs && typeof parsedSpecs === 'object' && Object.keys(parsedSpecs).length > 0) {
+        Object.entries(parsedSpecs).forEach(([k, v]) => addSpecRow(k, v));
+    }
+
+    // Populate Dimensions
+    let parsedDimens = dimens;
+    if (typeof dimens === 'string' && dimens.trim()) {
+        try { parsedDimens = JSON.parse(dimens); } catch (e) { parsedDimens = {}; }
+    }
+    if (parsedDimens && typeof parsedDimens === 'object' && Object.keys(parsedDimens).length > 0) {
+        Object.entries(parsedDimens).forEach(([k, v]) => addDimenRow(k, v));
+    }
+
+    // Populate Colors
+    let parsedColors = colors;
+    if (typeof colors === 'string' && colors.trim()) {
+        try { parsedColors = JSON.parse(colors); } catch (e) { parsedColors = []; }
+    }
+    if (Array.isArray(parsedColors) && parsedColors.length > 0) {
+        parsedColors.forEach(c => addColorRow(c.name || '', c.code || c.hex || '#1A1A1A', c.image || ''));
+    }
+
+    if (window.lucide) lucide.createIcons();
+    syncVisualBuildersToJson();
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+window.addSpecRow = addSpecRow;
+window.addDimenRow = addDimenRow;
+window.addColorRow = addColorRow;
+window.toggleJsonView = toggleJsonView;
+window.syncVisualBuildersToJson = syncVisualBuildersToJson;
+window.populateVisualBuilders = populateVisualBuilders;
 
 function openProductModal(id = null) {
     const modal = document.getElementById('product-modal');
@@ -532,8 +937,11 @@ function openProductModal(id = null) {
     document.getElementById('edit-prod-id').value = id || '';
 
     if (id) {
-        title.textContent = 'Edit Product';
+        title.innerHTML = 'Edit Product';
         const p = KNSData.getProducts().find(x => x.id === id);
+        if (p && p.updatedAt) {
+            title.innerHTML = `Edit Product <span style="font-size:0.8rem; font-weight:normal; color:#888; margin-left:8px;">(Last updated: ${formatUpdateTimeSimple(p.updatedAt)})</span>`;
+        }
         if (p) {
             document.getElementById('prod-name').value = p.name || '';
             document.getElementById('prod-cat').value = p.category || 'Executive Chair';
@@ -556,9 +964,13 @@ function openProductModal(id = null) {
             document.getElementById('prod-img-2').value = (p.images && p.images[1]) ? p.images[1] : '';
             document.getElementById('prod-img-3').value = (p.images && p.images[2]) ? p.images[2] : '';
             document.getElementById('prod-img-4').value = (p.images && p.images[3]) ? p.images[3] : '';
+
+            // Populate Visual Builders
+            populateVisualBuilders(p.specs, p.dimensions, p.colors);
         }
     } else {
         title.textContent = 'Add New Product';
+        populateVisualBuilders({}, {}, []);
     }
 
     modal.classList.add('active');
@@ -644,6 +1056,7 @@ window.handleImageFile = function(event, targetId) {
 
 async function handleProductSubmit(e) {
     e.preventDefault();
+    syncVisualBuildersToJson();
     const id = document.getElementById('edit-prod-id').value;
     const submitBtn = e.target.querySelector('button[type="submit"]');
     const originalBtnText = submitBtn ? submitBtn.innerHTML : 'Save Product';
@@ -694,7 +1107,8 @@ async function handleProductSubmit(e) {
         ].filter(v => v && v.trim() !== ''),
         isNew: document.getElementById('prod-isnew').checked,
         badge: document.getElementById('prod-trending').checked ? 'Trending' : '',
-        rating: 4.5
+        rating: 4.5,
+        updatedAt: new Date().toISOString()
     };
 
     // 🔥 Final Size Check for Firestore (1,048,576 bytes limit)
@@ -734,6 +1148,48 @@ async function handleProductSubmit(e) {
         alert(`🚨 Error Saving Product\n\nIssue: ${errorMsg}\n\nCommon Fixes:\n- Ensure images are under 700KB\n- Check your internet connection\n- Verify JSON formatting in specs/dimensions`);
     }
 }
+
+async function duplicateProduct(id) {
+    try {
+        const allProducts = (window.KNSData && KNSData.getProducts ? KNSData.getProducts() : []) || [];
+        const p = allProducts.find(x => x.id === id);
+        if (!p) {
+            alert("Product not found.");
+            return;
+        }
+
+        if (!confirm(`Duplicate "${p.name}"?\nA new copy will be created in your catalog with the same specifications and images.`)) {
+            return;
+        }
+
+        // Deep clone
+        const clone = JSON.parse(JSON.stringify(p));
+        delete clone.id;
+        delete clone.firestoreId;
+        clone.name = `${p.name} (Copy)`;
+        clone.updatedAt = new Date().toISOString();
+        clone.timestamp = Date.now();
+
+        if (window.KNSCart && KNSCart.showToast) {
+            KNSCart.showToast(`Duplicating "${p.name}"...`);
+        }
+
+        const res = await KNSData.addProduct(clone);
+        if (res && (res.ok || res.id)) {
+            if (window.KNSCart && KNSCart.showToast) {
+                KNSCart.showToast(`"${clone.name}" created successfully!`);
+            }
+            renderProductsTable();
+            refreshDashboard();
+        } else {
+            alert("Failed to duplicate product: " + (res && res.msg ? res.msg : "Unknown error"));
+        }
+    } catch (err) {
+        console.error("❌ Error duplicating product:", err);
+        alert("Error duplicating product: " + err.message);
+    }
+}
+window.duplicateProduct = duplicateProduct;
 
 function deleteProduct(id) {
     if (confirm('Are you sure you want to delete this product? This cannot be undone.')) {
@@ -813,46 +1269,186 @@ function deleteCatalog(id) {
 }
 
 /* --- Orders & Users --- */
+function exportOrdersToCSV() {
+    try {
+        const orders = (window.KNSData && KNSData.getAllOrders ? KNSData.getAllOrders() : getAllOrders()) || [];
+        if (!orders || orders.length === 0) {
+            alert("No orders available to export.");
+            return;
+        }
+
+        const headers = [
+            "Order ID",
+            "Order Date",
+            "Customer Name",
+            "Customer Email",
+            "Customer Phone",
+            "Shipping Address",
+            "City",
+            "Pincode",
+            "Total Items",
+            "Items Purchased",
+            "Total Amount (INR)",
+            "Payment Status",
+            "Order Status"
+        ];
+
+        const escapeCSV = (val) => {
+            if (val === null || val === undefined) return '""';
+            const str = String(val).replace(/"/g, '""');
+            return `"${str}"`;
+        };
+
+        const rows = orders.map(o => {
+            const rawId = (o.id || o.orderNumber || o.firestoreId || '').toString();
+            const displayId = rawId.startsWith('#KNS-') ? rawId : `#KNS-${rawId.replace('#KNS-', '').replace('#ORD-', '').slice(-6).toUpperCase()}`;
+            const oDate = o.timestamp || o.date;
+            const dateStr = oDate ? new Date(oDate).toLocaleDateString('en-IN') : '';
+            const custName = o.customerName || o.userName || 'Customer';
+            const custEmail = o.customerEmail || o.email || '';
+            const custPhone = o.phone || o.customerPhone || (o.shippingAddress && o.shippingAddress.phone) || '';
+            const address = o.address || (o.shippingAddress && o.shippingAddress.street) || '';
+            const city = o.city || (o.shippingAddress && o.shippingAddress.city) || '';
+            const pincode = o.pincode || (o.shippingAddress && o.shippingAddress.pincode) || '';
+
+            const items = o.items || [];
+            const itemsSummary = items.map(i => `${i.name || 'Product'} (Qty: ${i.quantity || 1}, Price: Rs ${i.price || 0})`).join('; ');
+            const totalItemsCount = items.reduce((sum, i) => sum + (parseInt(i.quantity) || 1), 0);
+            const totalAmount = o.total || 0;
+            const paymentStatus = o.paymentStatus || (o.status === 'Confirmed' ? 'Paid' : 'Pending');
+            const orderStatus = o.status || 'Confirmed';
+
+            return [
+                escapeCSV(displayId),
+                escapeCSV(dateStr),
+                escapeCSV(custName),
+                escapeCSV(custEmail),
+                escapeCSV(custPhone),
+                escapeCSV(address),
+                escapeCSV(city),
+                escapeCSV(pincode),
+                escapeCSV(totalItemsCount),
+                escapeCSV(itemsSummary),
+                escapeCSV(totalAmount),
+                escapeCSV(paymentStatus),
+                escapeCSV(orderStatus)
+            ].join(',');
+        });
+
+        const csvString = "\uFEFF" + [headers.join(','), ...rows].join('\r\n');
+        const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        const today = new Date().toISOString().split('T')[0];
+        link.download = `kns_orders_report_${today}.csv`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+
+        if (window.KNSCart && KNSCart.showToast) {
+            KNSCart.showToast(`Exported ${orders.length} orders to CSV successfully!`);
+        }
+    } catch (err) {
+        console.error("❌ Error exporting orders to CSV:", err);
+        alert("Error exporting orders: " + err.message);
+    }
+}
+window.exportOrdersToCSV = exportOrdersToCSV;
+
 function renderOrdersTable() {
-    const query = document.getElementById('order-search').value.toLowerCase();
-    const orders = getAllOrders().filter(o =>
-        o.id.toLowerCase().includes(query) || o.total.toString().includes(query)
-    );
+    const searchElem = document.getElementById('order-search');
+    const query = (searchElem ? searchElem.value : '').toLowerCase().trim();
+    const allOrders = (window.KNSData && KNSData.getAllOrders ? KNSData.getAllOrders() : getAllOrders()) || [];
+    
+    const orders = allOrders.filter(o => {
+        const id = (o.id || o.orderNumber || o.firestoreId || '').toLowerCase();
+        const customer = (o.customerName || o.userName || '').toLowerCase();
+        const email = (o.customerEmail || o.email || '').toLowerCase();
+        const phone = (o.phone || o.customerPhone || (o.shippingAddress && o.shippingAddress.phone) || '').toString().toLowerCase();
+        const total = (o.total || '').toString();
+        return id.includes(query) || customer.includes(query) || email.includes(query) || phone.includes(query) || total.includes(query);
+    });
+
     const tbody = document.getElementById('admin-orders-table');
     if (!tbody) return;
 
     tbody.innerHTML = orders.map(o => {
-        // Unify Display ID: Favor o.id (generated at checkout) then fallback to firestoreId
         const displayId = (o.id || o.orderNumber || o.firestoreId || 'Pending').replace('#KNS-', '').replace('#ORD-', '');
         const shortId = displayId.length > 8 ? displayId.slice(-6).toUpperCase() : displayId.toUpperCase();
         const fId = o.firestoreId || o.id; 
         const oDate = o.timestamp || o.date || Date.now();
-        const oUser = o.userName || o.customerName || 'Customer';
+        const oCustomer = o.customerName || o.userName || 'Customer';
+        const oEmail = o.customerEmail || o.email || '';
+        const rawPhone = o.phone || o.customerPhone || (o.shippingAddress && o.shippingAddress.phone) || '';
+        const cleanPhone = rawPhone.toString().replace(/\D/g, '');
+        const waPhone = cleanPhone.length === 10 ? '91' + cleanPhone : cleanPhone;
         const oTotal = o.total || 0;
         const oStatus = o.status || 'Confirmed';
 
+        const waMsg = `Hello ${oCustomer}, regarding your order #KNS-${shortId} at KNS Furnitech:`;
+        const waUrl = cleanPhone ? `https://wa.me/${waPhone}?text=${encodeURIComponent(waMsg)}` : null;
+        const mailtoUrl = (oEmail && oEmail.includes('@')) ? `mailto:${encodeURIComponent(oEmail)}?subject=${encodeURIComponent('KNS Furnitech - Order Update #KNS-' + shortId)}&body=${encodeURIComponent('Dear ' + oCustomer + ',\n\nRegarding your order #KNS-' + shortId + ' at KNS Furnitech:\n\nTotal: Rs ' + oTotal.toLocaleString('en-IN') + '\nStatus: ' + oStatus + '\n\nBest regards,\nKNS Furnitech Team')}` : null;
+
         return `
             <tr>
-                <td data-label="Order Number" style="font-weight:600;">#KNS-${shortId}</td>
+                <td data-label="Order Number" style="font-weight:700; color:var(--admin-dark);">#KNS-${shortId}</td>
+                <td data-label="Customer & Contact">
+                    <div style="font-weight:600; color:#1A1A1A;">${escapeHTML(oCustomer)}</div>
+                    <div style="display:flex; flex-direction:column; gap:2px; margin-top:2px; font-size:0.8rem; color:#666;">
+                        ${oEmail ? `<span>${escapeHTML(oEmail)}</span>` : ''}
+                        ${rawPhone ? `<span>${escapeHTML(rawPhone)}</span>` : ''}
+                    </div>
+                    <div style="display:flex; gap:6px; margin-top:6px;">
+                        ${waUrl ? `
+                            <a href="${waUrl}" target="_blank" rel="noopener noreferrer" class="btn-whatsapp-direct" title="Chat on WhatsApp"
+                               style="display:inline-flex; align-items:center; gap:4px; padding:3px 8px; background:#25D366; color:white; border-radius:6px; font-size:0.75rem; text-decoration:none; font-weight:600; transition:all 0.2s;">
+                                <i data-lucide="message-circle" size="13"></i> WhatsApp
+                            </a>
+                        ` : ''}
+                        ${mailtoUrl ? `
+                            <a href="${mailtoUrl}" class="btn-email-direct" title="Send Email"
+                               style="display:inline-flex; align-items:center; gap:4px; padding:3px 8px; background:#0ea5e9; color:white; border-radius:6px; font-size:0.75rem; text-decoration:none; font-weight:600; transition:all 0.2s;">
+                                <i data-lucide="mail" size="13"></i> Email
+                            </a>
+                        ` : ''}
+                    </div>
+                </td>
                 <td data-label="Date">${new Date(oDate).toLocaleDateString()}</td>
-                <td data-label="Total Amount" style="font-weight:700;">₹ ${oTotal.toLocaleString('en-IN')}</td>
+                <td data-label="Total Amount" style="font-weight:700; color:var(--admin-dark);">₹ ${oTotal.toLocaleString('en-IN')}</td>
                 <td data-label="Items">${o.items ? o.items.length : 0} Product(s)</td>
                 <td data-label="Status"><span class="status-badge ${oStatus.toLowerCase()}">${oStatus}</span></td>
-                <td data-label="Actions">
-                    <div class="action-btns">
-                        <div class="action-btn btn-view" title="View Details" onclick="viewOrder('${fId}')" style="background:#8CC63F; color:white;"><i data-lucide="eye" size="16"></i></div>
+                <td data-label="Actions" style="text-align: right; min-width: 140px;">
+                    <div class="action-btns" style="display: inline-flex; gap: 8px; justify-content: flex-end; align-items: center;">
+                        <button type="button" class="action-btn btn-view" title="View Order Details" onclick="viewOrder('${fId}')"
+                            style="width: 34px; height: 34px; border-radius: 8px; border: 1px solid rgba(140, 198, 63, 0.4); background: rgba(140, 198, 63, 0.15); color: #5b8e1f; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s;">
+                            <i data-lucide="eye" size="16"></i>
+                        </button>
+                        ${waUrl ? `
+                            <a href="${waUrl}" target="_blank" rel="noopener noreferrer" class="action-btn btn-whatsapp-direct" title="WhatsApp Customer"
+                               style="width: 34px; height: 34px; border-radius: 8px; background: #25D366; color: white; border: none; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s;">
+                                <i data-lucide="message-circle" size="16"></i>
+                            </a>
+                        ` : ''}
+                        ${mailtoUrl ? `
+                            <a href="${mailtoUrl}" class="action-btn btn-email-direct" title="Email Customer"
+                               style="width: 34px; height: 34px; border-radius: 8px; background: #0ea5e9; color: white; border: none; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s;">
+                                <i data-lucide="mail" size="16"></i>
+                            </a>
+                        ` : ''}
                     </div>
                 </td>
             </tr>
         `;
-    }).join('') || '<tr><td colspan="6" style="text-align:center; padding: 2rem; color: #888;">No orders found.</td></tr>';
+    }).join('') || '<tr><td colspan="7" style="text-align:center; padding: 2.5rem; color: #888;">No orders found.</td></tr>';
 
     if (window.lucide) lucide.createIcons();
 }
 
 function renderUsersTable() {
     const searchInput = document.getElementById('user-search');
-    const query = (searchInput ? searchInput.value : '').toLowerCase();
+    const query = (searchInput ? searchInput.value : '').toLowerCase().trim();
 
     // Direct Access to Memory-Backed KNSData
     let storedUsers = [];
@@ -868,27 +1464,53 @@ function renderUsersTable() {
         if (u) storedUsers.push({ ...u, createdAt: Date.now(), name: (u.name || 'Admin') + ' (You)' });
     }
 
+    const allOrders = (window.KNSData && KNSData.getAllOrders ? KNSData.getAllOrders() : getAllOrders()) || [];
+
     const users = storedUsers.filter(u =>
         (u.name || '').toLowerCase().includes(query) || (u.email && u.email.toLowerCase().includes(query))
     );
     const tbody = document.getElementById('admin-users-table');
     if (!tbody) return;
 
-    console.log(`👥 [UI] Rendering ${users.length} Users (Total in Memory: ${storedUsers.length})`);
+    console.log(`👥 [UI] Rendering ${users.length} Users with Spending Overview`);
 
     tbody.innerHTML = users.map(u => {
         const uName = u.name || 'Anonymous';
         const uEmail = u.email || 'No email';
         const uDate = u.createdAt || u.lastLogin || Date.now();
+
+        // Calculate Customer Spending Overview
+        const userOrders = allOrders.filter(o => {
+            const matchesEmail = u.email && (
+                (o.customerEmail && o.customerEmail.toLowerCase() === u.email.toLowerCase()) ||
+                (o.email && o.email.toLowerCase() === u.email.toLowerCase())
+            );
+            const matchesUserId = u.id && (o.userId === u.id || o.userId === u.uid);
+            return matchesEmail || matchesUserId;
+        });
+
+        const totalOrdersCount = userOrders.length;
+        const lifetimeSpent = userOrders.reduce((sum, o) => sum + (parseFloat(o.total) || 0), 0);
+
         return `
             <tr>
                 <td data-label="Avatar"><div class="admin-avatar" style="width:32px; height:32px; font-size:0.8rem;">${(uName[0] || '?').toUpperCase()}</div></td>
-                <td data-label="Name" style="font-weight:600;">${uName}</td>
-                <td data-label="Email">${uEmail}</td>
+                <td data-label="Name" style="font-weight:600; color:var(--admin-dark);">${escapeHTML(uName)}</td>
+                <td data-label="Email Address">${escapeHTML(uEmail)}</td>
+                <td data-label="Total Orders">
+                    <span style="display:inline-flex; align-items:center; gap:5px; font-weight:600; padding:4px 10px; background:#eff6ff; color:#1d4ed8; border-radius:12px; font-size:0.85rem;">
+                        <i data-lucide="shopping-bag" size="13"></i> ${totalOrdersCount} ${totalOrdersCount === 1 ? 'order' : 'orders'}
+                    </span>
+                </td>
+                <td data-label="Lifetime Spent" style="font-weight:700; color:var(--admin-dark); font-size:0.95rem;">
+                    ₹ ${lifetimeSpent.toLocaleString('en-IN')}
+                </td>
                 <td data-label="Joined On">${uDate ? new Date(uDate).toLocaleDateString() : 'Active Session'}</td>
             </tr>
         `;
-    }).join('') || '<tr><td colspan="4" style="text-align:center; padding: 2.5rem; color: #888;">No customers registered yet. Click "Sync Cloud" above to refresh.</td></tr>';
+    }).join('') || '<tr><td colspan="6" style="text-align:center; padding: 2.5rem; color: #888;">No customers registered yet. Click "Sync Cloud" above to refresh.</td></tr>';
+
+    if (window.lucide) lucide.createIcons();
 }
 
 function renderReviewsTable() {
@@ -951,32 +1573,69 @@ function renderInquiriesTable() {
         const msg = iq.message || 'No Message';
         const contextInfo = isBulk ? `
             <div style="margin-top:8px; padding-top:8px; border-top:1px dashed #ddd; font-size:0.8rem; color:var(--admin-green);">
-                <strong>🏢 ${iq.companyName || 'Corporate'}</strong> (Qty: ${iq.quantity || 'N/A'})<br>
-                <strong>🛍️ ${iq.productName || 'Product Unavailable'}</strong>
+                <strong>🏢 ${escapeHTML(iq.companyName || 'Corporate')}</strong> (Qty: ${escapeHTML(String(iq.quantity || 'N/A'))})<br>
+                <strong>🛍️ ${escapeHTML(iq.productName || 'Product Unavailable')}</strong>
             </div>
         ` : '';
+
+        const rawPhone = iq.phone || '';
+        const cleanPhone = rawPhone.toString().replace(/\D/g, '');
+        const waPhone = cleanPhone.length === 10 ? '91' + cleanPhone : cleanPhone;
+        const waMsg = `Hello ${fullName}, thank you for contacting KNS Furnitech regarding ${iq.productName ? iq.productName : 'your inquiry'}. How can we assist you today?`;
+        const waUrl = cleanPhone ? `https://wa.me/${waPhone}?text=${encodeURIComponent(waMsg)}` : null;
+
+        const emailSubject = `KNS Furnitech - Regarding your inquiry${iq.productName ? ' (' + iq.productName + ')' : ''}`;
+        const emailBody = `Dear ${fullName},\n\nThank you for reaching out to KNS Furnitech.\n\nRegarding your inquiry:\n"${msg}"\n\nWe would be delighted to assist you with specifications, pricing, and bulk catalogs.\n\nBest regards,\nKNS Furnitech Team`;
+        const mailtoUrl = (iq.email && iq.email.includes('@')) ? `mailto:${encodeURIComponent(iq.email)}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}` : null;
 
         return `
             <tr>
                 <td data-label="Date">${displayDate}</td>
-                <td data-label="Customer" style="font-weight:600;">
-                    ${fullName}
+                <td data-label="Customer" style="font-weight:600; color:var(--admin-dark);">
+                    ${escapeHTML(fullName)}
                     ${isBulk ? '<span style="display:inline-block; font-size:10px; padding:2px 6px; background:var(--admin-green); color:white; border-radius:4px; margin-left:8px; vertical-align:middle;">BULK</span>' : ''}
                 </td>
                 <td data-label="Contact">
-                    <div style="font-size:0.85rem; color:#1A1A1A;">${iq.email || 'No Email'}</div>
-                    <div style="font-size:0.8rem; color:#888;">${iq.phone || 'No Phone'}</div>
+                    <div style="font-size:0.85rem; color:#1A1A1A; font-weight:500;">${escapeHTML(iq.email || 'No Email')}</div>
+                    <div style="font-size:0.8rem; color:#666; margin-top:2px;">${escapeHTML(iq.phone || 'No Phone')}</div>
+                    <div style="display:flex; gap:6px; margin-top:6px;">
+                        ${waUrl ? `
+                            <a href="${waUrl}" target="_blank" rel="noopener noreferrer" class="btn-whatsapp-direct" title="Message on WhatsApp"
+                               style="display:inline-flex; align-items:center; gap:4px; padding:3px 8px; background:#25D366; color:white; border-radius:6px; font-size:0.75rem; text-decoration:none; font-weight:600; transition:all 0.2s;">
+                                <i data-lucide="message-circle" size="13"></i> WhatsApp
+                            </a>
+                        ` : ''}
+                        ${mailtoUrl ? `
+                            <a href="${mailtoUrl}" class="btn-email-direct" title="Send Email"
+                               style="display:inline-flex; align-items:center; gap:4px; padding:3px 8px; background:#0ea5e9; color:white; border-radius:6px; font-size:0.75rem; text-decoration:none; font-weight:600; transition:all 0.2s;">
+                                <i data-lucide="mail" size="13"></i> Email
+                            </a>
+                        ` : ''}
+                    </div>
                 </td>
                 <td data-label="Message">
                     <div style="max-width:300px; font-size:0.9rem; line-height:1.4; color:#444;">
-                        ${msg}
+                        ${escapeHTML(msg)}
                         ${contextInfo}
                     </div>
                 </td>
-                <td data-label="Actions">
-                    <div class="action-btns">
-                        <button class="action-btn" onclick="handleDeleteInquiry('${id}')" title="Delete" style="background:#ff4d4d; color:white; border:none; border-radius:6px; width:32px; height:32px; cursor:pointer;">
-                            <i data-lucide="trash-2" size="16"></i>
+                <td data-label="Actions" style="text-align: right; min-width: 140px;">
+                    <div class="action-btns" style="display:inline-flex; gap:6px; justify-content: flex-end; align-items:center;">
+                        ${waUrl ? `
+                            <a href="${waUrl}" target="_blank" rel="noopener noreferrer" class="action-btn btn-whatsapp-direct" title="WhatsApp Customer"
+                               style="width: 32px; height: 32px; border-radius: 6px; background: #25D366; color: white; border: none; display: inline-flex; align-items: center; justify-content: center; text-decoration: none;">
+                                <i data-lucide="message-circle" size="15"></i>
+                            </a>
+                        ` : ''}
+                        ${mailtoUrl ? `
+                            <a href="${mailtoUrl}" class="action-btn btn-email-direct" title="Email Customer"
+                               style="width: 32px; height: 32px; border-radius: 6px; background: #0ea5e9; color: white; border: none; display: inline-flex; align-items: center; justify-content: center; text-decoration: none;">
+                                <i data-lucide="mail" size="15"></i>
+                            </a>
+                        ` : ''}
+                        <button class="action-btn btn-delete" onclick="handleDeleteInquiry('${id}')" title="Delete Inquiry"
+                                style="background:#ff4d4d; color:white; border:none; border-radius:6px; width:32px; height:32px; cursor:pointer; display:inline-flex; align-items:center; justify-content:center;">
+                            <i data-lucide="trash-2" size="15"></i>
                         </button>
                     </div>
                 </td>

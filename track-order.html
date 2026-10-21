@@ -531,7 +531,7 @@
         });
 
         async function handleTrack(e) {
-            e.preventDefault();
+            if (e && e.preventDefault) e.preventDefault();
             const orderIdRaw = document.getElementById('orderId').value.trim();
             const emailInput = document.getElementById('userEmail');
             const email = currentUserEmail || (emailInput ? emailInput.value.trim().toLowerCase() : '');

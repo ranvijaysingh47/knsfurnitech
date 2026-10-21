@@ -48,6 +48,7 @@ window.KNSSkeleton = {
             `;
         }
         html += '</div>';
+        return html;
     },
     getBlogDetailSkeleton: () => {
         return `

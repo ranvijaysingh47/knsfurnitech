@@ -50,9 +50,27 @@ const KNSCart = (() => {
     function saveOrder(order) {
         try {
             const history = JSON.parse(localStorage.getItem(_orderKey())) || [];
-            history.unshift(order); // Newest first
+            // Sanitize order: Strip heavy base64 images so local storage doesn't exceed 5MB quota
+            const cleanOrder = JSON.parse(JSON.stringify(order));
+            if (cleanOrder.items && Array.isArray(cleanOrder.items)) {
+                cleanOrder.items = cleanOrder.items.map(i => {
+                    const item = { ...i };
+                    if (item.image && typeof item.image === 'string' && item.image.startsWith('data:image')) {
+                        item.image = 'images/logo.webp';
+                    }
+                    return item;
+                });
+            }
+            history.unshift(cleanOrder); // Newest first
+            if (history.length > 25) history.length = 25; // keep last 25 orders
             localStorage.setItem(_orderKey(), JSON.stringify(history));
-        } catch (e) { console.error("Failed to save order", e); }
+        } catch (e) {
+            console.warn("Failed to save order to localStorage (quota warning):", e);
+            try {
+                localStorage.removeItem('kns_view_order_temp');
+                localStorage.removeItem('kns_pending_checkout_data');
+            } catch (_) {}
+        }
     }
     function getOrders() {
         try { return JSON.parse(localStorage.getItem(_orderKey())) || []; }
