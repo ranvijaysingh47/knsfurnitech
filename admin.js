@@ -638,11 +638,11 @@ function renderProductsTable() {
         <tr>
             <td><input type="checkbox" class="select-row-products" value="${p.id}" onchange="updateBulkActionBar('products')"></td>
             <td data-label="Preview"><img src="${p.image}" class="table-img" alt="${escapeHTML(p.name)}"></td>
-            <td data-label="Product Name" style="font-weight:600;">${escapeHTML(p.name)}</td>
-            <td data-label="Category">${escapeHTML(p.category)}</td>
-            <td data-label="Price" style="font-weight:700;">₹ ${p.price.toLocaleString('en-IN')}</td>
-            <td data-label="Actions" style="text-align: center; min-width: 140px;">
-                <div class="action-btns" style="display: inline-flex; gap: 8px; justify-content: center; align-items: center;">
+            <td data-label="Product Name" style="font-weight:600;"><div class="cell-data">${escapeHTML(p.name)}</div></td>
+            <td data-label="Category"><div class="cell-data">${escapeHTML(p.category)}</div></td>
+            <td data-label="Price" style="font-weight:700;"><div class="cell-data">₹ ${p.price.toLocaleString('en-IN')}</div></td>
+            <td data-label="Actions">
+                <div class="action-btns">
                     <button type="button" class="action-btn btn-edit" title="Edit Product" onclick="openProductModal('${p.id}')"
                         style="width: 34px; height: 34px; border-radius: 8px; border: 1px solid rgba(140, 198, 63, 0.4); background: rgba(140, 198, 63, 0.12); color: #5b8e1f; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s;">
                         <i data-lucide="edit-3" size="15"></i>
@@ -657,7 +657,7 @@ function renderProductsTable() {
                     </button>
                 </div>
             </td>
-            <td data-label="Last Updated">${formatUpdateTime(p.updatedAt || p.timestamp || p.id)}</td>
+            <td data-label="Last Updated"><div class="cell-data">${formatUpdateTime(p.updatedAt || p.timestamp || p.id)}</div></td>
         </tr>
     `).join('') || '<tr><td colspan="7" style="text-align:center; padding: 2rem; color: #888;">No products found.</td></tr>';
 
@@ -1395,32 +1395,20 @@ function renderOrdersTable() {
             <tr>
                 <td data-label="Order Number" style="font-weight:700; color:var(--admin-dark);">#KNS-${shortId}</td>
                 <td data-label="Customer & Contact">
-                    <div style="font-weight:600; color:#1A1A1A;">${escapeHTML(oCustomer)}</div>
-                    <div style="display:flex; flex-direction:column; gap:2px; margin-top:2px; font-size:0.8rem; color:#666;">
-                        ${oEmail ? `<span>${escapeHTML(oEmail)}</span>` : ''}
-                        ${rawPhone ? `<span>${escapeHTML(rawPhone)}</span>` : ''}
-                    </div>
-                    <div style="display:flex; gap:6px; margin-top:6px;">
-                        ${waUrl ? `
-                            <a href="${waUrl}" target="_blank" rel="noopener noreferrer" class="btn-whatsapp-direct" title="Chat on WhatsApp"
-                               style="display:inline-flex; align-items:center; gap:4px; padding:3px 8px; background:#25D366; color:white; border-radius:6px; font-size:0.75rem; text-decoration:none; font-weight:600; transition:all 0.2s;">
-                                <i data-lucide="message-circle" size="13"></i> WhatsApp
-                            </a>
-                        ` : ''}
-                        ${mailtoUrl ? `
-                            <a href="${mailtoUrl}" class="btn-email-direct" title="Send Email"
-                               style="display:inline-flex; align-items:center; gap:4px; padding:3px 8px; background:#0ea5e9; color:white; border-radius:6px; font-size:0.75rem; text-decoration:none; font-weight:600; transition:all 0.2s;">
-                                <i data-lucide="mail" size="13"></i> Email
-                            </a>
-                        ` : ''}
+                    <div class="cell-data">
+                        <div style="font-weight:600; color:#1A1A1A;">${escapeHTML(oCustomer)}</div>
+                        <div style="font-size:0.8rem; color:#666; line-height:1.35;">
+                            ${oEmail ? `<div>${escapeHTML(oEmail)}</div>` : ''}
+                            ${rawPhone ? `<div>${escapeHTML(rawPhone)}</div>` : ''}
+                        </div>
                     </div>
                 </td>
                 <td data-label="Date">${new Date(oDate).toLocaleDateString()}</td>
                 <td data-label="Total Amount" style="font-weight:700; color:var(--admin-dark);">₹ ${oTotal.toLocaleString('en-IN')}</td>
                 <td data-label="Items">${o.items ? o.items.length : 0} Product(s)</td>
                 <td data-label="Status"><span class="status-badge ${oStatus.toLowerCase()}">${oStatus}</span></td>
-                <td data-label="Actions" style="text-align: right; min-width: 140px;">
-                    <div class="action-btns" style="display: inline-flex; gap: 8px; justify-content: flex-end; align-items: center;">
+                <td data-label="Actions">
+                    <div class="action-btns">
                         <button type="button" class="action-btn btn-view" title="View Order Details" onclick="viewOrder('${fId}')"
                             style="width: 34px; height: 34px; border-radius: 8px; border: 1px solid rgba(140, 198, 63, 0.4); background: rgba(140, 198, 63, 0.15); color: #5b8e1f; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s;">
                             <i data-lucide="eye" size="16"></i>
@@ -1592,50 +1580,40 @@ function renderInquiriesTable() {
             <tr>
                 <td data-label="Date">${displayDate}</td>
                 <td data-label="Customer" style="font-weight:600; color:var(--admin-dark);">
-                    ${escapeHTML(fullName)}
-                    ${isBulk ? '<span style="display:inline-block; font-size:10px; padding:2px 6px; background:var(--admin-green); color:white; border-radius:4px; margin-left:8px; vertical-align:middle;">BULK</span>' : ''}
+                    <div class="cell-data">
+                        ${escapeHTML(fullName)}
+                        ${isBulk ? '<span style="display:inline-block; font-size:10px; padding:2px 6px; background:var(--admin-green); color:white; border-radius:4px; margin-top:2px;">BULK</span>' : ''}
+                    </div>
                 </td>
                 <td data-label="Contact">
-                    <div style="font-size:0.85rem; color:#1A1A1A; font-weight:500;">${escapeHTML(iq.email || 'No Email')}</div>
-                    <div style="font-size:0.8rem; color:#666; margin-top:2px;">${escapeHTML(iq.phone || 'No Phone')}</div>
-                    <div style="display:flex; gap:6px; margin-top:6px;">
-                        ${waUrl ? `
-                            <a href="${waUrl}" target="_blank" rel="noopener noreferrer" class="btn-whatsapp-direct" title="Message on WhatsApp"
-                               style="display:inline-flex; align-items:center; gap:4px; padding:3px 8px; background:#25D366; color:white; border-radius:6px; font-size:0.75rem; text-decoration:none; font-weight:600; transition:all 0.2s;">
-                                <i data-lucide="message-circle" size="13"></i> WhatsApp
-                            </a>
-                        ` : ''}
-                        ${mailtoUrl ? `
-                            <a href="${mailtoUrl}" class="btn-email-direct" title="Send Email"
-                               style="display:inline-flex; align-items:center; gap:4px; padding:3px 8px; background:#0ea5e9; color:white; border-radius:6px; font-size:0.75rem; text-decoration:none; font-weight:600; transition:all 0.2s;">
-                                <i data-lucide="mail" size="13"></i> Email
-                            </a>
-                        ` : ''}
+                    <div class="cell-data">
+                        <div style="font-size:0.85rem; color:#1A1A1A; font-weight:500;">${escapeHTML(iq.email || 'No Email')}</div>
+                        <div style="font-size:0.8rem; color:#666;">${escapeHTML(iq.phone || 'No Phone')}</div>
                     </div>
                 </td>
                 <td data-label="Message">
-                    <div style="max-width:300px; font-size:0.9rem; line-height:1.4; color:#444;">
+                    <div class="cell-data" style="max-width:300px; font-size:0.9rem; line-height:1.4; color:#444;">
                         ${escapeHTML(msg)}
                         ${contextInfo}
                     </div>
                 </td>
-                <td data-label="Actions" style="text-align: right; min-width: 140px;">
-                    <div class="action-btns" style="display:inline-flex; gap:6px; justify-content: flex-end; align-items:center;">
+                <td data-label="Actions">
+                    <div class="action-btns">
                         ${waUrl ? `
                             <a href="${waUrl}" target="_blank" rel="noopener noreferrer" class="action-btn btn-whatsapp-direct" title="WhatsApp Customer"
-                               style="width: 32px; height: 32px; border-radius: 6px; background: #25D366; color: white; border: none; display: inline-flex; align-items: center; justify-content: center; text-decoration: none;">
-                                <i data-lucide="message-circle" size="15"></i>
+                               style="width: 34px; height: 34px; border-radius: 8px; background: #25D366; color: white; border: none; display: inline-flex; align-items: center; justify-content: center; text-decoration: none;">
+                                <i data-lucide="message-circle" size="16"></i>
                             </a>
                         ` : ''}
                         ${mailtoUrl ? `
                             <a href="${mailtoUrl}" class="action-btn btn-email-direct" title="Email Customer"
-                               style="width: 32px; height: 32px; border-radius: 6px; background: #0ea5e9; color: white; border: none; display: inline-flex; align-items: center; justify-content: center; text-decoration: none;">
-                                <i data-lucide="mail" size="15"></i>
+                               style="width: 34px; height: 34px; border-radius: 8px; background: #0ea5e9; color: white; border: none; display: inline-flex; align-items: center; justify-content: center; text-decoration: none;">
+                                <i data-lucide="mail" size="16"></i>
                             </a>
                         ` : ''}
                         <button class="action-btn btn-delete" onclick="handleDeleteInquiry('${id}')" title="Delete Inquiry"
-                                style="background:#ff4d4d; color:white; border:none; border-radius:6px; width:32px; height:32px; cursor:pointer; display:inline-flex; align-items:center; justify-content:center;">
-                            <i data-lucide="trash-2" size="15"></i>
+                                style="background:#ff4d4d; color:white; border:none; border-radius:8px; width:34px; height:34px; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; transition: all 0.2s;">
+                            <i data-lucide="trash-2" size="16"></i>
                         </button>
                     </div>
                 </td>

@@ -285,6 +285,19 @@
             color: var(--admin-dark);
         }
 
+        .card-header-btns {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .cell-data {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
         .table-responsive-wrapper {
             width: 100%;
             overflow-x: auto;
@@ -787,15 +800,55 @@
             }
 
             .card-header {
-                padding: 1.5rem;
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 1rem;
+                padding: 1.2rem !important;
+                flex-direction: column !important;
+                align-items: stretch !important;
+                gap: 1rem !important;
             }
 
-            .card-header .btn-add {
-                width: 100%;
-                justify-content: center;
+            .card-header-btns {
+                width: 100% !important;
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 8px !important;
+            }
+
+            .card-header-btns .btn-add,
+            .card-header-btns #btn-bulk-delete-products,
+            .card-header-btns #btn-bulk-delete-coupons,
+            .card-header-btns #coupon-search,
+            .card-header-btns > button:only-child {
+                grid-column: 1 / -1 !important;
+                width: 100% !important;
+            }
+
+            .card-header-btns .btn-sync,
+            .card-header-btns .btn-add {
+                width: 100% !important;
+                padding: 10px 8px !important;
+                font-size: 0.85rem !important;
+                justify-content: center !important;
+                white-space: nowrap !important;
+                box-sizing: border-box !important;
+            }
+
+            .card-header-btns .btn-sync i,
+            .card-header-btns .btn-add i {
+                width: 16px;
+                height: 16px;
+                flex-shrink: 0;
+            }
+
+            .admin-filter-bar {
+                padding: 1rem !important;
+                gap: 0.8rem !important;
+            }
+
+            .admin-filter-bar > div,
+            .category-filter-box {
+                width: 100% !important;
+                min-width: 0 !important;
+                flex: none !important;
             }
 
             /* --- Ultimate Table to Card Transformation --- */
@@ -804,7 +857,11 @@
                 background: transparent;
                 border-radius: 0;
                 box-shadow: none;
-                margin-bottom: 3rem;
+                margin-bottom: 2rem;
+            }
+
+            .table-responsive-wrapper {
+                overflow-x: visible !important;
             }
 
             .admin-table {
@@ -814,7 +871,7 @@
             }
 
             .admin-table thead {
-                display: none;
+                display: none !important;
             }
 
             .admin-table tbody {
@@ -823,27 +880,41 @@
             }
 
             .admin-table tr {
-                display: block;
+                display: block !important;
                 background: #fff;
                 border: 1px solid var(--admin-border);
                 border-radius: 16px;
-                margin-bottom: 1.5rem;
-                padding: 1.2rem;
+                margin-bottom: 1.25rem;
+                padding: 1rem 1.2rem;
                 box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+                box-sizing: border-box !important;
+                width: 100% !important;
             }
 
             .admin-table td {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 0.8rem 0 !important;
-                border-bottom: 1px solid #f8f8f8;
-                text-align: right;
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 0.75rem 0 !important;
+                border-bottom: 1px solid #f3f3f3 !important;
+                text-align: right !important;
                 font-size: 0.9rem !important;
+                width: 100% !important;
+                min-width: 0 !important;
+                max-width: 100% !important;
+                box-sizing: border-box !important;
+                word-break: break-word !important;
+                overflow-wrap: anywhere !important;
             }
 
+            .admin-table th:last-child,
             .admin-table td:last-child {
-                border-bottom: none;
+                width: 100% !important;
+                min-width: 0 !important;
+                max-width: 100% !important;
+                text-align: right !important;
+                padding-right: 0 !important;
+                border-bottom: none !important;
             }
 
             .admin-table td::before {
@@ -851,17 +922,54 @@
                 font-weight: 700;
                 color: #888;
                 text-transform: uppercase;
-                font-size: 0.75rem;
+                font-size: 0.72rem;
                 letter-spacing: 0.5px;
+                min-width: 95px;
+                max-width: 120px;
+                flex-shrink: 0;
+                text-align: left;
+                margin-right: 12px;
+                line-height: 1.3;
             }
 
-            .admin-table td img {
-                width: 50px;
-                height: 50px;
+            /* For checkbox row without data-label */
+            .admin-table td:first-child:not([data-label]) {
+                padding: 0.4rem 0 0.8rem 0 !important;
+                justify-content: flex-start !important;
+                gap: 10px !important;
             }
 
-            .action-btns {
-                justify-content: flex-end;
+            .admin-table td:first-child:not([data-label])::before {
+                content: "SELECT";
+                font-size: 0.72rem;
+                font-weight: 700;
+                color: #888;
+                min-width: auto;
+            }
+
+            .admin-table td .cell-data {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+                text-align: right;
+                gap: 2px;
+                max-width: calc(100% - 110px);
+                word-break: break-word;
+            }
+
+            .admin-table td .action-btns {
+                display: inline-flex !important;
+                gap: 8px !important;
+                justify-content: flex-end !important;
+                align-items: center !important;
+                flex-wrap: wrap !important;
+                max-width: calc(100% - 110px);
+            }
+
+            .admin-table td img.table-img {
+                width: 44px;
+                height: 44px;
+                border-radius: 8px;
             }
 
             .admin-stats-grid {
@@ -1228,7 +1336,7 @@
             <div class="admin-card" style="border:none; box-shadow:none;">
                 <div class="card-header">
                     <h3>Inventory Management</h3>
-                    <div style="display:flex; gap:10px;">
+                    <div class="card-header-btns">
                         <button class="btn-sync" onclick="openImportModal('products')"
                             style="background:#4DB6AC; color:white; border:none; padding: 10px 20px; border-radius: 10px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:8px;">
                             <i data-lucide="upload"></i> Import CSV
@@ -1245,14 +1353,14 @@
                             Product</button>
                     </div>
                 </div>
-                <div style="padding: 1.5rem 2rem; background: #fafafa; display: flex; gap: 1rem; flex-wrap: wrap;">
+                <div class="admin-filter-bar" style="padding: 1.5rem 2rem; background: #fafafa; display: flex; gap: 1rem; flex-wrap: wrap;">
                     <div style="flex: 1; min-width: 250px;">
                         <label style="display:block; margin-bottom:5px; font-size:0.8rem; font-weight:700; color:#888; text-transform:uppercase;">Search</label>
                         <input type="text" placeholder="Search by name or category..." id="prod-search"
                             style="width:100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;"
                             oninput="renderProductsTable()">
                     </div>
-                    <div style="width: 220px;">
+                    <div class="category-filter-box" style="width: 220px;">
                         <label style="display:block; margin-bottom:5px; font-size:0.8rem; font-weight:700; color:#888; text-transform:uppercase;">Category Filter</label>
                         <select id="prod-filter-cat" style="width:100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-family:inherit; background:white;" onchange="renderProductsTable()">
                             <option value="all">All Categories</option>
@@ -1294,7 +1402,9 @@
             <div class="admin-card" style="border:none; box-shadow:none;">
                 <div class="card-header">
                     <h3>Digital Assets</h3>
-                    <button class="btn-add" onclick="openCatalogModal()"><i data-lucide="plus"></i> Add Catalog</button>
+                    <div class="card-header-btns">
+                        <button class="btn-add" onclick="openCatalogModal()"><i data-lucide="plus"></i> Add Catalog</button>
+                    </div>
                 </div>
                 <div class="table-responsive-wrapper">
                     <table class="admin-table">
@@ -1321,7 +1431,7 @@
             <div class="admin-card" style="border:none; box-shadow:none;">
                 <div class="card-header">
                     <h3>All Site Orders</h3>
-                    <div style="display:flex; gap:10px;">
+                    <div class="card-header-btns">
                         <button class="btn-sync" onclick="exportOrdersToCSV()"
                             style="background: #2563eb; color:white; border:none; padding: 10px 18px; border-radius: 10px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:8px; transition: all 0.2s;">
                             <i data-lucide="download" size="16"></i> Export Orders CSV
@@ -1456,7 +1566,9 @@
             <div class="admin-card" style="border:none; box-shadow:none;">
                 <div class="card-header">
                     <h3>Blog Posts</h3>
-                    <button class="btn-add" onclick="openBlogModal()"><i data-lucide="plus"></i> New Blog Post</button>
+                    <div class="card-header-btns">
+                        <button class="btn-add" onclick="openBlogModal()"><i data-lucide="plus"></i> New Blog Post</button>
+                    </div>
                 </div>
                 <div style="padding: 1.5rem 2rem; background: #fafafa; display: flex; gap: 1rem;">
                     <input type="text" placeholder="Search blogs by title..." id="blog-search"
@@ -1485,7 +1597,7 @@
         <div class="admin-card">
             <div class="card-header">
                 <h3>Active Coupons</h3>
-                <div style="display:flex; gap:10px;">
+                <div class="card-header-btns">
                     <button class="btn-sync" onclick="openImportModal('coupons')"
                         style="background:#4DB6AC; color:white; border:none; padding: 10px 20px; border-radius: 10px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:8px;">
                         <i data-lucide="upload"></i> Import CSV
