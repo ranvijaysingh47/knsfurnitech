@@ -18,6 +18,279 @@
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <!-- Cashfree Checkout SDK -->
     <script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
+    <style>
+        /* ==========================================================================
+           CART PAGE SPECIFIC MOBILE ENHANCEMENTS & OVERFLOW PREVENTIONS
+           ========================================================================== */
+        .mobile-item-footer {
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            /* 1. Prevent Horizontal Viewport Blowout on Mobile */
+            html, body {
+                overflow-x: hidden !important;
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+
+            .cart-page {
+                padding: 1.25rem 1rem 3rem 1rem !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                box-sizing: border-box !important;
+                overflow-x: hidden !important;
+            }
+
+            .cart-layout {
+                grid-template-columns: 1fr !important;
+                gap: 1.5rem !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+            }
+
+            #checkout-main-col {
+                width: 100% !important;
+                max-width: 100% !important;
+                box-sizing: border-box !important;
+            }
+
+            /* 2. Responsive Checkout Stepper */
+            .checkout-stepper {
+                padding: 0 0.25rem !important;
+                margin-bottom: 1.5rem !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+            }
+
+            .checkout-stepper .step-label {
+                font-size: 0.68rem !important;
+                letter-spacing: 0 !important;
+            }
+
+            .checkout-stepper .step-dot {
+                width: 30px !important;
+                height: 30px !important;
+                font-size: 0.8rem !important;
+            }
+
+            .checkout-stepper .step-line {
+                top: 14px !important;
+            }
+
+            /* 3. New User Nudge Card */
+            #new-user-nudge {
+                padding: 1rem !important;
+                border-radius: 12px !important;
+                margin-bottom: 1.25rem !important;
+                box-sizing: border-box !important;
+                width: 100% !important;
+            }
+
+            #new-user-nudge > div {
+                gap: 0.75rem !important;
+            }
+
+            #new-user-nudge h4 {
+                font-size: 0.95rem !important;
+            }
+
+            #new-user-nudge p {
+                font-size: 0.8rem !important;
+            }
+
+            /* 4. Complete Cart Item Mobile Layout Transformation */
+            .cart-item {
+                display: grid !important;
+                grid-template-columns: 75px 1fr auto !important;
+                grid-template-rows: auto auto !important;
+                gap: 0.75rem 0.85rem !important;
+                align-items: start !important;
+                padding: 0.9rem !important;
+                border-radius: 14px !important;
+                background: #fff !important;
+                border: 1px solid #eee !important;
+                box-sizing: border-box !important;
+                width: 100% !important;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02) !important;
+                flex-direction: row !important; /* Overrides column stack */
+            }
+
+            .cart-item-img-link {
+                grid-column: 1 !important;
+                grid-row: 1 !important;
+                width: 75px !important;
+                height: 75px !important;
+                display: block !important;
+                flex-shrink: 0 !important;
+            }
+
+            .cart-item-img {
+                width: 75px !important;
+                height: 75px !important;
+                border-radius: 10px !important;
+                background-size: cover !important;
+                background-position: center !important;
+                background-color: #f8f8f8 !important;
+                border: 1px solid #f0f0f0 !important;
+            }
+
+            .cart-item-info {
+                grid-column: 2 !important;
+                grid-row: 1 !important;
+                min-width: 0 !important;
+                width: 100% !important;
+                padding-right: 0.2rem !important;
+            }
+
+            .cart-item-cat {
+                font-size: 0.68rem !important;
+                font-weight: 700 !important;
+                letter-spacing: 0.05em !important;
+                color: #8CC63F !important;
+                line-height: 1.2 !important;
+            }
+
+            .cart-item-name {
+                font-size: 0.92rem !important;
+                font-weight: 700 !important;
+                color: #1A1A1A !important;
+                margin: 2px 0 4px 0 !important;
+                line-height: 1.35 !important;
+                word-break: break-word !important;
+            }
+
+            .cart-item-price {
+                font-size: 0.92rem !important;
+                font-weight: 700 !important;
+                color: #666 !important;
+            }
+
+            /* Hide desktop placement on mobile */
+            .desktop-qty-ctrl,
+            .desktop-item-total {
+                display: none !important;
+            }
+
+            /* Trash button placed firmly at top-right */
+            .cart-item-side {
+                grid-column: 3 !important;
+                grid-row: 1 !important;
+                display: flex !important;
+                justify-content: flex-end !important;
+                align-items: flex-start !important;
+                min-height: auto !important;
+            }
+
+            .cart-item-remove {
+                width: 32px !important;
+                height: 32px !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                color: #888 !important;
+                border-radius: 8px !important;
+                background: #f8f8f8 !important;
+                border: 1px solid #eee !important;
+                cursor: pointer !important;
+                padding: 0 !important;
+                transition: all 0.2s ease !important;
+            }
+
+            .cart-item-remove:active,
+            .cart-item-remove:hover {
+                color: #e53e3e !important;
+                background: #fee2e2 !important;
+                border-color: #fca5a5 !important;
+            }
+
+            /* Balanced bottom footer with Stepper on Left, Subtotal on Right */
+            .mobile-item-footer {
+                grid-column: 1 / -1 !important;
+                grid-row: 2 !important;
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                width: 100% !important;
+                padding-top: 0.75rem !important;
+                border-top: 1px dashed #eee !important;
+                margin-top: 0.25rem !important;
+                box-sizing: border-box !important;
+            }
+
+            .mobile-item-footer .kns-qty-ctrl {
+                display: inline-flex !important;
+                align-items: center !important;
+                border: 1.5px solid #e0e0e0 !important;
+                border-radius: 8px !important;
+                background: #fafafa !important;
+                overflow: hidden !important;
+            }
+
+            .mobile-item-footer .kns-qty-btn {
+                width: 32px !important;
+                height: 30px !important;
+                background: #fff !important;
+                border: none !important;
+                font-size: 1.1rem !important;
+                font-weight: 700 !important;
+                color: #333 !important;
+                cursor: pointer !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+
+            .mobile-item-footer .kns-qty-ctrl span {
+                padding: 0 10px !important;
+                font-size: 0.9rem !important;
+                font-weight: 700 !important;
+                color: #1A1A1A !important;
+            }
+
+            /* 5. Mobile Actions Toolbar (Continue Shopping & Clear Cart) */
+            .cart-actions-toolbar {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+                gap: 0.5rem !important;
+                margin-top: 1.25rem !important;
+            }
+
+            .cart-actions-toolbar a {
+                font-size: 0.85rem !important;
+                white-space: nowrap !important;
+            }
+
+            .cart-actions-toolbar button {
+                padding: 0.5rem 0.85rem !important;
+                font-size: 0.8rem !important;
+                white-space: nowrap !important;
+                flex-shrink: 0 !important;
+                border-radius: 8px !important;
+            }
+
+            /* 6. Checkout Step Buttons & Order Summary Mobile */
+            .btn-proceed-delivery {
+                margin-top: 1.5rem !important;
+                padding: 1rem !important;
+                font-size: 1rem !important;
+                width: 100% !important;
+                border-radius: 12px !important;
+            }
+
+            .order-summary {
+                position: relative !important;
+                top: 0 !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+                padding: 1.25rem !important;
+                border-radius: 14px !important;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -155,7 +428,7 @@
                     <!-- Step 1: Cart Items -->
                     <div id="checkout-step-1" class="checkout-step active">
                         <div class="cart-items-list" id="cartItemsList"></div>
-                        <div style="margin-top:1.5rem; display:flex; gap:1rem; align-items:center;">
+                        <div class="cart-actions-toolbar" style="margin-top:1.5rem; display:flex; gap:1rem; align-items:center;">
                             <a href="shop.html"
                                 style="color:#8CC63F; font-size:0.9rem; font-weight:600; text-decoration:none; display:flex; align-items:center; gap:0.4rem;">
                                 ← Continue Shopping
@@ -165,7 +438,7 @@
                                 onmouseover="this.style.borderColor='#e53e3e';this.style.color='#e53e3e'"
                                 onmouseout="this.style.borderColor='#eee';this.style.color='#999'">Clear Cart</button>
                         </div>
-                        <button class="kns-ec-btn kns-ec-btn-primary" onclick="goToStep(2)"
+                        <button class="kns-ec-btn kns-ec-btn-primary btn-proceed-delivery" onclick="goToStep(2)"
                             style="width:100%; margin-top:2rem; padding:1.2rem; font-size:1.1rem;">
                             Proceed to Delivery →
                         </button>
@@ -756,8 +1029,9 @@
             list.innerHTML = items.map(item => {
               const safeName = window.escapeHTML ? escapeHTML(item.name) : item.name;
               const safeCat = window.escapeHTML ? escapeHTML(item.category) : item.category;
+              const itemTotal = (item.price * item.qty).toLocaleString('en-IN');
               return `
-              <div class="cart-item">
+              <div class="cart-item" data-id="${item.id}">
                 <a href="product.html?id=${item.id}" class="cart-item-img-link">
                     <div class="cart-item-img" style="background-image:url('${item.image}')"></div>
                 </a>
@@ -770,17 +1044,28 @@
                 }
 
                     <div class="cart-item-price">₹${item.price.toLocaleString('en-IN')}</div>
-                    <div class="kns-qty-ctrl" style="margin-top:0.5rem;">
-                        <button class="kns-qty-btn" onclick="KNSCart.updateQty('${item.id}',${item.qty - 1}); renderPage()">−</button>
+                    <div class="kns-qty-ctrl desktop-qty-ctrl" style="margin-top:0.5rem;">
+                        <button class="kns-qty-btn" onclick="KNSCart.updateQty('${item.id}',${item.qty - 1}); renderPage()" aria-label="Decrease quantity">−</button>
                         <span>${item.qty}</span>
-                        <button class="kns-qty-btn" onclick="KNSCart.updateQty('${item.id}',${item.qty + 1}); renderPage()">+</button>
+                        <button class="kns-qty-btn" onclick="KNSCart.updateQty('${item.id}',${item.qty + 1}); renderPage()" aria-label="Increase quantity">+</button>
                     </div>
                 </div>
-                <div style="display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between;">
+                <div class="cart-item-side" style="display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between;">
                     <button class="cart-item-remove" onclick="KNSCart.removeFromCart('${item.id}'); renderPage()" title="Remove">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
                     </button>
-                    <div style="font-weight:700;color:#1A1A1A;">₹${(item.price * item.qty).toLocaleString('en-IN')}</div>
+                    <div class="desktop-item-total" style="font-weight:700;color:#1A1A1A;">₹${itemTotal}</div>
+                </div>
+                <div class="mobile-item-footer">
+                    <div class="kns-qty-ctrl">
+                        <button class="kns-qty-btn" onclick="KNSCart.updateQty('${item.id}',${item.qty - 1}); renderPage()" aria-label="Decrease quantity">−</button>
+                        <span>${item.qty}</span>
+                        <button class="kns-qty-btn" onclick="KNSCart.updateQty('${item.id}',${item.qty + 1}); renderPage()" aria-label="Increase quantity">+</button>
+                    </div>
+                    <div class="mobile-item-total">
+                        <span style="font-size:0.75rem; color:#888; text-transform:uppercase; font-weight:600; margin-right:4px;">Total:</span>
+                        <span style="font-weight:800; color:#1A1A1A; font-size:1.05rem;">₹${itemTotal}</span>
+                    </div>
                 </div>
               </div>`}).join('');
 
