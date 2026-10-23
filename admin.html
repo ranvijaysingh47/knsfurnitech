@@ -1895,7 +1895,7 @@
                 <div class="form-group">
                     <label>Image URL 1 (Main)</label>
                     <div style="display: flex; gap: 8px;">
-                        <input type="url" id="prod-img-1" required placeholder="Main image link..." style="flex:1;">
+                        <input type="text" id="prod-img-1" required placeholder="Main image link or path..." style="flex:1;">
                         <input type="file" id="prod-file-1" accept="image/*" style="display:none;" onchange="handleImageFile(event, 'prod-img-1')">
                         <button type="button" class="action-btn" title="Upload Image" onclick="document.getElementById('prod-file-1').click()" 
                             style="width: 42px; height: 42px; border-color: var(--admin-green); color: var(--admin-green);">
@@ -1906,7 +1906,7 @@
                 <div class="form-group">
                     <label>Image URL 2</label>
                     <div style="display: flex; gap: 8px;">
-                        <input type="url" id="prod-img-2" placeholder="Second image link..." style="flex:1;">
+                        <input type="text" id="prod-img-2" placeholder="Second image link or path..." style="flex:1;">
                         <input type="file" id="prod-file-2" accept="image/*" style="display:none;" onchange="handleImageFile(event, 'prod-img-2')">
                         <button type="button" class="action-btn" title="Upload Image" onclick="document.getElementById('prod-file-2').click()" 
                             style="width: 42px; height: 42px; border-color: var(--admin-green); color: var(--admin-green);">
@@ -1919,7 +1919,7 @@
                 <div class="form-group">
                     <label>Image URL 3</label>
                     <div style="display: flex; gap: 8px;">
-                        <input type="url" id="prod-img-3" placeholder="Third image link..." style="flex:1;">
+                        <input type="text" id="prod-img-3" placeholder="Third image link or path..." style="flex:1;">
                         <input type="file" id="prod-file-3" accept="image/*" style="display:none;" onchange="handleImageFile(event, 'prod-img-3')">
                         <button type="button" class="action-btn" title="Upload Image" onclick="document.getElementById('prod-file-3').click()" 
                             style="width: 42px; height: 42px; border-color: var(--admin-green); color: var(--admin-green);">
@@ -1930,7 +1930,7 @@
                 <div class="form-group">
                     <label>Image URL 4</label>
                     <div style="display: flex; gap: 8px;">
-                        <input type="url" id="prod-img-4" placeholder="Fourth image link..." style="flex:1;">
+                        <input type="text" id="prod-img-4" placeholder="Fourth image link or path..." style="flex:1;">
                         <input type="file" id="prod-file-4" accept="image/*" style="display:none;" onchange="handleImageFile(event, 'prod-img-4')">
                         <button type="button" class="action-btn" title="Upload Image" onclick="document.getElementById('prod-file-4').click()" 
                             style="width: 42px; height: 42px; border-color: var(--admin-green); color: var(--admin-green);">
@@ -1981,7 +1981,7 @@
             </div>
             <div class="form-group">
                 <label>Thumbnail Image URL</label>
-                <input type="url" id="cat-img" required>
+                <input type="text" id="cat-img" required placeholder="Thumbnail image link or path...">
             </div>
             <div class="form-group">
                 <label>Catalog Download Link (Google Drive / PDF)</label>
@@ -2027,7 +2027,7 @@
             </div>
             <div class="form-group">
                 <label>Main Image URL</label>
-                <input type="url" id="blog-image" required placeholder="https://unsplash.com/...">
+                <input type="text" id="blog-image" required placeholder="Main image link or path...">
             </div>
             <div class="form-group">
                 <label>Excerpt (Short Summary)</label>

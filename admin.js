@@ -729,7 +729,7 @@ function addColorRow(name = '', code = '#1A1A1A', image = '') {
         <input type="color" class="color-picker-input" value="${safeCode}" title="Pick Color">
         <input type="text" class="color-hex-input" placeholder="#000000" maxlength="7" value="${safeCode}">
         <input type="text" class="color-name-input" placeholder="Color Name (e.g. Tan)" value="${escapeHtml(name)}">
-        <input type="url" class="color-image color-img-input" placeholder="Optional swatch/variant image link..." value="${escapeHtml(image)}">
+        <input type="text" class="color-image color-img-input" placeholder="Optional swatch/variant image link or path..." value="${escapeHtml(image)}">
         <button type="button" class="btn-row-del" title="Remove">&times;</button>
     `;
 
