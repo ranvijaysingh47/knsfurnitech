@@ -826,6 +826,7 @@
             }
 
             .card-header-btns .btn-add,
+            .card-header-btns #btn-bulk-edit-products,
             .card-header-btns #btn-bulk-delete-products,
             .card-header-btns #btn-bulk-delete-coupons,
             .card-header-btns #coupon-search,
@@ -1045,6 +1046,327 @@
                 transform: rotate(360deg);
             }
         }
+        /* ════════════════════════════════════════════════════════════════
+           BULK EDIT PRODUCTS SYSTEM (Desktop & Mobile)
+           ════════════════════════════════════════════════════════════════ */
+        .bulk-selection-helper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 0.75rem 2rem;
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 0.88rem;
+        }
+
+        .bulk-edit-modal-content {
+            max-width: 680px;
+            max-height: 90vh;
+            padding: 2rem;
+            border-radius: 20px;
+        }
+
+        .bulk-selected-preview {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 4px 2px 10px;
+            margin-bottom: 1rem;
+            scrollbar-width: thin;
+        }
+
+        .bulk-selected-preview::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .bulk-selected-preview::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        .bulk-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            padding: 4px 10px 4px 6px;
+            border-radius: 20px;
+            white-space: nowrap;
+            font-size: 0.8rem;
+            color: #334155;
+            flex-shrink: 0;
+        }
+
+        .bulk-chip img {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #fff;
+        }
+
+        .bulk-chip-name {
+            font-weight: 600;
+            max-width: 130px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .bulk-chip-price {
+            color: #0284c7;
+            font-weight: 700;
+        }
+
+        .bulk-edit-instruction-box {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 12px;
+            padding: 10px 14px;
+            color: #0369a1;
+            font-size: 0.84rem;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            margin-bottom: 1.25rem;
+            line-height: 1.45;
+        }
+
+        .bulk-edit-instruction-box i {
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .bulk-field-group {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .bulk-field-group.active {
+            background: #ffffff;
+            border-color: #0284c7;
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.08);
+        }
+
+        .bulk-field-toggle {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            user-select: none;
+            margin: 0;
+        }
+
+        .bulk-field-toggle input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #0284c7;
+            cursor: pointer;
+        }
+
+        .bulk-field-title {
+            font-weight: 700;
+            font-size: 0.92rem;
+            color: #1e293b;
+        }
+
+        .bulk-field-body {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px dashed #cbd5e1;
+        }
+
+        .bulk-op-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .bulk-op-row .form-control,
+        .bulk-field-body .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            background: #fff;
+            box-sizing: border-box;
+        }
+
+        .bulk-op-row .form-control:focus,
+        .bulk-field-body .form-control:focus {
+            border-color: #0284c7;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+        }
+
+        .bulk-field-hint {
+            display: block;
+            margin-top: 6px;
+            font-size: 0.78rem;
+            color: #64748b;
+        }
+
+        .bulk-modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 12px;
+            margin-top: 1.5rem;
+            padding-top: 1.25rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .bulk-modal-footer .btn-cancel {
+            padding: 10px 18px;
+            border: 1px solid #cbd5e1;
+            background: #f8fafc;
+            color: #475569;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .bulk-modal-footer .btn-cancel:hover {
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+
+        /* Mobile Floating Bulk Action Bar */
+        .mobile-bulk-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 1800;
+            background: #1e293b;
+            color: #fff;
+            padding: 12px 16px;
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 -8px 25px rgba(0, 0, 0, 0.25);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            transform: translateY(110%);
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .mobile-bulk-bar-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .mobile-bulk-bar-count {
+            background: #0284c7;
+            color: #fff;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+
+        .mobile-bulk-bar-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-mobile-bulk-edit {
+            background: #0284c7;
+            color: #fff;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-mobile-bulk-del {
+            background: #ef4444;
+            color: #fff;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-mobile-bulk-clear {
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-bulk-bar.active {
+                display: flex !important;
+                transform: translateY(0);
+            }
+            .bulk-selection-helper {
+                padding: 0.85rem 1rem !important;
+                flex-direction: column !important;
+                align-items: stretch !important;
+                gap: 8px !important;
+            }
+            .bulk-selection-helper > div {
+                justify-content: space-between !important;
+                width: 100% !important;
+            }
+            #selection-quick-actions {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr auto !important;
+                gap: 6px !important;
+                width: 100% !important;
+            }
+            #selection-quick-actions button {
+                justify-content: center !important;
+            }
+            .bulk-edit-modal-content {
+                padding: 1.25rem !important;
+                border-radius: 16px !important;
+                max-height: 94vh !important;
+            }
+            .bulk-op-row {
+                flex-direction: column !important;
+                align-items: stretch !important;
+                gap: 8px !important;
+            }
+            .bulk-modal-footer {
+                flex-direction: column-reverse !important;
+                gap: 8px !important;
+            }
+            .bulk-modal-footer button {
+                width: 100% !important;
+                justify-content: center !important;
+            }
+        }
     </style>
 </head>
 <div class="mobile-admin-bar">
@@ -1202,7 +1524,29 @@
                         <div class="admin-nav-item" style="padding: 5px 10px; font-size: 0.85rem;" data-tab="orders">
                             View All &rarr;</div>
                     </div>
-                    <div class="table-responsive-wrapper">
+                    <div class="bulk-selection-helper">
+                    <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 600; color: #334155; user-select: none;">
+                            <input type="checkbox" id="select-all-products-helper" onchange="toggleSelectAllHelper('products')" style="accent-color: var(--admin-green); width: 16px; height: 16px; cursor: pointer;">
+                            <span>Select All Visible (<span id="visible-prod-count">0</span> items)</span>
+                        </label>
+                        <span id="selected-prod-pill" style="display: none; background: #0284c7; color: white; font-size: 0.75rem; font-weight: 700; padding: 3px 10px; border-radius: 20px;">
+                            <span id="selected-prod-count-text">0</span> selected
+                        </span>
+                    </div>
+                    <div id="selection-quick-actions" style="display: none; align-items: center; gap: 8px;">
+                        <button type="button" onclick="openBulkEditModal('products')" style="background: #0284c7; color: white; border: none; padding: 7px 14px; border-radius: 8px; font-size: 0.82rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+                            <i data-lucide="edit-3" size="14"></i> Bulk Edit
+                        </button>
+                        <button type="button" onclick="handleBulkDelete('products')" style="background: #ef4444; color: white; border: none; padding: 7px 14px; border-radius: 8px; font-size: 0.82rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+                            <i data-lucide="trash-2" size="14"></i> Delete
+                        </button>
+                        <button type="button" onclick="clearProductSelection()" style="background: white; color: #64748b; border: 1px solid #cbd5e1; padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 500; cursor: pointer;">
+                            Clear
+                        </button>
+                    </div>
+                </div>
+                <div class="table-responsive-wrapper">
                         <table class="admin-table" style="min-width: 500px;">
                             <thead>
                                 <tr>
@@ -1356,6 +1700,10 @@
                         <button class="btn-sync" onclick="exportProductsToCSV()"
                             style="background:#64B5F6; color:white; border:none; padding: 10px 20px; border-radius: 10px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:8px;">
                             <i data-lucide="download"></i> Export CSV
+                        </button>
+                        <button class="btn-sync" id="btn-bulk-edit-products" onclick="openBulkEditModal('products')"
+                            style="background:#0284c7; color:white; border:none; padding: 10px 20px; border-radius: 10px; font-weight:600; cursor:pointer; display:none; align-items:center; gap:8px;">
+                            <i data-lucide="edit-3"></i> Bulk Edit (<span id="count-bulk-edit-products">0</span>)
                         </button>
                         <button class="btn-sync" id="btn-bulk-delete-products" onclick="handleBulkDelete('products')"
                             style="background:#ff4d4d; color:white; border:none; padding: 10px 20px; border-radius: 10px; font-weight:600; cursor:pointer; display:none; align-items:center; gap:8px;">
@@ -1956,6 +2304,207 @@
                 <button type="submit" class="btn-add" style="flex:2; justify-content:center;">Save Product</button>
             </div>
         </form>
+    </div>
+</div>
+
+<!-- BULK EDIT PRODUCTS MODAL -->
+<div id="bulk-edit-products-modal" class="modal-overlay">
+    <div class="modal-content bulk-edit-modal-content">
+        <div class="modal-header">
+            <div>
+                <h2 style="display:flex; align-items:center; gap:10px;">
+                    <i data-lucide="edit-3" style="color: #0284c7;"></i> Bulk Edit Products
+                </h2>
+                <p id="bulk-edit-subtitle" style="margin: 4px 0 0; color: #64748b; font-size: 0.86rem;">
+                    Updating <strong id="bulk-edit-count" style="color: #0284c7;">0</strong> selected products
+                </p>
+            </div>
+            <button class="close-modal" onclick="closeModal('bulk-edit-products-modal')">&times;</button>
+        </div>
+
+        <!-- Selected Products Chips Preview -->
+        <div class="bulk-selected-preview" id="bulk-selected-preview">
+            <!-- Chips injected dynamically by admin.js -->
+        </div>
+
+        <div class="bulk-edit-instruction-box">
+            <i data-lucide="info" size="18"></i>
+            <div>
+                <strong>Selective Updating:</strong> Only the fields you check will be modified on your selected products. All other fields will remain completely unchanged.
+            </div>
+        </div>
+
+        <form id="bulk-edit-form" class="admin-form" onsubmit="handleBulkEditSubmit(event)">
+            <!-- Field 1: Category -->
+            <div class="bulk-field-group">
+                <label class="bulk-field-toggle">
+                    <input type="checkbox" id="bulk-chk-category" onchange="toggleBulkField('category')">
+                    <span class="bulk-field-title">Category</span>
+                </label>
+                <div class="bulk-field-body" id="bulk-body-category" style="display:none;">
+                    <select id="bulk-val-category" class="form-control">
+                        <option value="Executive Chair">Executive Chair</option>
+                        <option value="Workstation Chair">Workstation Chair</option>
+                        <option value="Sofa Lounge Seating">Sofa Lounge Seating</option>
+                        <option value="Plastic Metal - Cafe Chair">Cafe Chair</option>
+                        <option value="Bar Stool Chair">Bar Stools</option>
+                        <option value="Puffy Table Chair">Puffy & Tables</option>
+                        <option value="Educational Furniture">Educational</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Field 2: Material -->
+            <div class="bulk-field-group">
+                <label class="bulk-field-toggle">
+                    <input type="checkbox" id="bulk-chk-material" onchange="toggleBulkField('material')">
+                    <span class="bulk-field-title">Material</span>
+                </label>
+                <div class="bulk-field-body" id="bulk-body-material" style="display:none;">
+                    <input type="text" id="bulk-val-material" class="form-control" placeholder="e.g. Metal, Mesh & Steel, Leatherette, Solid Wood">
+                </div>
+            </div>
+
+            <!-- Field 3: Selling Price (₹) -->
+            <div class="bulk-field-group">
+                <label class="bulk-field-toggle">
+                    <input type="checkbox" id="bulk-chk-price" onchange="toggleBulkField('price')">
+                    <span class="bulk-field-title">Selling Price (₹)</span>
+                </label>
+                <div class="bulk-field-body" id="bulk-body-price" style="display:none;">
+                    <div class="bulk-op-row">
+                        <select id="bulk-op-price" class="form-control" style="flex:1.2;">
+                            <option value="set">Set Fixed Price (₹)</option>
+                            <option value="inc_percent">Increase by Percentage (%)</option>
+                            <option value="dec_percent">Decrease by Percentage (%)</option>
+                            <option value="inc_amount">Increase by Fixed Amount (₹)</option>
+                            <option value="dec_amount">Decrease by Fixed Amount (₹)</option>
+                        </select>
+                        <input type="number" id="bulk-val-price" class="form-control" style="flex:1;" placeholder="Value or %" min="0" step="any">
+                    </div>
+                    <small class="bulk-field-hint">e.g. 10% discount decreases ₹5,000 to ₹4,500</small>
+                </div>
+            </div>
+
+            <!-- Field 4: MRP (₹) -->
+            <div class="bulk-field-group">
+                <label class="bulk-field-toggle">
+                    <input type="checkbox" id="bulk-chk-mrp" onchange="toggleBulkField('mrp')">
+                    <span class="bulk-field-title">MRP (Original Price ₹)</span>
+                </label>
+                <div class="bulk-field-body" id="bulk-body-mrp" style="display:none;">
+                    <div class="bulk-op-row">
+                        <select id="bulk-op-mrp" class="form-control" style="flex:1.2;">
+                            <option value="set">Set Fixed MRP (₹)</option>
+                            <option value="inc_percent">Increase by Percentage (%)</option>
+                            <option value="dec_percent">Decrease by Percentage (%)</option>
+                            <option value="inc_amount">Increase by Fixed Amount (₹)</option>
+                            <option value="dec_amount">Decrease by Fixed Amount (₹)</option>
+                        </select>
+                        <input type="number" id="bulk-val-mrp" class="form-control" style="flex:1;" placeholder="Value or %" min="0" step="any">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Field 5: Stock Quantity / Status -->
+            <div class="bulk-field-group">
+                <label class="bulk-field-toggle">
+                    <input type="checkbox" id="bulk-chk-stock" onchange="toggleBulkField('stock')">
+                    <span class="bulk-field-title">Stock Status & Quantity</span>
+                </label>
+                <div class="bulk-field-body" id="bulk-body-stock" style="display:none;">
+                    <div class="bulk-op-row">
+                        <select id="bulk-op-stock" class="form-control" style="flex:1.2;" onchange="handleBulkStockOpChange()">
+                            <option value="set_qty">Set Exact Stock Quantity</option>
+                            <option value="in_stock">Set to In Stock (Standard 50 units)</option>
+                            <option value="out_of_stock">Set to Out of Stock (0 units)</option>
+                        </select>
+                        <input type="number" id="bulk-val-stock" class="form-control" style="flex:1;" placeholder="Stock Quantity" min="0">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Field 6: Delivery Estimate -->
+            <div class="bulk-field-group">
+                <label class="bulk-field-toggle">
+                    <input type="checkbox" id="bulk-chk-delivery" onchange="toggleBulkField('delivery')">
+                    <span class="bulk-field-title">Delivery Estimate</span>
+                </label>
+                <div class="bulk-field-body" id="bulk-body-delivery" style="display:none;">
+                    <input type="text" id="bulk-val-delivery" class="form-control" placeholder="e.g. 3-5 Business Days, Same Day Dispatch">
+                </div>
+            </div>
+
+            <!-- Field 7: Product Badge -->
+            <div class="bulk-field-group">
+                <label class="bulk-field-toggle">
+                    <input type="checkbox" id="bulk-chk-badge" onchange="toggleBulkField('badge')">
+                    <span class="bulk-field-title">Product Badge</span>
+                </label>
+                <div class="bulk-field-body" id="bulk-body-badge" style="display:none;">
+                    <select id="bulk-val-badge" class="form-control">
+                        <option value="">None (Remove Badge)</option>
+                        <option value="Trending">Trending</option>
+                        <option value="Bestseller">Bestseller</option>
+                        <option value="New">New Arrival</option>
+                        <option value="Hot Deal">Hot Deal</option>
+                        <option value="Premium">Premium</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Field 8: Mark as New Arrival -->
+            <div class="bulk-field-group">
+                <label class="bulk-field-toggle">
+                    <input type="checkbox" id="bulk-chk-isnew" onchange="toggleBulkField('isnew')">
+                    <span class="bulk-field-title">"New Arrival" Flag (isNew)</span>
+                </label>
+                <div class="bulk-field-body" id="bulk-body-isnew" style="display:none;">
+                    <select id="bulk-val-isnew" class="form-control">
+                        <option value="true">Yes (Mark as New Arrival)</option>
+                        <option value="false">No (Unmark as New Arrival)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Progress / Status Indicator -->
+            <div id="bulk-edit-progress-container" style="display:none; margin: 1.5rem 0 0.5rem;">
+                <div style="display:flex; justify-content:space-between; font-size:0.85rem; font-weight:600; margin-bottom:6px; color:#444;">
+                    <span id="bulk-progress-status">Updating products...</span>
+                    <span id="bulk-progress-pct">0%</span>
+                </div>
+                <div style="background:#e5e7eb; height:8px; border-radius:10px; overflow:hidden;">
+                    <div id="bulk-progress-bar" style="background:#0284c7; height:100%; width:0%; transition:width 0.2s;"></div>
+                </div>
+            </div>
+
+            <!-- Actions Footer -->
+            <div class="bulk-modal-footer">
+                <button type="button" class="btn-cancel" onclick="closeModal('bulk-edit-products-modal')">Cancel</button>
+                <button type="submit" id="btn-submit-bulk-edit" class="btn-add" style="background:#0284c7; color:white; border:none; padding:10px 22px;">
+                    <i data-lucide="check-circle-2"></i> Apply Changes
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Mobile Floating Bulk Action Bar -->
+<div id="mobile-bulk-floating-bar" class="mobile-bulk-bar">
+    <div class="mobile-bulk-bar-info">
+        <span class="mobile-bulk-bar-count" id="mobile-bulk-count">0</span>
+        <span>selected</span>
+    </div>
+    <div class="mobile-bulk-bar-actions">
+        <button type="button" class="btn-mobile-bulk-edit" onclick="openBulkEditModal('products')">
+            <i data-lucide="edit-3" size="14"></i> Bulk Edit
+        </button>
+        <button type="button" class="btn-mobile-bulk-del" onclick="handleBulkDelete('products')" title="Delete Selected">
+            <i data-lucide="trash-2" size="14"></i>
+        </button>
+        <button type="button" class="btn-mobile-bulk-clear" onclick="clearProductSelection()" title="Clear Selection">
+            &times;
+        </button>
     </div>
 </div>
 

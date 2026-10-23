@@ -632,6 +632,10 @@ function renderProductsTable() {
     const tbody = document.getElementById('admin-products-table');
     if (!tbody) return;
 
+    // Sync visible products counter for selection helper
+    const visCountEl = document.getElementById('visible-prod-count');
+    if (visCountEl) visCountEl.textContent = products.length;
+
     console.log(`🖼️ [UI] Rendering ${products.length} Products (Recent First, Category: ${catFilter})`);
 
     tbody.innerHTML = products.map(p => `
@@ -666,6 +670,8 @@ function renderProductsTable() {
     `).join('') || '<tr><td colspan="7" style="text-align:center; padding: 2rem; color: #888;">No products found.</td></tr>';
 
     if (window.lucide) lucide.createIcons();
+    // Re-sync action bar & helpers with current table state
+    updateBulkActionBar('products');
 }
 
 /* ════════════════════════════════════════════════════════════════
@@ -1874,23 +1880,374 @@ let importType = null;
 let importedData = [];
 
 function toggleSelectAll(type) {
-    const isChecked = document.getElementById(`select-all-${type}`).checked;
+    const masterCb = document.getElementById(`select-all-${type}`);
+    const isChecked = masterCb ? masterCb.checked : false;
     document.querySelectorAll(`.select-row-${type}`).forEach(cb => cb.checked = isChecked);
+    if (type === 'products') {
+        const helperCb = document.getElementById('select-all-products-helper');
+        if (helperCb) {
+            helperCb.checked = isChecked;
+            helperCb.indeterminate = false;
+        }
+    }
     updateBulkActionBar(type);
 }
 
 function updateBulkActionBar(type) {
     const selected = document.querySelectorAll(`.select-row-${type}:checked`);
-    const btn = document.getElementById(`btn-bulk-delete-${type}`);
-    const countSpan = document.getElementById(`count-${type}`);
+    const delBtn = document.getElementById(`btn-bulk-delete-${type}`);
+    const delCountSpan = document.getElementById(`count-${type}`);
+    const editBtn = document.getElementById(`btn-bulk-edit-${type}`);
+    const editCountSpan = document.getElementById(`count-bulk-edit-${type}`);
     
-    if (btn) {
+    if (delBtn) {
         if (selected.length > 0) {
-            btn.style.display = 'flex';
-            countSpan.textContent = selected.length;
+            delBtn.style.display = 'flex';
+            if (delCountSpan) delCountSpan.textContent = selected.length;
         } else {
-            btn.style.display = 'none';
+            delBtn.style.display = 'none';
         }
+    }
+
+    if (editBtn) {
+        if (selected.length > 0) {
+            editBtn.style.display = 'flex';
+            if (editCountSpan) editCountSpan.textContent = selected.length;
+        } else {
+            editBtn.style.display = 'none';
+        }
+    }
+
+    if (type === 'products') {
+        updateProductSelectionHelpers(selected.length);
+    }
+}
+
+function updateProductSelectionHelpers(count) {
+    const allCbs = document.querySelectorAll('.select-row-products');
+    const helperCb = document.getElementById('select-all-products-helper');
+    const masterCb = document.getElementById('select-all-products');
+    const pill = document.getElementById('selected-prod-pill');
+    const countText = document.getElementById('selected-prod-count-text');
+    const quickActions = document.getElementById('selection-quick-actions');
+    const mobileBar = document.getElementById('mobile-bulk-floating-bar');
+    const mobileCount = document.getElementById('mobile-bulk-count');
+
+    if (pill) pill.style.display = count > 0 ? 'inline-block' : 'none';
+    if (countText) countText.textContent = count;
+    if (quickActions) quickActions.style.display = count > 0 ? 'flex' : 'none';
+
+    if (helperCb) {
+        if (count === 0) {
+            helperCb.checked = false;
+            helperCb.indeterminate = false;
+        } else if (allCbs.length > 0 && count === allCbs.length) {
+            helperCb.checked = true;
+            helperCb.indeterminate = false;
+        } else {
+            helperCb.checked = false;
+            helperCb.indeterminate = true;
+        }
+    }
+
+    if (masterCb) {
+        masterCb.checked = (allCbs.length > 0 && count === allCbs.length);
+    }
+
+    if (mobileBar) {
+        if (count > 0) {
+            mobileBar.classList.add('active');
+            if (mobileCount) mobileCount.textContent = count;
+        } else {
+            mobileBar.classList.remove('active');
+        }
+    }
+}
+
+function toggleSelectAllHelper(type = 'products') {
+    const helperCb = document.getElementById(`select-all-${type}-helper`);
+    const masterCb = document.getElementById(`select-all-${type}`);
+    const isChecked = helperCb ? helperCb.checked : false;
+
+    if (masterCb) masterCb.checked = isChecked;
+    document.querySelectorAll(`.select-row-${type}`).forEach(cb => cb.checked = isChecked);
+    updateBulkActionBar(type);
+}
+
+function clearProductSelection() {
+    const masterCb = document.getElementById('select-all-products');
+    const helperCb = document.getElementById('select-all-products-helper');
+    if (masterCb) masterCb.checked = false;
+    if (helperCb) {
+        helperCb.checked = false;
+        helperCb.indeterminate = false;
+    }
+    document.querySelectorAll('.select-row-products').forEach(cb => cb.checked = false);
+    updateBulkActionBar('products');
+}
+
+function openBulkEditModal(type = 'products') {
+    const selected = Array.from(document.querySelectorAll(`.select-row-${type}:checked`)).map(cb => cb.value);
+    if (!selected.length) {
+        if (window.KNSCart && KNSCart.showToast) {
+            KNSCart.showToast("Please select at least one product using the checkboxes.");
+        } else {
+            alert("Please select at least one product using the checkboxes to bulk edit.");
+        }
+        return;
+    }
+
+    const modal = document.getElementById('bulk-edit-products-modal');
+    if (!modal) return;
+
+    // Reset form
+    const form = document.getElementById('bulk-edit-form');
+    if (form) form.reset();
+
+    const fields = ['category', 'material', 'price', 'mrp', 'stock', 'delivery', 'badge', 'isnew'];
+    fields.forEach(f => {
+        const chk = document.getElementById(`bulk-chk-${f}`);
+        const body = document.getElementById(`bulk-body-${f}`);
+        const group = chk?.closest('.bulk-field-group');
+        if (chk) chk.checked = false;
+        if (body) body.style.display = 'none';
+        if (group) group.classList.remove('active');
+    });
+
+    const progContainer = document.getElementById('bulk-edit-progress-container');
+    if (progContainer) progContainer.style.display = 'none';
+    const submitBtn = document.getElementById('btn-submit-bulk-edit');
+    if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i data-lucide="check-circle-2"></i> Apply Changes';
+    }
+
+    const countEl = document.getElementById('bulk-edit-count');
+    if (countEl) countEl.textContent = selected.length;
+
+    const allProducts = (window.KNSData && KNSData.getProducts ? KNSData.getProducts() : []) || [];
+    const selectedProducts = allProducts.filter(p => selected.includes(p.id));
+
+    const previewContainer = document.getElementById('bulk-selected-preview');
+    if (previewContainer) {
+        previewContainer.innerHTML = selectedProducts.map(p => `
+            <div class="bulk-chip" title="${escapeHtml(p.name || '')} (${escapeHtml(p.category || '')})">
+                <img src="${p.image || 'images/logo.webp'}" alt="" onerror="this.src='images/logo.webp'">
+                <span class="bulk-chip-name">${escapeHtml(p.name || 'Untitled')}</span>
+                <span class="bulk-chip-price">₹${(p.price || 0).toLocaleString('en-IN')}</span>
+            </div>
+        `).join('');
+    }
+
+    modal.classList.add('active');
+    if (window.lucide) lucide.createIcons();
+}
+
+function toggleBulkField(field) {
+    const chk = document.getElementById(`bulk-chk-${field}`);
+    const body = document.getElementById(`bulk-body-${field}`);
+    const group = chk?.closest('.bulk-field-group');
+    if (!chk || !body) return;
+
+    if (chk.checked) {
+        body.style.display = 'block';
+        if (group) group.classList.add('active');
+        const input = body.querySelector('input:not([type="checkbox"]), select');
+        if (input) setTimeout(() => input.focus(), 60);
+    } else {
+        body.style.display = 'none';
+        if (group) group.classList.remove('active');
+    }
+}
+
+function handleBulkStockOpChange() {
+    const op = document.getElementById('bulk-op-stock')?.value;
+    const input = document.getElementById('bulk-val-stock');
+    if (!input) return;
+    if (op === 'in_stock') {
+        input.value = 50;
+        input.disabled = true;
+    } else if (op === 'out_of_stock') {
+        input.value = 0;
+        input.disabled = true;
+    } else {
+        input.disabled = false;
+        if (input.value === '50' || input.value === '0') input.value = '';
+        input.focus();
+    }
+}
+
+async function handleBulkEditSubmit(event) {
+    if (event) event.preventDefault();
+
+    const selectedIds = Array.from(document.querySelectorAll('.select-row-products:checked')).map(cb => cb.value);
+    if (!selectedIds.length) {
+        alert("No products selected.");
+        return;
+    }
+
+    const enabledFields = {};
+    const fieldKeys = ['category', 'material', 'price', 'mrp', 'stock', 'delivery', 'badge', 'isnew'];
+    let anyEnabled = false;
+
+    fieldKeys.forEach(k => {
+        const chk = document.getElementById(`bulk-chk-${k}`);
+        if (chk && chk.checked) {
+            enabledFields[k] = true;
+            anyEnabled = true;
+        }
+    });
+
+    if (!anyEnabled) {
+        alert("Please enable at least one field checkbox to apply changes.");
+        return;
+    }
+
+    const categoryVal = document.getElementById('bulk-val-category')?.value;
+    const materialVal = document.getElementById('bulk-val-material')?.value?.trim();
+
+    const priceOp = document.getElementById('bulk-op-price')?.value;
+    const priceVal = parseFloat(document.getElementById('bulk-val-price')?.value);
+
+    const mrpOp = document.getElementById('bulk-op-mrp')?.value;
+    const mrpVal = parseFloat(document.getElementById('bulk-val-mrp')?.value);
+
+    const stockOp = document.getElementById('bulk-op-stock')?.value;
+    const stockVal = parseInt(document.getElementById('bulk-val-stock')?.value);
+
+    const deliveryVal = document.getElementById('bulk-val-delivery')?.value?.trim();
+    const badgeVal = document.getElementById('bulk-val-badge')?.value;
+    const isNewVal = document.getElementById('bulk-val-isnew')?.value === 'true';
+
+    // Validation
+    if (enabledFields.price && (isNaN(priceVal) || priceVal < 0)) {
+        alert("Please enter a valid price amount or percentage.");
+        document.getElementById('bulk-val-price')?.focus();
+        return;
+    }
+    if (enabledFields.mrp && (isNaN(mrpVal) || mrpVal < 0)) {
+        alert("Please enter a valid MRP amount or percentage.");
+        document.getElementById('bulk-val-mrp')?.focus();
+        return;
+    }
+    if (enabledFields.stock && stockOp === 'set_qty' && (isNaN(stockVal) || stockVal < 0)) {
+        alert("Please enter a valid stock quantity.");
+        document.getElementById('bulk-val-stock')?.focus();
+        return;
+    }
+
+    const confirmMsg = `Are you sure you want to bulk update ${selectedIds.length} products?\n` +
+        `This will apply changes to the enabled fields.`;
+    if (!confirm(confirmMsg)) return;
+
+    const submitBtn = document.getElementById('btn-submit-bulk-edit');
+    const cancelBtn = document.querySelector('#bulk-edit-products-modal .btn-cancel');
+    const progContainer = document.getElementById('bulk-edit-progress-container');
+    const progBar = document.getElementById('bulk-progress-bar');
+    const progText = document.getElementById('bulk-progress-status');
+    const progPct = document.getElementById('bulk-progress-pct');
+
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i data-lucide="loader-2" class="spin"></i> Applying Changes...';
+        if (window.lucide) lucide.createIcons();
+    }
+    if (cancelBtn) cancelBtn.disabled = true;
+    if (progContainer) progContainer.style.display = 'block';
+
+    const allProducts = (window.KNSData && KNSData.getProducts ? KNSData.getProducts() : []) || [];
+    let successCount = 0;
+    let failCount = 0;
+
+    for (let i = 0; i < selectedIds.length; i++) {
+        const id = selectedIds[i];
+        const p = allProducts.find(x => x.id === id);
+        if (!p) continue;
+
+        const patch = { updatedAt: new Date().toISOString() };
+
+        if (enabledFields.category && categoryVal) {
+            patch.category = categoryVal;
+        }
+
+        if (enabledFields.material && materialVal !== undefined && materialVal !== '') {
+            patch.material = materialVal;
+        }
+
+        if (enabledFields.price) {
+            const currentPrice = Number(p.price) || 0;
+            let newPrice = currentPrice;
+            if (priceOp === 'set') newPrice = priceVal;
+            else if (priceOp === 'inc_percent') newPrice = currentPrice * (1 + priceVal / 100);
+            else if (priceOp === 'dec_percent') newPrice = currentPrice * (1 - priceVal / 100);
+            else if (priceOp === 'inc_amount') newPrice = currentPrice + priceVal;
+            else if (priceOp === 'dec_amount') newPrice = currentPrice - priceVal;
+            patch.price = Math.max(0, Math.round(newPrice));
+        }
+
+        if (enabledFields.mrp) {
+            const currentMrp = Number(p.mrp) || 0;
+            let newMrp = currentMrp;
+            if (mrpOp === 'set') newMrp = mrpVal;
+            else if (mrpOp === 'inc_percent') newMrp = currentMrp * (1 + mrpVal / 100);
+            else if (mrpOp === 'dec_percent') newMrp = currentMrp * (1 - mrpVal / 100);
+            else if (mrpOp === 'inc_amount') newMrp = currentMrp + mrpVal;
+            else if (mrpOp === 'dec_amount') newMrp = currentMrp - mrpVal;
+            patch.mrp = Math.max(0, Math.round(newMrp));
+        }
+
+        if (enabledFields.stock) {
+            if (stockOp === 'in_stock') patch.stock = 50;
+            else if (stockOp === 'out_of_stock') patch.stock = 0;
+            else patch.stock = Math.max(0, stockVal);
+        }
+
+        if (enabledFields.delivery && deliveryVal !== undefined && deliveryVal !== '') {
+            patch.delivery = deliveryVal;
+        }
+
+        if (enabledFields.badge !== undefined && enabledFields.badge) {
+            patch.badge = badgeVal;
+        }
+
+        if (enabledFields.isnew) {
+            patch.isNew = isNewVal;
+        }
+
+        try {
+            const res = await KNSData.updateProduct(id, patch);
+            if (res && (res.ok || res.id)) successCount++;
+            else failCount++;
+        } catch (err) {
+            console.error(`Bulk edit error for product ${id}:`, err);
+            failCount++;
+        }
+
+        const pct = Math.round(((i + 1) / selectedIds.length) * 100);
+        if (progBar) progBar.style.width = `${pct}%`;
+        if (progPct) progPct.textContent = `${pct}%`;
+        if (progText) progText.textContent = `Updated ${i + 1} of ${selectedIds.length}...`;
+    }
+
+    if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i data-lucide="check-circle-2"></i> Apply Changes';
+    }
+    if (cancelBtn) cancelBtn.disabled = false;
+
+    closeModal('bulk-edit-products-modal');
+    clearProductSelection();
+    renderProductsTable();
+    if (typeof refreshDashboard === 'function') refreshDashboard();
+
+    const resultMsg = failCount === 0
+        ? `Bulk edit successful: ${successCount} products updated.`
+        : `Bulk edit complete: ${successCount} updated, ${failCount} failed.`;
+
+    if (window.KNSCart && KNSCart.showToast) {
+        KNSCart.showToast(resultMsg);
+    } else {
+        alert(resultMsg);
     }
 }
 
@@ -1915,8 +2272,14 @@ async function handleBulkDelete(type) {
             const masterCb = document.getElementById(`select-all-${type}`);
             if (masterCb) masterCb.checked = false;
             
-            if (type === 'products') renderProductsTable();
-            else renderCouponsTable();
+            if (type === 'products') {
+                const helperCb = document.getElementById('select-all-products-helper');
+                if (helperCb) helperCb.checked = false;
+                clearProductSelection();
+                renderProductsTable();
+            } else {
+                renderCouponsTable();
+            }
 
         } catch (e) {
             console.error("Bulk Delete Error:", e);
@@ -2191,6 +2554,12 @@ function exportProductsToCSV() {
 window.toggleSelectAll = toggleSelectAll;
 window.updateBulkActionBar = updateBulkActionBar;
 window.handleBulkDelete = handleBulkDelete;
+window.openBulkEditModal = openBulkEditModal;
+window.toggleBulkField = toggleBulkField;
+window.handleBulkStockOpChange = handleBulkStockOpChange;
+window.handleBulkEditSubmit = handleBulkEditSubmit;
+window.toggleSelectAllHelper = toggleSelectAllHelper;
+window.clearProductSelection = clearProductSelection;
 window.openImportModal = openImportModal;
 window.handleFileSelect = handleFileSelect;
 window.toggleImportSelectAll = toggleImportSelectAll;
