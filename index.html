@@ -935,6 +935,11 @@
                 renderAllDynamicSections();
             });
 
+            document.addEventListener('reviews:updated', () => {
+                console.log("Index: Reviews updated, re-rendering dynamic sections...");
+                renderAllDynamicSections();
+            });
+
             function renderSection(id, getItems, templateFn, skeletonFn) {
                 const container = document.getElementById(id);
                 if (!container) return;
@@ -1006,7 +1011,16 @@
                         // Exactly 6 products
                         return [...purchasedProducts, ...trendingBadgeProducts, ...otherFallback].slice(0, 6);
                     },
-                    (p, i) => `
+                    (p, i) => {
+                        const prodReviews = (window.KNSData && KNSData.getReviews)
+                            ? KNSData.getReviews().filter(r => r && (r.productId === p.id || (p.firestoreId && r.productId === p.firestoreId)))
+                            : (Array.isArray(p.reviews) ? p.reviews : []);
+                        const hasReviews = prodReviews.length > 0;
+                        const avgRating = hasReviews
+                            ? (prodReviews.reduce((sum, r) => sum + (Number(r.rating) || 5), 0) / prodReviews.length).toFixed(1)
+                            : null;
+
+                        return `
                         <div class="trend-studio-card animate-on-scroll" style="transition-delay: ${i * 0.08}s;">
                             <div class="trend-studio-media">
                                 <span class="trend-rank-pill"><span class="trend-rank-dot"></span>#${i + 1} Trending</span>
@@ -1025,7 +1039,7 @@
                                 <div class="trend-studio-price-row">
                                     <span class="trend-studio-price">₹${p.price.toLocaleString('en-IN')}</span>
                                     ${p.mrp ? `<span class="trend-studio-mrp">₹${p.mrp.toLocaleString('en-IN')}</span>` : ''}
-                                    ${p.rating ? `<span class="trend-studio-rating">★ ${p.rating}</span>` : ''}
+                                    ${hasReviews && avgRating ? `<span class="trend-studio-rating">★ ${avgRating}</span>` : ''}
                                 </div>
                                 <div class="trend-actions-row">
                                     <a href="product.html?id=${p.id}" class="btn-outline">
@@ -1041,7 +1055,8 @@
                                 </div>
                             </div>
                         </div>
-                    `,
+                    `;
+                    },
                     () => KNSSkeleton.getProductSkeleton(6)
                 );
 
