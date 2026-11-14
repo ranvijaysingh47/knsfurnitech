@@ -4707,3 +4707,269 @@ button.quote-btn:hover {
     }
 }
 
+
+
+/* ==========================================================================
+   TRENDING PRODUCTS SECTION (Clean & Minimal Studio Edition)
+   ========================================================================== */
+.trending-minimal-section {
+    position: relative;
+    padding: 4.5rem 5%;
+    background: #ffffff;
+    border-radius: 20px;
+    margin-bottom: 2rem;
+}
+
+.trending-minimal-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    max-width: 1240px;
+    margin: 0 auto;
+}
+
+.trend-studio-card {
+    background: #ffffff;
+    border: 1px solid #eaedf0;
+    border-radius: 18px;
+    padding: 0.85rem;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1),
+                box-shadow 0.4s cubic-bezier(0.165, 0.84, 0.44, 1),
+                border-color 0.3s ease;
+    position: relative;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.02);
+}
+
+.trend-studio-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06), 0 0 20px rgba(140, 198, 63, 0.12);
+    border-color: rgba(140, 198, 63, 0.45);
+}
+
+.trend-studio-media {
+    position: relative;
+    height: 220px;
+    background: #fbfbfb;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.25rem;
+    overflow: hidden;
+}
+
+.trend-studio-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.trend-studio-card:hover .trend-studio-media img {
+    transform: scale(1.08);
+}
+
+.trend-rank-pill {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: #ffffff;
+    color: #1a1a1a;
+    border: 1px solid #e5e7eb;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    z-index: 2;
+}
+
+.trend-rank-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--brand-green);
+    display: inline-block;
+}
+
+.trend-studio-card .kns-wish-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 2;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.2s;
+}
+
+.trend-studio-card .kns-wish-btn:hover {
+    transform: scale(1.12);
+    border-color: #cbd5e1;
+}
+
+.trend-studio-info {
+    padding: 0.75rem 0.4rem 0.4rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.trend-studio-cat {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--brand-green);
+    margin-bottom: 0.35rem;
+}
+
+.trend-studio-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 0.5rem 0;
+    line-height: 1.35;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.trend-studio-price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.trend-studio-price {
+    font-size: 1.22rem;
+    font-weight: 800;
+    color: #111827;
+}
+
+.trend-studio-mrp {
+    font-size: 0.85rem;
+    color: #9ca3af;
+    text-decoration: line-through;
+}
+
+.trend-studio-rating {
+    margin-left: auto;
+    font-size: 0.78rem;
+    font-weight: 700;
+    background: #fffbeb;
+    color: #b45309;
+    padding: 2px 7px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.trend-actions-row {
+    display: flex;
+    gap: 0.6rem;
+    margin-top: auto;
+    padding-top: 0.5rem;
+    align-items: center;
+}
+
+.trend-actions-row .btn-outline {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.65rem 0.5rem;
+    font-size: 0.84rem;
+    font-weight: 600;
+    border-radius: 8px;
+    border: 2px solid var(--border-light);
+    color: var(--brand-dark);
+    text-decoration: none;
+    background: transparent;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.trend-actions-row .btn-outline:hover {
+    border-color: var(--brand-green) !important;
+    color: var(--brand-green) !important;
+    transform: translateY(-2px);
+}
+
+.trend-actions-row .kns-add-cart-btn {
+    flex: 1.25;
+    margin-top: 0 !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    padding: 0.65rem 0.6rem;
+    border: none;
+    border-radius: 8px;
+    background: var(--brand-green) !important;
+    color: #fff !important;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.86rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1),
+                box-shadow 0.3s cubic-bezier(0.165, 0.84, 0.44, 1),
+                background 0.3s ease !important;
+}
+
+.trend-actions-row .kns-add-cart-btn:hover {
+    background: #7bb236 !important;
+    transform: translateY(-3px) !important;
+    box-shadow: 0 10px 28px rgba(140, 198, 63, 0.45) !important;
+}
+
+/* Tablet & Mobile Responsiveness */
+@media (max-width: 992px) {
+    .trending-minimal-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .trending-minimal-section {
+        padding: 3rem 4%;
+        border-radius: 16px;
+    }
+    .trending-minimal-grid {
+        display: flex !important;
+        overflow-x: auto !important;
+        scroll-snap-type: x mandatory;
+        gap: 1.1rem !important;
+        padding: 0.5rem 5% 1.5rem !important;
+        margin: 0 -5% !important;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+    }
+    .trending-minimal-grid::-webkit-scrollbar {
+        display: none;
+    }
+    .trend-studio-card {
+        flex: 0 0 80% !important;
+        min-width: 260px;
+        scroll-snap-align: center;
+    }
+    .trend-studio-media {
+        height: 195px;
+    }
+}

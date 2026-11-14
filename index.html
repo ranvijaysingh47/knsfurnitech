@@ -500,8 +500,8 @@
                         alt="Modern Living Room with KNS Furniture" class="stl-img" loading="lazy">
                 </div>
 
-                <!-- Hotspot 1: Sovereign Wingback (Left-aligned tooltip) -->
-                <div class="stl-hotspot align-left" style="top: 62%; left: 21%;">
+                <!-- Hotspot 1: Sovereign Wingback - Green Armchair (Left-aligned tooltip) -->
+                <div class="stl-hotspot align-left" style="top: 61.5%; left: 14.5%;">
                     <span class="stl-plus">+</span>
                     <div class="stl-tooltip">
                         <button class="stl-close-btn" aria-label="Close">&times;</button>
@@ -541,6 +541,60 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Hotspot 3: Resin - Tan Leather Lounge Chair & Ottoman (Right-aligned tooltip) -->
+                <div class="stl-hotspot align-right" style="top: 55%; left: 76%;">
+                    <span class="stl-plus">+</span>
+                    <div class="stl-tooltip">
+                        <button class="stl-close-btn" aria-label="Close">&times;</button>
+                        <div class="stl-tool-img"
+                            style="background-image: url('https://res.cloudinary.com/vket6qxm/image/upload/v1794662308/61MxCqZ37lL._SX679_.png');">
+                        </div>
+                        <div class="stl-tool-content">
+                            <h4>Resin Lounge Chair &amp; Ottoman</h4>
+                            <span class="stl-price">₹57,000</span>
+                            <div class="stl-card-actions">
+                                <a href="product.html?id=p-1793634836687-259" class="btn-stl">View Product</a>
+                                <button class="stl-btn-cart-mini" onclick="addToCart('Resin', 57000, 'https://res.cloudinary.com/vket6qxm/image/upload/v1794662308/61MxCqZ37lL._SX679_.png')" aria-label="Add to cart">
+                                    <i data-lucide="plus" size="18"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hotspot 4: Titan - Workstation Chair (Right-aligned tooltip) -->
+                <div class="stl-hotspot align-right" style="top: 71.5%; left: 89.5%;">
+                    <span class="stl-plus">+</span>
+                    <div class="stl-tooltip">
+                        <button class="stl-close-btn" aria-label="Close">&times;</button>
+                        <div class="stl-tool-img"
+                            style="background-image: url('https://res.cloudinary.com/vket6qxm/image/upload/v1792689136/1_c25d44c2-9eb7-4d2f-8379-c9c1e701031b_720x.webp');">
+                        </div>
+                        <div class="stl-tool-content">
+                            <h4>Titan Workstation Chair</h4>
+                            <span class="stl-price">₹4,500</span>
+                            <div class="stl-card-actions">
+                                <a href="product.html?id=p-1792684363287-862" class="btn-stl">View Product</a>
+                                <button class="stl-btn-cart-mini" onclick="addToCart('Titan', 4500, 'https://res.cloudinary.com/vket6qxm/image/upload/v1792689136/1_c25d44c2-9eb7-4d2f-8379-c9c1e701031b_720x.webp')" aria-label="Add to cart">
+                                    <i data-lucide="plus" size="18"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Trending Products (Clean & Minimal - 6 Products) -->
+        <section class="trending-minimal-section section-wrapper bg-white" id="trending-section"
+            style="background: #ffffff; border-radius: 20px; padding: 4rem 5%; margin-bottom: 2rem;">
+            <h2 class="section-title animate-on-scroll">Trending Products</h2>
+            <p style="text-align:center; color:#666; margin-top:-2rem; margin-bottom:3rem;" class="animate-on-scroll">
+                Explore our most purchased and popular ergonomic seating designs.
+            </p>
+            <div class="trending-minimal-grid" id="trending-products-node">
+                <script>document.write(KNSSkeleton.getProductSkeleton(6));</script>
             </div>
         </section>
 
@@ -876,6 +930,11 @@
                 renderAllDynamicSections();
             });
 
+            document.addEventListener('orders:updated', () => {
+                console.log("Index: Orders updated from cloud, re-rendering dynamic sections...");
+                renderAllDynamicSections();
+            });
+
             function renderSection(id, getItems, templateFn, skeletonFn) {
                 const container = document.getElementById(id);
                 if (!container) return;
@@ -884,6 +943,7 @@
                     if (items && items.length > 0) {
                         container.innerHTML = items.map(templateFn).join('');
                         if (window.lucide) lucide.createIcons();
+                if (typeof _syncWishlistUI === 'function') _syncWishlistUI();
                     } else if (skeletonFn) {
                         container.innerHTML = skeletonFn();
                     }
@@ -894,6 +954,96 @@
 
             function renderAllDynamicSections() {
                 // Best Sellers rendering is now handled autonomously by ui.js per-category tabs
+
+                // 1. Render Trending Section (Clean & Minimal - 6 Products)
+                renderSection('trending-products-node',
+                    () => {
+                        const salesMap = {};
+                        const allOrders = [
+                            ...(window.KNSData && KNSData.getAllOrders ? KNSData.getAllOrders() : []),
+                            ...(window.KNSCart && KNSCart.getOrders ? KNSCart.getOrders() : [])
+                        ];
+                        allOrders.forEach(ord => {
+                            if (ord && Array.isArray(ord.items)) {
+                                ord.items.forEach(it => {
+                                    const id = it.id || it.productId;
+                                    const qty = Number(it.qty) || 1;
+                                    if (id) salesMap[id] = (salesMap[id] || 0) + qty;
+                                    if (it.name) {
+                                        const slug = it.name.toLowerCase().trim();
+                                        salesMap[slug] = (salesMap[slug] || 0) + qty;
+                                    }
+                                });
+                            }
+                        });
+
+                        const products = KNSData.getProducts();
+
+                        // 1. Products with recorded purchases, sorted by highest sales
+                        const purchasedProducts = products.filter(p => {
+                            const sales = salesMap[p.id] || salesMap[p.name?.toLowerCase().trim()] || 0;
+                            return sales > 0;
+                        }).sort((a, b) => {
+                            const salesA = salesMap[a.id] || salesMap[a.name?.toLowerCase().trim()] || 0;
+                            const salesB = salesMap[b.id] || salesMap[b.name?.toLowerCase().trim()] || 0;
+                            return salesB - salesA;
+                        });
+
+                        // 2. Fallback: products with Trending / Best Seller badge
+                        const trendingBadgeProducts = products.filter(p => {
+                            const notInPurchased = !purchasedProducts.some(x => x.id === p.id);
+                            const hasBadge = p.badge && (p.badge.toLowerCase() === 'trending' || p.badge.toLowerCase() === 'best seller' || p.badge.toLowerCase() === 'hot');
+                            return notInPurchased && hasBadge;
+                        });
+
+                        // 3. Fallback: other top-rated products
+                        const otherFallback = products.filter(p => {
+                            const notInPurchased = !purchasedProducts.some(x => x.id === p.id);
+                            const notInTrending = !trendingBadgeProducts.some(x => x.id === p.id);
+                            return notInPurchased && notInTrending;
+                        }).sort((a, b) => (Number(b.rating) || 0) - (Number(a.rating) || 0));
+
+                        // Exactly 6 products
+                        return [...purchasedProducts, ...trendingBadgeProducts, ...otherFallback].slice(0, 6);
+                    },
+                    (p, i) => `
+                        <div class="trend-studio-card animate-on-scroll" style="transition-delay: ${i * 0.08}s;">
+                            <div class="trend-studio-media">
+                                <span class="trend-rank-pill"><span class="trend-rank-dot"></span>#${i + 1} Trending</span>
+                                <button class="kns-wish-btn" data-wishlist-id="${p.id}" onclick="event.preventDefault(); KNSWishlist.toggle({id:'${p.id}',name:'${(p.name||'').replace(/'/g,"\\'")}',price:${p.price},image:'${p.image||p.img}'})">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                                </button>
+                                <a href="product.html?id=${p.id}" style="width:100%; height:100%; display:flex; align-items:center; justify-content:center;">
+                                    <img src="${p.image || p.img}" alt="${p.name}" loading="lazy">
+                                </a>
+                            </div>
+                            <div class="trend-studio-info">
+                                <span class="trend-studio-cat">${p.category || 'Ergonomics'}</span>
+                                <a href="product.html?id=${p.id}" style="text-decoration: none; color: inherit;">
+                                    <h3 class="trend-studio-title">${p.name}</h3>
+                                </a>
+                                <div class="trend-studio-price-row">
+                                    <span class="trend-studio-price">₹${p.price.toLocaleString('en-IN')}</span>
+                                    ${p.mrp ? `<span class="trend-studio-mrp">₹${p.mrp.toLocaleString('en-IN')}</span>` : ''}
+                                    ${p.rating ? `<span class="trend-studio-rating">★ ${p.rating}</span>` : ''}
+                                </div>
+                                <div class="trend-actions-row">
+                                    <a href="product.html?id=${p.id}" class="btn-outline">
+                                        View Details
+                                    </a>
+                                    ${p.stock <= 0 && p.stock !== null && p.stock !== undefined ? 
+                                        `<button class="kns-add-cart-btn" disabled style="opacity: 0.6; cursor: not-allowed;">Out of Stock</button>` :
+                                        `<button class="kns-add-cart-btn" onclick="KNSCart.addToCart({id:'${p.id}',name:'${(p.name||'').replace(/'/g,"\\'")}',price:${p.price},image:'${p.image||p.img}',stock:${p.stock}})">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                                            Add to Cart
+                                        </button>`
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    `,
+                    () => KNSSkeleton.getProductSkeleton(6)
+                );
 
                 // 2. Render Just Arrived
                 renderSection('just-arrived-node',
@@ -963,6 +1113,7 @@
                 );
 
                 if (window.lucide) lucide.createIcons();
+                if (typeof _syncWishlistUI === 'function') _syncWishlistUI();
                 if (window.animateObserver) {
                     document.querySelectorAll('.animate-on-scroll').forEach(el => window.animateObserver.observe(el));
                 }
