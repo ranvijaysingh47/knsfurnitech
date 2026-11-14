@@ -606,9 +606,56 @@ function formatUpdateTimeSimple(val) {
 window.formatUpdateTime = formatUpdateTime;
 window.formatUpdateTimeSimple = formatUpdateTimeSimple;
 
+function setProductSort(field) {
+    const select = document.getElementById('prod-sort');
+    if (!select) return;
+    const current = select.value;
+    let nextVal = 'recent-desc';
+
+    if (field === 'name') {
+        nextVal = (current === 'name-asc') ? 'name-desc' : 'name-asc';
+    } else if (field === 'price') {
+        nextVal = (current === 'price-asc') ? 'price-desc' : 'price-asc';
+    } else if (field === 'category') {
+        nextVal = (current === 'category-asc') ? 'recent-desc' : 'category-asc';
+    } else if (field === 'recent') {
+        nextVal = (current === 'recent-desc') ? 'recent-asc' : 'recent-desc';
+    }
+
+    select.value = nextVal;
+    renderProductsTable();
+}
+
+function updateSortIndicators(currentSort) {
+    const indicators = {
+        'sort-ind-name': '↕',
+        'sort-ind-category': '↕',
+        'sort-ind-price': '↕',
+        'sort-ind-recent': '↕'
+    };
+
+    if (currentSort === 'name-asc') indicators['sort-ind-name'] = '▲';
+    else if (currentSort === 'name-desc') indicators['sort-ind-name'] = '▼';
+    else if (currentSort === 'price-asc') indicators['sort-ind-price'] = '▲';
+    else if (currentSort === 'price-desc') indicators['sort-ind-price'] = '▼';
+    else if (currentSort === 'category-asc') indicators['sort-ind-category'] = '▲';
+    else if (currentSort === 'recent-desc') indicators['sort-ind-recent'] = '▼';
+    else if (currentSort === 'recent-asc') indicators['sort-ind-recent'] = '▲';
+
+    Object.keys(indicators).forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.textContent = indicators[id];
+            el.style.color = indicators[id] !== '↕' ? 'var(--admin-green, #8cc63f)' : '#94a3b8';
+            el.style.fontWeight = indicators[id] !== '↕' ? '700' : 'normal';
+        }
+    });
+}
+
 function renderProductsTable() {
-    const query = (document.getElementById('prod-search').value || '').toLowerCase();
+    const query = (document.getElementById('prod-search')?.value || '').toLowerCase();
     const catFilter = document.getElementById('prod-filter-cat')?.value || 'all';
+    const sortVal = document.getElementById('prod-sort')?.value || 'recent-desc';
     const allProducts = KNSData.getProducts() || [];
     
     let products = allProducts.filter(p =>
@@ -619,15 +666,37 @@ function renderProductsTable() {
         products = products.filter(p => p.category === catFilter);
     }
 
-    // Sort: Recently Uploaded First
+    // Sort: Configurable Sort System
     products.sort((a, b) => {
-        const timeA = a.updatedAt || a.timestamp || (a.id && a.id.startsWith('p-') ? parseInt(a.id.split('-')[1]) : 0);
-        const timeB = b.updatedAt || b.timestamp || (b.id && b.id.startsWith('p-') ? parseInt(b.id.split('-')[1]) : 0);
-        const dateA = new Date(timeA).getTime();
-        const dateB = new Date(timeB).getTime();
-        if (dateA !== dateB) return dateB - dateA;
-        return (parseInt(b.id?.replace(/\D/g, '') || 0)) - (parseInt(a.id?.replace(/\D/g, '') || 0));
+        if (sortVal === 'name-asc') {
+            return (a.name || '').localeCompare(b.name || '');
+        } else if (sortVal === 'name-desc') {
+            return (b.name || '').localeCompare(a.name || '');
+        } else if (sortVal === 'price-asc') {
+            return (Number(a.price) || 0) - (Number(b.price) || 0);
+        } else if (sortVal === 'price-desc') {
+            return (Number(b.price) || 0) - (Number(a.price) || 0);
+        } else if (sortVal === 'category-asc') {
+            return (a.category || '').localeCompare(b.category || '');
+        } else if (sortVal === 'recent-asc') {
+            const timeA = a.updatedAt || a.timestamp || (a.id && a.id.startsWith('p-') ? parseInt(a.id.split('-')[1]) : 0);
+            const timeB = b.updatedAt || b.timestamp || (b.id && b.id.startsWith('p-') ? parseInt(b.id.split('-')[1]) : 0);
+            const dateA = new Date(timeA).getTime();
+            const dateB = new Date(timeB).getTime();
+            if (dateA !== dateB) return dateA - dateB;
+            return (parseInt(a.id?.replace(/\D/g, '') || 0)) - (parseInt(b.id?.replace(/\D/g, '') || 0));
+        } else {
+            // Default: 'recent-desc' (Recently Uploaded First)
+            const timeA = a.updatedAt || a.timestamp || (a.id && a.id.startsWith('p-') ? parseInt(a.id.split('-')[1]) : 0);
+            const timeB = b.updatedAt || b.timestamp || (b.id && b.id.startsWith('p-') ? parseInt(b.id.split('-')[1]) : 0);
+            const dateA = new Date(timeA).getTime();
+            const dateB = new Date(timeB).getTime();
+            if (dateA !== dateB) return dateB - dateA;
+            return (parseInt(b.id?.replace(/\D/g, '') || 0)) - (parseInt(a.id?.replace(/\D/g, '') || 0));
+        }
     });
+
+    updateSortIndicators(sortVal);
 
     const tbody = document.getElementById('admin-products-table');
     if (!tbody) return;
@@ -2449,8 +2518,38 @@ async function processImport() {
 
     try {
         if (importType === 'products') {
-            const res = await KNSData.addProductsBatch(toImport);
-            successCount = res.count;
+            const allCurrentProds = (window.KNSData && KNSData.getProducts ? KNSData.getProducts() : []) || [];
+            let updatedCount = 0;
+            const newToImport = [];
+
+            for (const item of toImport) {
+                const match = allCurrentProds.find(x => 
+                    (item.id && x.id === item.id) ||
+                    (x.name && x.name.trim().toLowerCase() === item.name.trim().toLowerCase())
+                );
+
+                if (match) {
+                    try {
+                        await KNSData.updateProduct(match.id, {
+                            ...item,
+                            id: match.id,
+                            updatedAt: new Date().toISOString()
+                        });
+                        updatedCount++;
+                    } catch (e) {
+                        console.error("CSV update failed for", match.name, e);
+                    }
+                } else {
+                    newToImport.push(item);
+                }
+            }
+
+            if (newToImport.length > 0) {
+                const res = await KNSData.addProductsBatch(newToImport);
+                successCount = (res.count || 0) + updatedCount;
+            } else {
+                successCount = updatedCount;
+            }
         } else {
             // Legacy individual add for coupons
             for (const cb of selectedCbs) {
@@ -2498,9 +2597,9 @@ function exportProductsToCSV() {
         return;
     }
 
-    // Headers matching products_template.csv
+    // Headers matching products_template.csv with id for exact update mapping
     const headers = [
-        "name", "category", "material", "price", "mrp", "stock", "delivery", 
+        "id", "name", "category", "material", "price", "mrp", "stock", "delivery", 
         "description", "longDescription", "specs", "dimensions", "colors", 
         "image_url", "gallery_images", "badge", "is_new", "rating"
     ];
@@ -2508,6 +2607,7 @@ function exportProductsToCSV() {
     const rows = products.map(p => {
         // Map product object to the expected CSV structure
         const data = [
+            p.id || '',
             p.name || '',
             p.category || '',
             p.material || '',
@@ -2566,6 +2666,217 @@ window.toggleImportSelectAll = toggleImportSelectAll;
 window.updateImportBtnState = updateImportBtnState;
 window.processImport = processImport;
 window.exportProductsToCSV = exportProductsToCSV;
+
+/* ════════════════════════════════════════════════════════════════
+   QUICK BULK PRICE & MRP EDITOR (Inline Sheet Mode)
+   ════════════════════════════════════════════════════════════════ */
+let quickPriceChanges = {};
+
+function openQuickPriceModal() {
+    quickPriceChanges = {};
+    const modal = document.getElementById('quick-price-modal');
+    if (!modal) return;
+
+    const searchInput = document.getElementById('quick-price-search');
+    if (searchInput) searchInput.value = '';
+    const catSelect = document.getElementById('quick-price-cat');
+    if (catSelect) catSelect.value = 'all';
+
+    renderQuickPriceTable();
+    updateQuickPriceStatus();
+    modal.classList.add('active');
+    if (window.lucide) lucide.createIcons();
+}
+
+function renderQuickPriceTable() {
+    const tbody = document.getElementById('quick-price-tbody');
+    if (!tbody) return;
+
+    const query = (document.getElementById('quick-price-search')?.value || '').toLowerCase().trim();
+    const cat = document.getElementById('quick-price-cat')?.value || 'all';
+    const products = (window.KNSData && KNSData.getProducts ? KNSData.getProducts() : []) || [];
+
+    const filtered = products.filter(p => {
+        const matchQ = !query || (p.name || '').toLowerCase().includes(query) || (p.category || '').toLowerCase().includes(query);
+        const matchC = cat === 'all' || p.category === cat;
+        return matchQ && matchC;
+    });
+
+    const counter = document.getElementById('quick-price-counter');
+    if (counter) counter.textContent = `Showing ${filtered.length} of ${products.length} products`;
+
+    if (!filtered.length) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 2.5rem; color: #888;">No matching products found.</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = filtered.map(p => {
+        const changed = quickPriceChanges[p.id];
+        const currentPrice = changed && changed.price !== undefined ? changed.price : (p.price || 0);
+        const currentMrp = changed && changed.mrp !== undefined ? changed.mrp : (p.mrp || 0);
+        const isModified = !!changed;
+
+        const discountPct = (currentMrp > currentPrice && currentMrp > 0)
+            ? Math.round(((currentMrp - currentPrice) / currentMrp) * 100)
+            : 0;
+
+        return `
+            <tr id="qp-row-${p.id}" style="${isModified ? 'background: #fffbeb;' : ''}">
+                <td style="padding: 8px 10px;">
+                    <img src="${p.image || 'images/logo.webp'}" style="width: 38px; height: 38px; object-fit: cover; border-radius: 6px; border: 1px solid #eee;" alt="" onerror="this.src='images/logo.webp'">
+                </td>
+                <td style="padding: 8px 10px; font-weight: 600; color: #1e293b;">
+                    <div>${(window.escapeHTML || window.escapeHtml || (s => s))(p.name)}</div>
+                    <small style="color: #94a3b8; font-size: 0.75rem;">ID: ${p.id}</small>
+                </td>
+                <td style="padding: 8px 10px; color: #64748b; font-size: 0.84rem;">
+                    ${(window.escapeHTML || window.escapeHtml || (s => s))(p.category)}
+                </td>
+                <td style="padding: 8px 10px;">
+                    <div style="position: relative; display: flex; align-items: center;">
+                        <span style="position: absolute; left: 8px; color: #64748b; font-weight: 600;">₹</span>
+                        <input type="number" min="0" value="${currentPrice}"
+                            style="width: 100%; padding: 6px 8px 6px 22px; border: 1px solid ${isModified ? '#f59e0b' : '#cbd5e1'}; border-radius: 6px; font-weight: 700; font-size: 0.9rem;"
+                            oninput="onQuickPriceChange('${p.id}', this.value, null)">
+                    </div>
+                </td>
+                <td style="padding: 8px 10px;">
+                    <div style="position: relative; display: flex; align-items: center;">
+                        <span style="position: absolute; left: 8px; color: #64748b; font-weight: 600;">₹</span>
+                        <input type="number" min="0" value="${currentMrp}"
+                            style="width: 100%; padding: 6px 8px 6px 22px; border: 1px solid ${isModified ? '#f59e0b' : '#cbd5e1'}; border-radius: 6px; font-weight: 700; font-size: 0.9rem;"
+                            oninput="onQuickPriceChange('${p.id}', null, this.value)">
+                    </div>
+                </td>
+                <td style="padding: 8px 10px; text-align: center;" id="qp-badge-${p.id}">
+                    ${isModified 
+                        ? '<span style="background: #fef3c7; color: #b45309; padding: 4px 8px; border-radius: 12px; font-size: 0.74rem; font-weight: 700;">Modified</span>'
+                        : (discountPct > 0 
+                            ? `<span style="background: #eef7e6; color: #5b8e1f; padding: 3px 8px; border-radius: 12px; font-size: 0.74rem; font-weight: 600;">${discountPct}% off</span>`
+                            : '<span style="color: #94a3b8; font-size: 0.78rem;">Saved</span>'
+                          )
+                    }
+                </td>
+            </tr>
+        `;
+    }).join('');
+}
+
+function filterQuickPriceList() {
+    renderQuickPriceTable();
+}
+
+function onQuickPriceChange(id, newPrice, newMrp) {
+    const products = (window.KNSData && KNSData.getProducts ? KNSData.getProducts() : []) || [];
+    const p = products.find(x => x.id === id);
+    if (!p) return;
+
+    if (!quickPriceChanges[id]) {
+        quickPriceChanges[id] = { price: p.price || 0, mrp: p.mrp || 0 };
+    }
+
+    if (newPrice !== null && newPrice !== undefined) {
+        quickPriceChanges[id].price = Math.max(0, parseFloat(newPrice) || 0);
+    }
+    if (newMrp !== null && newMrp !== undefined) {
+        quickPriceChanges[id].mrp = Math.max(0, parseFloat(newMrp) || 0);
+    }
+
+    if (quickPriceChanges[id].price === (p.price || 0) && quickPriceChanges[id].mrp === (p.mrp || 0)) {
+        delete quickPriceChanges[id];
+    }
+
+    const row = document.getElementById(`qp-row-${id}`);
+    const badge = document.getElementById(`qp-badge-${id}`);
+    const isModified = !!quickPriceChanges[id];
+
+    if (row) {
+        row.style.background = isModified ? '#fffbeb' : '';
+    }
+    if (badge) {
+        const currentP = isModified ? quickPriceChanges[id].price : (p.price || 0);
+        const currentM = isModified ? quickPriceChanges[id].mrp : (p.mrp || 0);
+        const discountPct = (currentM > currentP && currentM > 0)
+            ? Math.round(((currentM - currentP) / currentM) * 100)
+            : 0;
+
+        badge.innerHTML = isModified 
+            ? '<span style="background: #fef3c7; color: #b45309; padding: 4px 8px; border-radius: 12px; font-size: 0.74rem; font-weight: 700;">Modified</span>'
+            : (discountPct > 0 
+                ? `<span style="background: #eef7e6; color: #5b8e1f; padding: 3px 8px; border-radius: 12px; font-size: 0.74rem; font-weight: 600;">${discountPct}% off</span>`
+                : '<span style="color: #94a3b8; font-size: 0.78rem;">Saved</span>'
+              );
+    }
+
+    updateQuickPriceStatus();
+}
+
+function updateQuickPriceStatus() {
+    const count = Object.keys(quickPriceChanges).length;
+    const statusText = document.getElementById('quick-price-status-text');
+    const saveBtn = document.getElementById('btn-save-quick-prices');
+    if (statusText) {
+        statusText.innerHTML = count > 0 
+            ? `<strong style="color: #d97706;">${count} product(s) modified</strong> — click "Save All Changes" to apply.`
+            : `<span style="color: #64748b;">No unsaved changes</span>`;
+    }
+    if (saveBtn) {
+        saveBtn.innerHTML = `<i data-lucide="check-circle-2"></i> Save All Changes (${count})`;
+        saveBtn.disabled = count === 0;
+        saveBtn.style.opacity = count === 0 ? '0.6' : '1';
+        saveBtn.style.cursor = count === 0 ? 'not-allowed' : 'pointer';
+        if (window.lucide) lucide.createIcons();
+    }
+}
+
+async function saveQuickPrices() {
+    const ids = Object.keys(quickPriceChanges);
+    if (!ids.length) {
+        if (window.KNSCart && KNSCart.showToast) KNSCart.showToast("No price changes detected.");
+        return;
+    }
+
+    const btn = document.getElementById('btn-save-quick-prices');
+    const originalHtml = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<i data-lucide="loader-2" class="spin"></i> Saving...';
+    if (window.lucide) lucide.createIcons();
+
+    let updatedCount = 0;
+    for (const id of ids) {
+        const change = quickPriceChanges[id];
+        try {
+            await KNSData.updateProduct(id, {
+                price: change.price,
+                mrp: change.mrp,
+                updatedAt: new Date().toISOString()
+            });
+            updatedCount++;
+        } catch (e) {
+            console.error(`Failed to update product ${id}:`, e);
+        }
+    }
+
+    quickPriceChanges = {};
+    btn.disabled = false;
+    btn.innerHTML = originalHtml;
+    if (window.lucide) lucide.createIcons();
+
+    closeModal('quick-price-modal');
+    if (window.KNSCart && KNSCart.showToast) {
+        KNSCart.showToast(`Updated prices for ${updatedCount} products successfully!`);
+    } else {
+        alert(`Updated prices for ${updatedCount} products successfully!`);
+    }
+
+    renderProductsTable();
+}
+
+window.setProductSort = setProductSort;
+window.openQuickPriceModal = openQuickPriceModal;
+window.filterQuickPriceList = filterQuickPriceList;
+window.onQuickPriceChange = onQuickPriceChange;
+window.saveQuickPrices = saveQuickPrices;
 
 /* --- Maintenance Section --- */
 function renderMaintenancePage() {

@@ -778,4 +778,112 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* Legacy Mega Menu Disabled */
+/* ════════════════════════════════════════════════════════════════
+   PRIVACY POLICY & COOKIE CONSENT BANNER
+   ════════════════════════════════════════════════════════════════ */
+window.KNSPrivacyConsent = (function() {
+    const STORAGE_KEY = 'kns_privacy_consent';
+    const CONSENT_DATE_KEY = 'kns_privacy_consent_date';
+
+    function init() {
+        // Do not render on admin dashboard
+        if (window.location.pathname.toLowerCase().includes('admin.html')) return;
+
+        // Check if user has already accepted or acknowledged
+        const existingConsent = localStorage.getItem(STORAGE_KEY);
+        if (existingConsent) return;
+
+        // Render after slight delay for smooth page experience
+        setTimeout(renderBanner, 800);
+    }
+
+    function renderBanner() {
+        if (document.getElementById('kns-cookie-banner')) return;
+
+        const banner = document.createElement('div');
+        banner.id = 'kns-cookie-banner';
+        banner.className = 'kns-cookie-banner';
+        banner.innerHTML = `
+            <div class="kns-cookie-card">
+                <button class="kns-cookie-close" id="kns-cookie-close-btn" title="Dismiss" aria-label="Close privacy notice">&times;</button>
+                <div class="kns-cookie-body">
+                    <div class="kns-cookie-header">
+                        <div class="kns-cookie-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8cc63f" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                <path d="m9 12 2 2 4-4"/>
+                            </svg>
+                        </div>
+                        <h4>Your Privacy Matters</h4>
+                    </div>
+                    <p class="kns-cookie-text">
+                        We use cookies to give you a seamless shopping experience, analyze site usage, and personalize content. By clicking <strong>"Accept All"</strong>, you consent to our data practices described in our 
+                        <a href="privacy-policy.html" target="_blank" rel="noopener">Privacy Policy</a> and 
+                        <a href="terms-of-service.html" target="_blank" rel="noopener">Terms of Service</a>.
+                    </p>
+                    <div class="kns-cookie-actions">
+                        <button type="button" class="kns-cookie-btn kns-cookie-btn-primary" id="kns-cookie-accept-btn">
+                            Accept All
+                        </button>
+                        <button type="button" class="kns-cookie-btn kns-cookie-btn-outline" id="kns-cookie-decline-btn">
+                            Essential Only
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(banner);
+
+        const acceptBtn = document.getElementById('kns-cookie-accept-btn');
+        const declineBtn = document.getElementById('kns-cookie-decline-btn');
+        const closeBtn = document.getElementById('kns-cookie-close-btn');
+
+        if (acceptBtn) acceptBtn.addEventListener('click', () => saveChoice('accepted'));
+        if (declineBtn) declineBtn.addEventListener('click', () => saveChoice('essential_only'));
+        if (closeBtn) closeBtn.addEventListener('click', () => saveChoice('dismissed'));
+
+        requestAnimationFrame(() => {
+            banner.classList.add('visible');
+        });
+    }
+
+    function saveChoice(choice) {
+        try {
+            localStorage.setItem(STORAGE_KEY, choice);
+            localStorage.setItem(CONSENT_DATE_KEY, new Date().toISOString());
+        } catch (e) {
+            console.warn("Could not save privacy consent to localStorage:", e);
+        }
+
+        const banner = document.getElementById('kns-cookie-banner');
+        if (banner) {
+            banner.classList.remove('visible');
+            banner.classList.add('hiding');
+            setTimeout(() => {
+                banner.remove();
+            }, 350);
+        }
+    }
+
+    return { 
+        init, 
+        reset: () => { 
+            localStorage.removeItem(STORAGE_KEY); 
+            localStorage.removeItem(CONSENT_DATE_KEY); 
+            init(); 
+        } 
+    };
+})();
+
+// Auto-trigger privacy consent
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    if (window.KNSPrivacyConsent) KNSPrivacyConsent.init();
+} else {
+    document.addEventListener('DOMContentLoaded', () => {
+        if (window.KNSPrivacyConsent) KNSPrivacyConsent.init();
+    });
+}
+
+/* Legacy Mega Menu Disabled */
 const KNSMegaMenu = { init: () => { } };
