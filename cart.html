@@ -1669,6 +1669,24 @@
                 console.error("Firestore Order Save failed:", err);
             }
 
+            // Dispatch Order Confirmation Email to Customer & Alert to Admin (mail.php)
+            try {
+                if (window.location.protocol !== 'file:') {
+                    fetch('mail.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            action: 'order_confirmation',
+                            order: orderData
+                        })
+                    }).then(r => r.json()).then(res => {
+                        console.log("📧 Order confirmation email dispatch result:", res);
+                    }).catch(e => console.warn("Order email notification failed:", e));
+                }
+            } catch (err) {
+                console.warn("Could not trigger order notification:", err);
+            }
+
             // Set UI for success step
             const orderIdEl = document.getElementById('displayOrderId');
             if (orderIdEl) orderIdEl.textContent = orderId;

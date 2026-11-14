@@ -25,33 +25,38 @@
                 }
             } catch (err) { console.error("Firestore Error:", err); }
 
-            // 2. Send via EmailJS (Option 3 - Frontend Notification)
+            // 2. Send via Self-Hosted Hostinger PHP Mailer (Direct to Knsfurnitech@gmail.com)
             let emailSent = false;
-            try {
-                if (typeof emailjs !== 'undefined') {
-                    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-                        from_name: data.name || `${data.firstName || ''} ${data.lastName || ''}`.trim() || 'Valued Customer',
-                        from_email: data.email,
-                        phone: data.phone || data.phoneNumber || 'N/A',
-                        message: data.message || `Bulk Inquiry for ${data.companyName || 'N/A'} (Qty: ${data.quantity || 'N/A'})`,
-                        to_name: "KNS Furnitech Support"
-                    });
-                    emailSent = true;
-                    console.log("EmailJS Success!");
-                }
-            } catch (err) { console.warn("EmailJS failed, trying fallback...", err); }
-
-            // 3. Send via Hostinger PHP Mailer (Option 4 - Backend Notification)
-            if (!emailSent && window.location.protocol !== 'file:') {
+            if (window.location.protocol !== 'file:') {
                 try {
                     const phpRes = await fetch('mail.php', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(data)
+                        body: JSON.stringify({
+                            action: 'inquiry',
+                            ...data
+                        })
                     });
                     const phpResult = await phpRes.json();
                     if (phpResult && phpResult.ok) emailSent = true;
-                } catch (err) { console.error("PHP Mailer Error:", err); }
+                } catch (err) { console.warn("PHP Mailer Error, falling back to EmailJS...", err); }
+            }
+
+            // 3. Fallback to EmailJS if needed
+            if (!emailSent) {
+                try {
+                    if (typeof emailjs !== 'undefined') {
+                        await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+                            from_name: data.name || `${data.firstName || ''} ${data.lastName || ''}`.trim() || 'Valued Customer',
+                            from_email: data.email,
+                            phone: data.phone || data.phoneNumber || 'N/A',
+                            message: data.message || `Bulk Inquiry for ${data.companyName || 'N/A'} (Qty: ${data.quantity || 'N/A'})`,
+                            to_name: "KNS Furnitech Support"
+                        });
+                        emailSent = true;
+                        console.log("EmailJS Success!");
+                    }
+                } catch (err) { console.warn("EmailJS failed, trying mailto fallback...", err); }
             }
 
             if (emailSent || window.location.protocol === 'file:') {

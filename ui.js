@@ -887,3 +887,49 @@ if (document.readyState === 'complete' || document.readyState === 'interactive')
 
 /* Legacy Mega Menu Disabled */
 const KNSMegaMenu = { init: () => { } };
+
+/* ================================================================
+   Automated Newsletter Subscription via Self-Hosted mail.php
+   ================================================================ */
+document.addEventListener('submit', async (e) => {
+    const form = e.target.closest('.newsletter-form');
+    if (!form) return;
+    e.preventDefault();
+
+    const input = form.querySelector('input[type="email"]');
+    if (!input || !input.value.trim()) return;
+
+    const email = input.value.trim();
+    const btn = form.querySelector('button[type="submit"]');
+    const originalText = btn ? btn.innerText : 'Subscribe';
+
+    if (btn) {
+        btn.innerText = 'Subscribing...';
+        btn.disabled = true;
+    }
+
+    try {
+        const res = await fetch('mail.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'subscribe', email: email })
+        });
+        const result = await res.json();
+        if (result && result.ok) {
+            alert('🎉 Thank you for subscribing! A welcome email has been sent to your inbox.');
+            form.reset();
+        } else {
+            alert(result.msg || 'Thank you for subscribing to KNS Furnitech updates!');
+            form.reset();
+        }
+    } catch (err) {
+        console.warn("Newsletter submission offline/local:", err);
+        alert('Thank you for subscribing to KNS Furnitech!');
+        form.reset();
+    } finally {
+        if (btn) {
+            btn.innerText = originalText;
+            btn.disabled = false;
+        }
+    }
+});
